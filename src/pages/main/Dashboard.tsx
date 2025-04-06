@@ -1,10 +1,30 @@
+import {useEffect} from "react";
+import useGeneralDataStore from "../../store/useGeneralDataStore.ts";
+import {CircularProgress} from "@mui/material";
+import ErrorAlert from "../../components/common/ErrorAlert.tsx";
+
+
 const Dashboard = () => {
+    const {fetchGeneralData, isLoading, error} = useGeneralDataStore();
+    useEffect(() => {
+        fetchGeneralData();
+    }, [])
+
+    if (isLoading) {
+        return (
+            <div className={"w-full h-screen flex items-center justify-center"}>
+                <CircularProgress color="primary" size={200} thickness={5}/>
+            </div>
+        )
+    }
+
     return (
         <div>
             <p className={"font-open-sans"}>Dashboard</p>
+            {error && <ErrorAlert severity="error" message={error}/>}
         </div>
     )
-}
+};
 
 // const Dashboard: React.FC = () => {
 //     // const { responseData, setGeneralData } = useGlobalContext();

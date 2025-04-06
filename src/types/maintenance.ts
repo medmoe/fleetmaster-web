@@ -1,4 +1,4 @@
-import {VehicleType} from "@/types/types";
+import {VehicleType} from "./types.ts";
 
 export interface PartProviderType {
     id?: string
@@ -68,4 +68,11 @@ export type FilteredReportPeriodType = {
     current: MaintenanceReportWithStringsType[]
     previous: MaintenanceReportWithStringsType[]
 }
+
+export interface GeneralDataType {
+  parts: PartType[];
+  part_providers: PartProviderType[];
+  service_providers: ServiceProviderType[];
+}
+
 

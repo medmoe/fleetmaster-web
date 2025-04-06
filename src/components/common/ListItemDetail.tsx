@@ -1,4 +1,3 @@
-
 interface ListItemDetailProps {
     label: string
     value?: string
@@ -8,9 +7,8 @@ interface ListItemDetailProps {
 
 function ListItemDetail({label, value, containerStyle, textStyle}: ListItemDetailProps) {
     return (
-        <div className={`${containerStyle}`}>
-            <p className={`text-sm font-open-sans ${textStyle}`}>
-                <span className={"text-default text-sm font-open-sans"}>{label}:</span> {value}</p>
+        <div className={`${containerStyle} text-left`}>
+            <p className={`text-sm font-open-sans ${textStyle}`}><span className={"text-default text-sm font-open-sans"}>{label}:</span> {value}</p>
         </div>
     );
 }

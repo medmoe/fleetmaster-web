@@ -2,8 +2,11 @@ import React, {useState} from "react";
 import apiClient from "../../api/axiosConfig.ts";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {API} from "../../constants/endpoints.ts";
+import useAuthStore from "../../store/useAuthStore.ts";
 
 export const useLoginPage = () => {
+    const {setAuthResponse} = useAuthStore()
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [loginFormData, setLoginFormData] = useState({username: "", password: ""})
@@ -19,13 +22,14 @@ export const useLoginPage = () => {
         event.preventDefault();
         setIsLoading(true)
         try {
-            const response = await axios.post('http://0.0.0.0:8000/accounts/login/', loginFormData, {
+            const response = await axios.post(`${API}accounts/login/`, loginFormData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                }
+                },
+                withCredentials: true
             })
-            console.log(response)
+            setAuthResponse(response.data)
             navigate("/dashboard");
         } catch (error) {
             console.log(error)

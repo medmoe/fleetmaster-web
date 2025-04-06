@@ -54,7 +54,7 @@ export interface UserType {
     email: string
 }
 
-export interface ResponseDataType {
+export interface AuthResponseDataType {
     user: UserType
     phone?: string
     address?: string
