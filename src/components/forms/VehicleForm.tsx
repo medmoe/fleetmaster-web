@@ -4,7 +4,7 @@ import {
     Button,
     Container,
     FormControl,
-    Grid2,
+    Grid,
     InputLabel,
     MenuItem,
     Paper,
@@ -41,9 +41,9 @@ interface TextFieldProps {
 }
 
 // Constants (assuming these would be imported from your constants file)
-const vehicleTypes = ['Car', 'Motorcycle', 'Truck', 'Van'];
-const vehicleStatuses = ['Active', 'In maintenance', 'Out of service'];
-const fuelTypes = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+const vehicleTypes = ['CAR', 'MOTORCYCLE', 'TRUCK', 'VAN'];
+const vehicleStatuses = ['ACTIVE', 'IN_MAINTENANCE', 'OUT_OF_SERVICE'];
+const fuelTypes = ['GASOLINE', 'DIESEL', 'ELECTRIC', 'HYBRID'];
 
 // Helper functions to create input groups
 const createFirstInputTextPropsBlock = (
@@ -105,9 +105,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                 <Box sx={{mt: 3}}>
                     {/* First block of text fields */}
-                    <Grid2 container spacing={2}>
+                    <Grid container spacing={2}>
                         {createFirstInputTextPropsBlock(vehicleData, handleChange).map((field, idx) => (
-                            <Grid2 key={idx}>
+                            <Grid key={idx}>
                                 <TextField
                                     fullWidth
                                     label={field.placeholder}
@@ -117,9 +117,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                     variant="outlined"
                                     sx={{bgcolor: 'background.paper'}}
                                 />
-                            </Grid2>
+                            </Grid>
                         ))}
-                    </Grid2>
+                    </Grid>
 
                     {/* Vehicle Type Picker */}
                     <FormControl fullWidth sx={{mt: 2}}>
@@ -157,8 +157,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                     {/* Date Pickers */}
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Grid2 container spacing={2} sx={{mt: 1}}>
-                            <Grid2>
+                        <Grid container spacing={2} sx={{mt: 1}}>
+                            <Grid>
                                 <DatePicker
                                     label="Purchase Date"
                                     value={dates.purchase_date}
@@ -169,8 +169,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                         openPickerIcon: {sx: {color: "#9c27b0"}}
                                     }}
                                 />
-                            </Grid2>
-                            <Grid2>
+                            </Grid>
+                            <Grid>
                                 <DatePicker
                                     label="Last Service Date"
                                     value={dates.last_service_date}
@@ -181,8 +181,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                         openPickerIcon: {sx: {color: "#9c27b0"}}
                                     }}
                                 />
-                            </Grid2>
-                        </Grid2>
+                            </Grid>
+                        </Grid>
 
                         <Box sx={{mt: 2}}>
                             <DatePicker
@@ -213,8 +213,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                     {/* More Date Pickers */}
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Grid2 container spacing={2} sx={{mt: 2}}>
-                            <Grid2>
+                        <Grid container spacing={2} sx={{mt: 2}}>
+                            <Grid>
                                 <DatePicker
                                     label="Insurance Expiry Date"
                                     value={dates.insurance_expiry_date}
@@ -225,8 +225,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                         openPickerIcon: {sx: {color: "#9c27b0"}}
                                     }}
                                 />
-                            </Grid2>
-                            <Grid2>
+                            </Grid>
+                            <Grid>
                                 <DatePicker
                                     label="License Expiry Date"
                                     value={dates.license_expiry_date}
@@ -237,14 +237,14 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                         openPickerIcon: {sx: {color: "#9c27b0"}}
                                     }}
                                 />
-                            </Grid2>
-                        </Grid2>
+                            </Grid>
+                        </Grid>
                     </LocalizationProvider>
 
                     {/* Second block of text fields */}
-                    <Grid2 container spacing={2} sx={{mt: 1}}>
+                    <Grid container spacing={2} sx={{mt: 1}}>
                         {createSecondInputTextPropsBlock(vehicleData, handleChange).map((field, idx) => (
-                            <Grid2 key={idx}>
+                            <Grid key={idx}>
                                 <TextField
                                     fullWidth
                                     label={field.placeholder}
@@ -254,9 +254,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                     variant="outlined"
                                     sx={{bgcolor: 'background.paper'}}
                                 />
-                            </Grid2>
+                            </Grid>
                         ))}
-                    </Grid2>
+                    </Grid>
                 </Box>
 
                 {/* Action Buttons */}

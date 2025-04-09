@@ -4,7 +4,9 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './index.css';
 import DashboardLayout from "./layouts/DashboardLayout.tsx";
-import {Dashboard, LoginPage, SignUp, Vehicles} from "./pages"
+import MaintenanceLayout from "./layouts/MaintenanceLayout.tsx";
+import {ProtectedRoute} from "./components";
+import {Dashboard, LoginPage, MaintenanceOverview, PartProviders, Parts, Reports, ServiceProviders, SignUp, Vehicles} from "./pages"
 
 import WebFont from "webfontloader";
 
@@ -30,9 +32,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Routes>
                     <Route path="/" element={<LoginPage/>}/>
                     <Route path="/register" element={<SignUp/>}/>
-                    <Route element={<DashboardLayout/>}>
-                        <Route path="/dashboard" element={<Dashboard/>}/>
-                        <Route path="/vehicles" element={<Vehicles/>}/>
+
+                    <Route element={<ProtectedRoute/>}>
+                        <Route element={<DashboardLayout/>}>
+                            <Route path="/dashboard" element={<Dashboard/>}/>
+                            <Route path="/vehicles" element={<Vehicles/>}/>
+                        </Route>
+                        <Route element={<MaintenanceLayout/>}>
+                            <Route path="/maintenance-overview" element={<MaintenanceOverview/>}/>
+                            <Route path="/parts" element={<Parts/>}/>
+                            <Route path="/part-providers" element={<PartProviders/>}/>
+                            <Route path="/service-providers" element={<ServiceProviders/>}/>
+                            <Route path={"/reports"} element={<Reports/>}/>
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

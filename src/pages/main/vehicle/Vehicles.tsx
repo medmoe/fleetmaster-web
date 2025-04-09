@@ -1,10 +1,10 @@
 import {Button, CircularProgress, Container} from "@mui/material";
 import {Add} from "@mui/icons-material";
-import React from "react";
-import {VehicleCardComponent, VehicleForm} from "../../components";
-import useAuthStore from "../../store/useAuthStore.ts";
-import {useVehicle} from "../../hooks/main/useVehicle.ts";
-import ErrorAlert from "../../components/common/ErrorAlert.tsx";
+import {VehicleCardComponent, VehicleForm} from "../../../components";
+import useAuthStore from "../../../store/useAuthStore.ts";
+import {useVehicle} from "../../../hooks/main/useVehicle.ts";
+import ErrorAlert from "../../../components/common/ErrorAlert.tsx";
+import {useNavigate} from "react-router-dom";
 
 const Vehicles = () => {
     const {authResponse} = useAuthStore()
@@ -17,6 +17,8 @@ const Vehicles = () => {
         setShowVehicleForm,
         handleVehicleFormChange,
         handleVehicleFormDateChange,
+        handleVehicleEdition,
+        handleVehicleDeletion,
         submitVehicleForm
     } = useVehicle()
     const typedVehicleDates = vehicleDates as {
@@ -26,6 +28,7 @@ const Vehicles = () => {
         insurance_expiry_date: Date | null;
         license_expiry_date: Date | null;
     }
+    const navigate = useNavigate()
     return (
         <div className={"min-h-screen bg-gray-100 py-8"}>
             {isLoading && <div className={"w-full h-screen flex items-center justify-center"}>
@@ -52,9 +55,9 @@ const Vehicles = () => {
                         <div className={"mt-4 space-y-4"}>
                             {authResponse?.vehicles?.map((vehicle) => {
                                 return <VehicleCardComponent key={vehicle.id} vehicle={vehicle}
-                                                             handleVehicleEdition={() => console.log("on press")}
-                                                             handleVehicleDeletion={() => console.log("on press")}
-                                                             handleMaintenance={() => console.log("handleMaintenance")}/>;
+                                                             handleVehicleEdition={() => handleVehicleEdition(vehicle)}
+                                                             handleVehicleDeletion={() => handleVehicleDeletion(vehicle)}
+                                                             handleMaintenance={() => navigate(`/maintenance-overview`)}/>;
                             })}
                             <Container maxWidth={"md"}>
                                 <Button variant="contained"

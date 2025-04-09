@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import apiClient from "../../api/axiosConfig.ts";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {API} from "../../constants/endpoints.ts";
@@ -41,10 +40,9 @@ export const useLoginPage = () => {
     const verifyToken = async () => {
         setIsLoading(true)
         try {
-            const response = await apiClient.get('/accounts/refresh/')
-            if (response.status === 200) {
-                navigate("/dashboard");
-            }
+            const response = await axios.get(`${API}/accounts/refresh/`, {withCredentials: true})
+            console.log("verify token: ", response);
+            navigate("/dashboard");
         } catch (error) {
             console.log(error)
         } finally {

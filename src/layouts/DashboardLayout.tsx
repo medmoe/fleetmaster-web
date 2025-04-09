@@ -1,36 +1,19 @@
 // src/components/layout/DashboardLayout.tsx
-import React, {ReactNode, useState} from 'react';
-import {NavLink, Outlet} from 'react-router-dom';
+import React, {useState} from 'react';
+import {Outlet} from 'react-router-dom';
 import {
     BarChart as ReportsIcon,
     Build as MaintenanceIcon,
     Close as CloseIcon,
     Dashboard as DashboardIcon,
     DirectionsCar as VehiclesIcon,
+    Logout as LogoutIcon,
     Menu as MenuIcon,
-    Person as DriversIcon
+    Person as DriversIcon,
 } from '@mui/icons-material';
 import {useMediaQuery} from '@mui/material';
-
-interface NavigationItemProps {
-    to: string;
-    icon: ReactNode;
-    label: string;
-}
-
-const NavigationItem = ({to, icon, label}: NavigationItemProps) => (
-    <NavLink
-        to={to}
-        className={({isActive}) =>
-            `flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
-                isActive ? 'bg-primary-500 text-white' : 'hover:bg-gray-100'
-            }`
-        }
-    >
-        <div className="text-xl">{icon}</div>
-        <span className="font-merriweather-regular">{label}</span>
-    </NavLink>
-);
+import {NavigationItem} from "../components";
+import LogoutButton from "../pages/auth/Logout.tsx";
 
 const DashboardLayout: React.FC = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -53,7 +36,8 @@ const DashboardLayout: React.FC = () => {
             )}
 
             {/* Sidebar */}
-            <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out md:translate-x-0`}>
+            <div
+                className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out md:translate-x-0`}>
                 <div className="p-6">
                     <h1 className="text-2xl font-merriweather-bold text-primary-500">Fleet Master</h1>
                 </div>
@@ -64,6 +48,8 @@ const DashboardLayout: React.FC = () => {
                     <NavigationItem to="/drivers" icon={<DriversIcon/>} label="Drivers"/>
                     <NavigationItem to="/maintenance" icon={<MaintenanceIcon/>} label="Maintenance"/>
                     <NavigationItem to="/reports" icon={<ReportsIcon/>} label="Reports"/>
+                    <div className={"border-t border-gray-200 my-4"}></div>
+                    <LogoutButton icon={<LogoutIcon/>} label="Logout"/>
                 </nav>
             </div>
 

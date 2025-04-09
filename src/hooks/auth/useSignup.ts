@@ -1,104 +1,189 @@
-// src/hooks/useSignup.ts
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import apiClient from "../../api/axiosConfig.ts";
+import {useNavigate} from "react-router-dom";
+import React, {useState} from "react";
+import {SignUpFormData} from "../../types/types.ts";
+import axios from "axios";
+import {API} from "../../constants/endpoints.ts";
 
-export type SignupFormState = {
-    user: {
-        firstname?: string;
-        lastname?: string;
-        username: string;
-        email: string;
-        password: string;
-    },
-    phone?: string,
-    address?: string,
-    city?: string,
-    state?: string,
-    country?: string,
-    zip_code?: string,
-}
 
 export const useSignup = () => {
     const navigate = useNavigate();
-    const [formState, setFormState] = useState<SignupFormState>({
-        user: {
-            username: "",
-            email: "",
-            password: "",
-        }
-    });
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showAddressFields, setShowAddressFields] = useState(false);
+    const [error, setError] = useState('');
 
-    const validateEmail = (email: string): boolean => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    // Form state
+    const [formData, setFormData] = useState<SignUpFormData>({
+        user: {
+            username: '',
+            email: '',
+            password: '',
+        },
+        phone: '',
+        confirmPassword: ''
+    });
+
+    // Form errors state
+    const [formErrors, setFormErrors] = useState<Record<string, string>>({
+        'user.username': '',
+        'user.email': '',
+        phone: '',
+        'user.password': '',
+        confirmPassword: ''
+    });
+
+    // Handle input changes
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        // Handle nested properties in the user object
+        if (name.startsWith('user.')) {
+            const field = name.split('.')[1];
+            setFormData({
+                ...formData,
+                user: {
+                    ...formData.user,
+                    [field]: value
+                }
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
+        // Clear error when user starts typing again
+        if (formErrors[name]) {
+            setFormErrors({
+                ...formErrors,
+                [name]: ''
+            });
+        }
     };
 
-    const handleChange = (name: string, value: string) => {
-        setFormState((prevState) => {
-            if (name in prevState.user) {
-                return {
-                    ...prevState,
-                    user: {
-                        ...prevState.user,
-                        [name]: value,
-                    }
-                };
-            } else {
-                return {
-                    ...prevState,
-                    [name]: value,
-                };
-            }
+    // Validate individual field
+    const validateField = (name: string, value: string) => {
+        let error = '';
+
+        switch (name) {
+            case 'user.username':
+                if (!value.trim()) {
+                    error = 'Username is required';
+                }
+                break;
+            case 'user.email':
+                if (!value.trim()) {
+                    error = 'Email is required';
+                } else if (!/\S+@\S+\.\S+/.test(value)) {
+                    error = 'Email is invalid';
+                }
+                break;
+            case 'phone':
+                if (value && !/^\+?[1-9]\d{9,14}$/.test(value)) {
+                    error = 'Phone number is invalid';
+                }
+                break;
+            case 'user.password':
+                if (!value) {
+                    error = 'Password is required';
+                } else if (value.length < 8) {
+                    error = 'Password must be at least 8 characters';
+                }
+                break;
+            case 'confirmPassword':
+                if (!value) {
+                    error = 'Please confirm your password';
+                } else if (value !== formData.user.password) {
+                    error = 'Passwords do not match';
+                }
+                break;
+            default:
+                break;
+        }
+
+        return error;
+    };
+
+    // Handle blur event to validate field
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        const error = validateField(name, value);
+
+        setFormErrors({
+            ...formErrors,
+            [name]: error
         });
     };
 
-    const updateConfirmPassword = (value: string) => {
-        setConfirmPassword(value);
+    // Validate entire form
+    const validateForm = () => {
+        const errors: Record<string, string> = {};
+        let isValid = true;
+
+        // Validate user fields (nested)
+        Object.entries(formData.user).forEach(([key, value]) => {
+            const fieldError = validateField(`user.${key}`, value);
+            if (fieldError) {
+                isValid = false;
+                errors[`user.${key}`] = fieldError;
+            }
+        });
+
+        // Validate top-level fields
+        ['phone', 'confirmPassword'].forEach(field => {
+            const fieldError = validateField(field, field === 'phone' ? formData.phone : formData.confirmPassword);
+            if (fieldError) {
+                isValid = false;
+                errors[field] = fieldError;
+            }
+        })
+        setFormErrors(errors);
+        return isValid;
     };
 
-    const submitForm = async () => {
-        setError(null);
+    // Handle form submission
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
         setLoading(true);
+        setError('');
 
         try {
-            // Validate password
-            if (formState.user.password !== confirmPassword) {
-                setError("Passwords don't match");
-                setLoading(false);
-                return;
-            }
-
-            // Validate email
-            if (!validateEmail(formState.user.email)) {
-                setError("Invalid email address");
-                setLoading(false);
-                return;
-            }
-
-
-            // Make API call
-            const response = await apiClient.post('signup/', formState);
-            console.log(response);
-            // Navigate to dashboard
-            navigate("/dashboard");
-        } catch (error) {
-            console.log(error);
+            // Simulate API call
+            const response = await axios.post(`${API}accounts/signup/`, formData, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log('Registration successful:', response.data);
+            // Redirect to login page on success
+            navigate('/');
+        } catch (err) {
+            console.error('Registration failed:', err);
+            setError('Registration failed. Please try again later.');
         } finally {
             setLoading(false);
         }
     };
 
     return {
-        formState,
-        confirmPassword,
         loading,
         error,
+        showAddressFields,
+        showPassword,
+        showConfirmPassword,
+        formData,
+        formErrors,
         handleChange,
-        updateConfirmPassword,
-        submitForm
-    };
-};
+        handleBlur,
+        handleSubmit,
+        setShowAddressFields,
+        setShowPassword,
+        setShowConfirmPassword,
+    }
+}

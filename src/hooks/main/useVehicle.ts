@@ -17,13 +17,10 @@ export const useVehicle = () => {
     })
     const [vehicleForm, setVehicleForm] = useState<VehicleType>({year: "", type: "", status: "", mileage: "", capacity: ""})
     const [isPostRequest, setIsPostRequest] = useState(true)
-    const [errorState, setErrorState] = useState({
-        errorMessage: "",
-        isError: false,
-    })
+    const [errorState, setErrorState] = useState({errorMessage: "", isError: false,})
     const [showVehicleForm, setShowVehicleForm] = useState(false);
+    const {addVehicle, editVehicle, removeVehicle} = useAuthStore();
 
-    const {addVehicle, editVehicle} = useAuthStore();
     const validateForm = (): [boolean, string] => {
         if (!isPositiveInteger(vehicleForm.year)) {
             return [false, "Year must be a positive number!"]
@@ -57,6 +54,23 @@ export const useVehicle = () => {
             ...prevState,
             [name]: value,
         }))
+    }
+    const handleVehicleEdition = (vehicle: VehicleType) => {
+        setVehicleForm(vehicle)
+        setIsPostRequest(false)
+        setShowVehicleForm(true)
+    }
+    const handleVehicleDeletion = async (vehicle: VehicleType) => {
+        setIsLoading(true)
+        try {
+            const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
+            await axios.delete(`${API}vehicles/${vehicle.id}`, options)
+            removeVehicle(vehicle.id as string)
+        } catch (error: any) {
+            setErrorState({isError: true, errorMessage: error.message,})
+        } finally {
+            setIsLoading(false)
+        }
     }
     const submitVehicleForm = async () => {
         let vehicleDateKeys = ["purchase_date", "last_service_date", "next_service_due", "insurance_expiry_date", "license_expiry_date"]
@@ -109,6 +123,8 @@ export const useVehicle = () => {
         setShowVehicleForm,
         handleVehicleFormChange,
         handleVehicleFormDateChange,
+        handleVehicleEdition,
+        handleVehicleDeletion,
         submitVehicleForm,
     }
 }

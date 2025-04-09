@@ -1,149 +1,338 @@
-// src/pages/SignupPage.tsx
-import React from 'react';
 import {Link} from 'react-router-dom';
-import {useSignup} from '../../hooks/auth/useSignup.ts';
+import {Alert, Box, Button, CircularProgress, Container, Divider, IconButton, InputAdornment, Paper, TextField, Typography} from '@mui/material';
+import {Email, Person, Phone, Visibility, VisibilityOff} from "@mui/icons-material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {useSignup} from "../../hooks/auth/useSignup.ts";
 
-const SignUp: React.FC = () => {
+const SignUp = () => {
     const {
-        formState,
-        confirmPassword,
         loading,
         error,
+        formData,
+        handleSubmit,
         handleChange,
-        updateConfirmPassword,
-        submitForm
+        handleBlur,
+        formErrors,
+        showPassword,
+        showConfirmPassword,
+        showAddressFields,
+        setShowAddressFields,
+        setShowConfirmPassword,
+        setShowPassword,
     } = useSignup();
-
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+        <Container maxWidth="sm" className="py-10">
+            <Paper elevation={3} className="p-8 rounded-lg">
                 {loading ? (
-                    <div className="w-full flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div>
-                    </div>
+                    <Box className="flex justify-center items-center h-80">
+                        <CircularProgress color="primary"/>
+                    </Box>
                 ) : (
-                    <div className="w-full flex flex-col items-center">
-                        <h1 className="text-2xl font-bold text-center text-txt">
-                            Welcome to Fleet Master
-                        </h1>
-
-                        <div className="mt-4">
-                            <p className="text-txt text-center">Start managing your fleet with ease</p>
-                            <p className="text-txt text-center">Sign up now to keep track of your fleet and stay organized</p>
-                        </div>
+                    <Box component="form" onSubmit={handleSubmit} className="space-y-5">
+                        <Box className="text-center mb-6">
+                            <Typography variant="h4" component="h1" className="font-bold text-gray-800">
+                                Welcome to Fleet Master
+                            </Typography>
+                            <Typography variant="body1" color="textSecondary" className="mt-2">
+                                Start managing your fleet with ease. Sign up now to keep track of your fleet and stay organized.
+                            </Typography>
+                        </Box>
 
                         {error && (
-                            <div className="w-full mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                            <Alert severity="error" className="mb-4">
                                 {error}
-                            </div>
+                            </Alert>
                         )}
 
-                        <form className="mt-6 w-full">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <input
-                                        type="text"
-                                        name="firstname"
-                                        value={formState.user.firstname || ''}
-                                        placeholder="Your first name"
-                                        onChange={(e) => handleChange('firstname', e.target.value)}
-                                        className="bg-white w-full p-4 border border-gray-300 rounded"
-                                    />
-                                </div>
+                        <Box className="grid grid-cols-2 gap-4">
+                            <TextField
+                                fullWidth
+                                id="firstname"
+                                name="user.first_name"
+                                label="First Name"
+                                value={formData.user.first_name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors['user.first_name']}
+                                helperText={formErrors['user.first_name']}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Person/>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
 
-                                <div>
-                                    <input
-                                        type="text"
-                                        name="lastname"
-                                        value={formState.user.lastname || ''}
-                                        placeholder="Your last name"
-                                        onChange={(e) => handleChange('lastname', e.target.value)}
-                                        className="bg-white w-full p-4 border border-gray-300 rounded"
-                                    />
-                                </div>
-                            </div>
+                            <TextField
+                                fullWidth
+                                id="lastname"
+                                name="user.last_name"
+                                label="Last Name"
+                                value={formData.user.last_name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors['user.last_name']}
+                                helperText={formErrors['user.last_name']}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Person/>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                        </Box>
+                        <Box className="grid grid-cols-1 gap-4">
+                            <TextField
+                                fullWidth
+                                required
+                                id="username"
+                                name="user.username"
+                                label="Username"
+                                value={formData.user.username}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.username}
+                                helperText={formErrors.username}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Person/>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
 
-                            <div className="mt-4">
-                                <input
-                                    type="text"
-                                    name="username"
-                                    value={formState.user.username}
-                                    placeholder="Your username"
-                                    onChange={(e) => handleChange('username', e.target.value)}
-                                    className="bg-white w-full p-4 border border-gray-300 rounded"
-                                />
-                            </div>
+                            />
+                            <TextField
+                                fullWidth
+                                required
+                                id="email"
+                                name="user.email"
+                                label="Email Address"
+                                type="email"
+                                value={formData.user.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.email}
+                                helperText={formErrors.email}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Email/>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                            <TextField
+                                required
+                                fullWidth
+                                id="phone"
+                                name="phone"
+                                label="Phone Number"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.phone}
+                                helperText={formErrors.phone}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Phone/>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                            <TextField
+                                required
+                                fullWidth
+                                id="password"
+                                name="user.password"
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
+                                value={formData.user.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.password}
+                                helperText={formErrors.password}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <IconButton aria-label="toggle password visibility" onClick={() => setShowPassword(!showPassword)}
+                                                            edge="end">
+                                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                            <TextField
+                                required
+                                fullWidth
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!formErrors.confirmPassword}
+                                helperText={formErrors.confirmPassword}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <IconButton aria-label="toggle confirmed password visibility"
+                                                            edge="end"
+                                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                                    {showConfirmPassword ? <VisibilityOff/> : <Visibility/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                        </Box>
+                        <Box sx={{mt: 4, mb: 3}}>
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
+                                <Typography variant="h6" sx={{mr: 2}}>
+                                    Address Information (Optional)
+                                </Typography>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={() => setShowAddressFields(!showAddressFields)}
+                                    startIcon={showAddressFields ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                                >
+                                    {showAddressFields ? 'Hide' : 'Add Address'}
+                                </Button>
+                            </Box>
 
-                            <div className="mt-4">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formState.user.email}
-                                    placeholder="Your email"
-                                    onChange={(e) => handleChange('email', e.target.value)}
-                                    className="bg-white w-full p-4 border border-gray-300 rounded"
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    value={formState.phone || ''}
-                                    placeholder="Your phone number"
-                                    onChange={(e) => handleChange('phone', e.target.value)}
-                                    className="bg-white w-full p-4 border border-gray-300 rounded"
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formState.user.password}
-                                    placeholder="Your password"
-                                    onChange={(e) => handleChange('password', e.target.value)}
-                                    className="bg-white w-full p-4 border border-gray-300 rounded"
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    placeholder="Re-enter password"
-                                    onChange={(e) => updateConfirmPassword(e.target.value)}
-                                    className="bg-white w-full p-4 border border-gray-300 rounded"
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <p className="text-txt">
-                                    By continuing you agree to Fleet Master's
-                                    <span className="text-secondary-500"> Terms of service </span> and
-                                    <span className="text-secondary-500"> privacy policy</span>
-                                </p>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={submitForm}
-                                className="w-full mt-6 bg-primary-500 p-4 rounded text-white font-semibold text-base"
+                            {/* Collapsible address fields */}
+                            <Box
+                                sx={{
+                                    display: showAddressFields ? 'flex' : 'none',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    transition: 'all 0.3s ease'
+                                }}
                             >
-                                Continue
-                            </button>
+                                {/* Street Address - Full width */}
+                                <Box sx={{width: '100%'}}>
+                                    <TextField
+                                        fullWidth
+                                        id="address"
+                                        name="address"
+                                        label="Street Address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        error={!!formErrors['address']}
+                                        helperText={formErrors['address']}
+                                    />
+                                </Box>
 
-                            <div className="mt-6 text-center">
-                                <p>
-                                    Already registered? <Link to="/" className="text-secondary-500">Sign in</Link>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
+                                {/* City and State - Side by side */}
+                                <Box sx={{display: 'flex', gap: 2, flexWrap: 'wrap'}}>
+                                    <Box sx={{flexGrow: 1, minWidth: '250px'}}>
+                                        <TextField
+                                            fullWidth
+                                            id="city"
+                                            name="city"
+                                            label="City"
+                                            value={formData.city}
+                                            onChange={handleChange}
+                                            error={!!formErrors['city']}
+                                            helperText={formErrors['city']}
+                                        />
+                                    </Box>
+                                    <Box sx={{flexGrow: 1, minWidth: '250px'}}>
+                                        <TextField
+                                            fullWidth
+                                            id="state"
+                                            name="state"
+                                            label="State/Province"
+                                            value={formData.state}
+                                            onChange={handleChange}
+                                            error={!!formErrors['state']}
+                                            helperText={formErrors['state']}
+                                        />
+                                    </Box>
+                                </Box>
+
+                                {/* Country and ZIP - Side by side */}
+                                <Box sx={{display: 'flex', gap: 2, flexWrap: 'wrap'}}>
+                                    <Box sx={{flexGrow: 1, minWidth: '250px'}}>
+                                        <TextField
+                                            fullWidth
+                                            id="country"
+                                            name="country"
+                                            label="Country"
+                                            value={formData.country}
+                                            onChange={handleChange}
+                                            error={!!formErrors['country']}
+                                            helperText={formErrors['country']}
+                                        />
+                                    </Box>
+                                    <Box sx={{flexGrow: 1, minWidth: '250px'}}>
+                                        <TextField
+                                            fullWidth
+                                            id="zip_code"
+                                            name="zip_code"
+                                            label="ZIP / Postal Code"
+                                            value={formData.zip_code}
+                                            onChange={handleChange}
+                                            error={!!formErrors['zip_code']}
+                                            helperText={formErrors['zip_code']}
+                                        />
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
+
+
+                        <Box className={"flex flex-col items-center gap-3"}>
+                            <Typography variant="body2" color="textSecondary" className="text-sm mt-4">
+                                By continuing you agree to Fleet Master's
+                                <Link to="/terms" className="text-secondary-500 hover:underline"> Terms of Service </Link>
+                                and
+                                <Link to="/privacy" className="text-secondary-500 hover:underline"> Privacy Policy</Link>
+                            </Typography>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className="py-3 mt-4 bg-blue-600 hover:bg-blue-700"
+                                disabled={loading}
+                            >
+                                {loading ? <CircularProgress size={24} color="inherit"/> : "Create Account"}
+                            </Button>
+                            <Divider className="my-4"/>
+                            <Typography variant="body1" align="center" className="mt-4">
+                                Already registered?{" "}
+                                <Link to="/" className="text-secondary-500 font-medium hover:underline">
+                                    Sign in
+                                </Link>
+                            </Typography>
+                        </Box>
+                    </Box>
                 )}
-            </div>
-        </div>
+            </Paper>
+        </Container>
     );
 };
 

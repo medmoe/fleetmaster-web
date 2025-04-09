@@ -70,3 +70,25 @@ export interface PickerItemType {
     label: string
     value: string
 }
+
+export interface UserData {
+    username: string;
+    email: string;
+    password: string;
+    first_name?: string;
+    last_name?: string;
+}
+
+export interface UserProfileData {
+    phone: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zip_code?: string;
+}
+
+export interface SignUpFormData extends UserProfileData{
+    user: UserData;
+    confirmPassword: string;
+}

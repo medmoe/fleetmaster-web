@@ -1,9 +1,13 @@
+import {useEffect} from "react";
 import {useLoginPage} from "../../hooks/auth/useLoginPage.ts";
 import {CircularProgress} from "@mui/material";
 import {Link} from 'react-router-dom'
 
 const LoginPage = () => {
-    const {isLoading, loginFormData, handleLoginFormChange, submitLoginForm} = useLoginPage();
+    const {isLoading, loginFormData, handleLoginFormChange, submitLoginForm, verifyToken} = useLoginPage();
+    useEffect(() => {
+        verifyToken();
+    }, [])
     return (
         <div className="flex items-center justify-center h-screen bg-background">
             {isLoading ? <CircularProgress color="primary" size={200} thickness={5}/> :
@@ -54,4 +58,5 @@ const LoginPage = () => {
     )
 };
 
-export default LoginPage;4
+export default LoginPage;
+4
