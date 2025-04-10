@@ -40,11 +40,10 @@ export const useLoginPage = () => {
     const verifyToken = async () => {
         setIsLoading(true)
         try {
-            const response = await axios.get(`${API}/accounts/refresh/`, {withCredentials: true})
-            console.log("verify token: ", response);
+            await axios.get(`${API}/accounts/refresh/`, {withCredentials: true})
             navigate("/dashboard");
         } catch (error) {
-            console.log(error)
+            console.warn("verify token error")
         } finally {
             setIsLoading(false)
         }
