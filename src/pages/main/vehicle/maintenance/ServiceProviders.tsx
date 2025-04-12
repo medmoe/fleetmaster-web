@@ -165,7 +165,6 @@ const ServiceProviders = () => {
                     </div>
                     <div className={"mt-5 flex items-center gap-2"}>
                         <p className={"font-open-sans text-txt"}>Here is the list of service providers.</p>
-                        {isLoading && <CircularProgress color="primary" size={20} thickness={4}/>}
                     </div>
 
                     <Snackbar

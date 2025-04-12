@@ -28,7 +28,7 @@ import {PartType} from "../../../../types/maintenance.ts";
 import {API} from '../../../../constants/endpoints.ts';
 import axios from 'axios';
 
-const PartsManagementPage: React.FC = () => {
+const Parts: React.FC = () => {
     // Get data from store
     const {generalData, setGeneralData} = useGeneralDataStore();
 
@@ -150,12 +150,10 @@ const PartsManagementPage: React.FC = () => {
 
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', p: 3}}>
-            <Typography variant="h4" component="h1" gutterBottom sx={{fontWeight: 'bold', color: 'primary.main'}}>
-                Parts Management
-            </Typography>
-            <Typography variant="body1" color="textSecondary" component="p" sx={{mb: 4}}>
-                Manage your parts inventory by adding, editing, or removing parts.
-            </Typography>
+            <h1 className={"font-semibold text-lg text-txt"}>Parts management</h1>
+            <div className={"mt-5 flex items-center gap-2 mb-4"}>
+                <p className={"font-open-sans text-txt"}>Here is the list of service providers.</p>
+            </div>
             {error.isError && (
                 <Alert
                     severity="error"
@@ -363,4 +361,4 @@ const PartsManagementPage: React.FC = () => {
     );
 };
 
-export default PartsManagementPage;
+export default Parts;

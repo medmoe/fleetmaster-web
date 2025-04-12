@@ -12,3 +12,6 @@ export {default as PartProviderCard} from "./cards/PartProviderCard";
 export {default as PartProviderForm} from "./forms/PartProviderForm";
 export {default as ServiceProviderForm} from "./forms/ServiceProviderForm";
 export {default as ServiceProviderCard} from "./cards/ServiceProviderCard";
+export {default as MaintenanceReportCard} from "./cards/MaintenanceReportCard";
+export {default as MaintenanceReportsList} from "./MaintenanceReportsList";
+export {default as NewMaintenanceReportDialog} from "./dialogs/NewMaintenanceReportDialog";

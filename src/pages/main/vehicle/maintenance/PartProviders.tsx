@@ -139,7 +139,6 @@ const PartProviders = () => {
                     </div>
                     <div className={"mt-5 flex items-center gap-2"}>
                         <p className={"font-open-sans text-txt"}>Here is the list of part providers.</p>
-                        {isLoading && <CircularProgress color="primary" size={20} thickness={4}/>}
                     </div>
                     <div className={"mt-4 space-y-4"}>
                         {generalData.part_providers.map((partProvider) => (

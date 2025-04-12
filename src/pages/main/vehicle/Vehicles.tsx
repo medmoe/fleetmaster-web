@@ -5,6 +5,7 @@ import useAuthStore from "../../../store/useAuthStore.ts";
 import {useVehicle} from "../../../hooks/main/useVehicle.ts";
 import ErrorAlert from "../../../components/common/ErrorAlert.tsx";
 import {useNavigate} from "react-router-dom";
+import useGeneralDataStore from "../../../store/useGeneralDataStore.ts";
 
 const Vehicles = () => {
     const {authResponse} = useAuthStore()
@@ -29,6 +30,11 @@ const Vehicles = () => {
         license_expiry_date: Date | null;
     }
     const navigate = useNavigate()
+    const {setVehicleID} = useGeneralDataStore()
+    const handleVehicleMaintenance = (vehicleID: string) => {
+        setVehicleID(vehicleID)
+        navigate(`/maintenance-overview`)
+    }
     return (
         <div className={"min-h-screen bg-gray-100 py-8"}>
             {isLoading && <div className={"w-full h-screen flex items-center justify-center"}>
@@ -57,7 +63,7 @@ const Vehicles = () => {
                                 return <VehicleCardComponent key={vehicle.id} vehicle={vehicle}
                                                              handleVehicleEdition={() => handleVehicleEdition(vehicle)}
                                                              handleVehicleDeletion={() => handleVehicleDeletion(vehicle)}
-                                                             handleMaintenance={() => navigate(`/maintenance-overview`)}/>;
+                                                             handleMaintenance={() => handleVehicleMaintenance(vehicle.id || "")}/>;
                             })}
                             <Container maxWidth={"md"}>
                                 <Button variant="contained"
