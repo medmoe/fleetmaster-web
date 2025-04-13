@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -19,26 +20,53 @@ import {
 } from '@mui/material';
 import {ArrowBack as ArrowBackIcon, Search as SearchIcon} from '@mui/icons-material';
 import MaintenanceReportCard from "./cards/MaintenanceReportCard.tsx";
-import {MaintenanceReportType} from '../types/maintenance';
+import {MaintenanceReportWithStringsType} from '../types/maintenance';
+import axios from "axios";
+import {API} from "../constants/endpoints.ts";
+import {useMaintenanceReport} from "../hooks/maintenance/useMaintenanceReport.ts";
+import useGeneralDataStore from '../store/useGeneralDataStore.ts';
+import NewMaintenanceReportDialog from "./dialogs/NewMaintenanceReportDialog.tsx";
 
 interface MaintenanceReportsListProps {
-    reports: MaintenanceReportType[];
-    onEditReport: (report: MaintenanceReportType) => void;
-    onDeleteReport: (reportId: string) => void;
+    reports: MaintenanceReportWithStringsType[];
+    setOpenSnackBar: (open: boolean) => void;
+    openSnackbar: boolean;
+    snackBarMessage: string;
     setShowReportsList: (show: boolean) => void;
 }
 
 const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                                                                            reports,
-                                                                           onEditReport,
-                                                                           onDeleteReport,
-                                                                           setShowReportsList
+                                                                           setOpenSnackBar,
+                                                                           setShowReportsList,
                                                                        }) => {
+    const {setMaintenanceReports, maintenanceReports} = useGeneralDataStore();
+    const {
+        isLoading,
+        setIsLoading,
+        error,
+        handleAddPartPurchase,
+        handleAddServiceEvent,
+        handleMaintenanceReportFormChange,
+        handleMaintenanceReportSubmission,
+        handleRemovePartPurchase,
+        handleRemoveServiceEvent,
+        handleServiceProviderChange,
+        handlePartPurchaseChange,
+        partPurchaseEvent,
+        serviceProviderEvent,
+        setError,
+        setOpenFormDialog,
+        maintenanceReportFormData,
+        openFormDialog,
+        setMaintenanceReportFormData,
+    } = useMaintenanceReport(setShowReportsList, setOpenSnackBar);
+    const {setRequest} = useGeneralDataStore();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('ALL');
     const [sortBy, setSortBy] = useState('date_desc');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [reportToDelete, setReportToDelete] = useState<MaintenanceReportType | null>(null);
+    const [reportToDelete, setReportToDelete] = useState<MaintenanceReportWithStringsType | null>(null);
 
     // Filter reports based on search query and filter type
     const filteredReports = reports.filter(report => {
@@ -69,20 +97,37 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
     });
 
     // Handle opening delete confirmation dialog
-    const handleDeleteClick = (report: MaintenanceReportType) => {
+    const handleDeleteClick = (report: MaintenanceReportWithStringsType) => {
         setReportToDelete(report);
         setDeleteDialogOpen(true);
+        setRequest('delete');
     };
 
     // Handle confirmed deletion
-    const handleConfirmDelete = () => {
-        if (reportToDelete?.id) {
-            onDeleteReport(reportToDelete.id);
+    const handleConfirmDelete = async () => {
+        if (!reportToDelete) return;
+        setIsLoading(true);
+
+        try {
+            const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
+            const url = `${API}maintenance/reports/${reportToDelete.id}/`;
+            await axios.delete(url, options);
             setDeleteDialogOpen(false);
-            setReportToDelete(null);
+            setMaintenanceReports(maintenanceReports.filter(report => report.id !== reportToDelete.id));
+            setShowReportsList(false);
+            setOpenSnackBar(true);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const handleEditClick = (report: MaintenanceReportWithStringsType) => {
+        setOpenFormDialog(true)
+        setRequest('edit')
+        setMaintenanceReportFormData(report)
+    }
     return (
         <Box>
             {/* Filters and Search */}
@@ -176,7 +221,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                         <MaintenanceReportCard
                             key={report.id}
                             report={report}
-                            onEdit={onEditReport}
+                            onEdit={handleEditClick}
                             onDelete={handleDeleteClick}
                         />
                     ))}
@@ -200,16 +245,45 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                 <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this maintenance report for
-                        {reportToDelete?.vehicle_details?.make} {reportToDelete?.vehicle_details?.model}?
+                        Are you sure you want to delete this maintenance report for?
                         This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+                    <Button onClick={() => {
+                        setDeleteDialogOpen(false)
+                        setRequest('idle')
+                    }}>Cancel</Button>
+                    <Button onClick={handleConfirmDelete}
+                            color="error"
+                            startIcon={isLoading && (
+                                <CircularProgress size={20} color={"inherit"}/>
+                            )}
+                    >Delete</Button>
                 </DialogActions>
             </Dialog>
+
+            {/*Edit maintenance report dialog*/}
+            <NewMaintenanceReportDialog open={openFormDialog}
+                                        onClose={() => {
+                                            setOpenFormDialog(false);
+                                            setRequest('idle');
+                                        }}
+                                        partPurchaseEvent={partPurchaseEvent}
+                                        serviceProviderEvent={serviceProviderEvent}
+                                        handleServiceProviderChange={handleServiceProviderChange}
+                                        handlePartPurchaseChange={handlePartPurchaseChange}
+                                        handleAddPartPurchase={handleAddPartPurchase}
+                                        handleAddServiceEvent={handleAddServiceEvent}
+                                        maintenanceReportFormData={maintenanceReportFormData}
+                                        handleMaintenanceReportFormChange={handleMaintenanceReportFormChange}
+                                        handleMaintenanceReportSubmission={handleMaintenanceReportSubmission}
+                                        handleRemovePartPurchase={handleRemovePartPurchase}
+                                        handleRemoveServiceEvent={handleRemoveServiceEvent}
+                                        errorState={error}
+                                        isLoading={isLoading}
+                                        handleErrorClosing={() => setError({isError: false, message: ""})}
+            />
         </Box>
     );
 };

@@ -14,12 +14,12 @@ import {
     Store as StoreIcon
 } from '@mui/icons-material';
 import {format, parseISO} from 'date-fns';
-import {MaintenanceReportType, PartPurchaseEventType, ServiceProviderEventType} from "../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "../../types/maintenance.ts";
 
 interface MaintenanceReportCardProps {
-    report: MaintenanceReportType;
-    onEdit?: (report: MaintenanceReportType) => void;
-    onDelete?: (report: MaintenanceReportType) => void;
+    report: MaintenanceReportWithStringsType;
+    onEdit?: (report: MaintenanceReportWithStringsType) => void;
+    onDelete?: (report: MaintenanceReportWithStringsType) => void;
 }
 
 const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
@@ -41,14 +41,14 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
     const typeColor = report.maintenance_type === 'PREVENTIVE' ? 'success' : 'error';
 
     // Calculate total parts cost
-    const partsCost = report.part_purchase_events?.reduce((total: number, event: PartPurchaseEventType) => {
+    const partsCost = report.part_purchase_events?.reduce((total: number, event: PartPurchaseEventWithNumbersType) => {
         return total + (parseFloat(event.cost || '0') || 0);
-    }, 0);
+    }, 0) || 0;
 
     // Calculate total service cost
-    const serviceCost = report.service_provider_events?.reduce((total: number, event: ServiceProviderEventType) => {
+    const serviceCost = report.service_provider_events?.reduce((total: number, event: ServiceProviderEventWithNumbersType) => {
         return total + (parseFloat(event.cost || '0') || 0);
-    }, 0);
+    }, 0) || 0;
 
     return (
         <Card
@@ -193,7 +193,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                     {report.part_purchase_events && report.part_purchase_events.length > 0 ? (
                         <Box sx={{mb: 3}}>
                             <Grid container spacing={1}>
-                                {report.part_purchase_events.map((part: PartPurchaseEventType, index: number) => (
+                                {report.part_purchase_events.map((part: PartPurchaseEventWithNumbersType, index: number) => (
                                     <Grid key={index}
                                           sx={{
                                               width: {
@@ -238,7 +238,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                     {report.service_provider_events && report.service_provider_events.length > 0 ? (
                         <Box>
                             <Grid container spacing={1}>
-                                {report.service_provider_events.map((service: ServiceProviderEventType, index: number) => (
+                                {report.service_provider_events.map((service: ServiceProviderEventWithNumbersType, index: number) => (
                                     <Grid key={index}
                                           sx={{
                                               width: {

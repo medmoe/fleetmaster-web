@@ -1,24 +1,29 @@
 import {create} from 'zustand';
 import {createJSONStorage, devtools, persist} from 'zustand/middleware';
 import axios from 'axios';
-import {GeneralDataType, MaintenanceReportType} from "../types/maintenance.ts";
+import {GeneralDataType, MaintenanceReportWithStringsType} from "../types/maintenance.ts";
 import {API} from "../constants/endpoints.ts";
+
+
+type requestType = 'delete' | 'add' | 'edit' | 'idle';
 
 interface GeneralDataStore {
     // State
     generalData: GeneralDataType;
     isLoading: boolean;
     error: string | null;
-    maintenanceReports: MaintenanceReportType[];
+    maintenanceReports: MaintenanceReportWithStringsType[];
     vehicleID?: string;
+    request: requestType;
 
     // Actions
     setVehicleID: (id: string) => void;
     fetchGeneralData: () => Promise<void>;
     setGeneralData: (data: GeneralDataType) => void;
     fetchMaintenanceReports: () => Promise<void>;
-    setMaintenanceReports: (reports: MaintenanceReportType[]) => void;
+    setMaintenanceReports: (reports: MaintenanceReportWithStringsType[]) => void;
     clearError: () => void;
+    setRequest: (request: requestType) => void;
 }
 
 const generalDataInitialState: GeneralDataType = {
@@ -36,6 +41,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 isLoading: false,
                 error: null,
                 maintenanceReports: [],
+                request: 'idle',
 
                 // Actions
                 fetchGeneralData: async () => {
@@ -71,8 +77,9 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         set({isLoading: false});
                     }
                 },
-                setMaintenanceReports: (reports: MaintenanceReportType[]) => set({maintenanceReports: reports}),
+                setMaintenanceReports: (reports: MaintenanceReportWithStringsType[]) => set({maintenanceReports: reports}),
                 setVehicleID: (id: string) => set({vehicleID: id}),
+                setRequest: (request: requestType) => set({request: request}),
             }),
             {
                 name: 'general-data-storage', // unique name for the storage

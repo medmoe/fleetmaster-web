@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {
+    Alert,
     Autocomplete,
     Box,
     Button,
     Chip,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -40,22 +42,28 @@ interface NewReportDialogProps {
     maintenanceReportFormData: MaintenanceReportWithStringsType;
     handleMaintenanceReportFormChange: (name: string, value: string) => void;
     handleMaintenanceReportSubmission: () => void;
+    errorState: { isError: boolean, message: string }
+    isLoading: boolean;
+    handleErrorClosing: () => void;
 }
 
 const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
-                                                                        open,
-                                                                        onClose,
+                                                                        errorState,
                                                                         handleAddPartPurchase,
                                                                         handleAddServiceEvent,
-                                                                        partPurchaseEvent,
-                                                                        serviceProviderEvent,
-                                                                        handlePartPurchaseChange,
-                                                                        handleServiceProviderChange,
-                                                                        handleRemovePartPurchase,
-                                                                        handleRemoveServiceEvent,
-                                                                        maintenanceReportFormData,
+                                                                        handleErrorClosing,
                                                                         handleMaintenanceReportFormChange,
                                                                         handleMaintenanceReportSubmission,
+                                                                        handlePartPurchaseChange,
+                                                                        handleRemovePartPurchase,
+                                                                        handleRemoveServiceEvent,
+                                                                        handleServiceProviderChange,
+                                                                        isLoading,
+                                                                        maintenanceReportFormData,
+                                                                        onClose,
+                                                                        open,
+                                                                        partPurchaseEvent,
+                                                                        serviceProviderEvent,
                                                                     }) => {
 
     // Temporary states for part purchase and service provider forms
@@ -73,6 +81,21 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                 </Box>
             </DialogTitle>
             <DialogContent dividers>
+                {errorState.isError && (
+                    <Alert severity="error"
+                           sx={{
+                               position: 'fixed',
+                               bottom: 16,
+                               left: '50%',
+                               transform: 'translateX(-50%)',
+                               zIndex: 9999,
+                               maxWidth: 'calc(100% - 32px'
+                           }}
+                           onClose={handleErrorClosing}
+                    >
+                        {errorState.message}
+                    </Alert>
+                )}
                 <Grid container spacing={2}>
                     {/* Basic Report Info */}
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
@@ -86,7 +109,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                 label="Maintenance Type"
                             >
                                 <MenuItem value="PREVENTIVE">Preventive</MenuItem>
-                                <MenuItem value="CURATIVE">Corrective</MenuItem>
+                                <MenuItem value="CURATIVE">Curative</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -119,7 +142,11 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         handleMaintenanceReportFormChange('start_date', '');
                                     }
                                 }}
-                                slotProps={{textField: {fullWidth: true, margin: 'normal'}}}
+                                slotProps={{
+                                    textField: {fullWidth: true, margin: 'normal'},
+                                    popper: {disablePortal: true},
+                                    openPickerIcon: {sx: {color: "#9c27b0"}}
+                                }}
                             />
                         </LocalizationProvider>
                     </Grid>
@@ -141,7 +168,11 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         handleMaintenanceReportFormChange('end_date', '');
                                     }
                                 }}
-                                slotProps={{textField: {fullWidth: true, margin: 'normal'}}}
+                                slotProps={{
+                                    textField: {fullWidth: true, margin: 'normal'},
+                                    popper: {disablePortal: true},
+                                    openPickerIcon: {sx: {color: "#9c27b0"}}
+                                }}
                             />
                         </LocalizationProvider>
                     </Grid>
@@ -274,7 +305,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                             handleAddPartPurchase();
                                             setShowPartPurchaseForm(false);
                                         }}
-                                        disabled={!partPurchaseEvent.part || !partPurchaseEvent.provider}
+                                        disabled={!partPurchaseEvent.part || !partPurchaseEvent.provider || !partPurchaseEvent.purchase_date}
                                     >
                                         Add Part
                                     </Button>
@@ -391,6 +422,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                             handleAddServiceEvent()
                                             setShowServiceProviderForm(false)
                                         }}
+                                        disabled={!serviceProviderEvent.service_provider || !serviceProviderEvent.service_date}
                                     >
                                         Add Service
                                     </Button>
@@ -416,8 +448,11 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     onClick={handleMaintenanceReportSubmission}
                     variant="contained"
                     color="primary"
-                    disabled={!maintenanceReportFormData.maintenance_type || !maintenanceReportFormData.start_date}
+                    disabled={!maintenanceReportFormData.maintenance_type || !maintenanceReportFormData.start_date || !maintenanceReportFormData.end_date}
                 >
+                    {isLoading && (
+                        <CircularProgress size={24} color={"inherit"} sx={{mr: 1}}/>
+                    )}
                     Save Report
                 </Button>
             </DialogActions>

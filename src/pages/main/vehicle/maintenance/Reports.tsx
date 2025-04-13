@@ -3,46 +3,41 @@ import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
 import {DateCalendar} from "@mui/x-date-pickers/DateCalendar";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {Badge, Box, Button, Paper, Typography} from "@mui/material";
+import {Alert, Badge, Box, Button, Paper, Snackbar, Typography} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
 import {format, isSameDay, parseISO} from "date-fns";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
-import {
-    MaintenanceReportType,
-    MaintenanceReportWithStringsType,
-    PartPurchaseEventWithNumbersType,
-    ServiceProviderEventWithNumbersType
-} from "../../../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType} from "../../../../types/maintenance.ts";
 import {MaintenanceReportsList, NewMaintenanceReportDialog} from "../../../../components";
-import {getLocalDateString} from "../../../../utils/common.ts";
+import {useMaintenanceReport} from "../../../../hooks/maintenance/useMaintenanceReport.ts";
 
-const MaintenanceOverview = () => {
-    const {fetchMaintenanceReports, maintenanceReports, isLoading} = useGeneralDataStore();
-    const [selectedReports, setSelectedReports] = useState<MaintenanceReportType[]>([])
-    const [showReportsList, setShowReportsList] = useState(false);
+
+const Reports = () => {
+    const {fetchMaintenanceReports, maintenanceReports, setRequest} = useGeneralDataStore();
+    const [selectedReports, setSelectedReports] = useState<MaintenanceReportWithStringsType[]>([])
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [openFormDialog, setOpenFormDialog] = useState(false);
-    const [maintenanceReportFormData, setMaintenanceReportFormData] = useState<MaintenanceReportWithStringsType>({
-        maintenance_type: "PREVENTIVE",
-        start_date: getLocalDateString(new Date()),
-        end_date: getLocalDateString(new Date()),
-        mileage: maintenanceReports.length > 0 ? maintenanceReports[0].mileage : "Unknown",
-        description: "",
-        part_purchase_events: [],
-        service_provider_events: [],
-    })
-    const [partPurchaseEvent, setPartPurchaseEvent] = useState<PartPurchaseEventWithNumbersType>({
-        part: "",
-        provider: "",
-        purchase_date: "",
-        cost: "0",
-    })
-    const [serviceProviderEvent, setServiceProviderEvent] = useState<ServiceProviderEventWithNumbersType>({
-        service_provider: "",
-        service_date: "",
-        cost: "0",
-        description: ""
-    })
+    const [showReportsList, setShowReportsList] = useState(false);
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const {
+        error,
+        handleAddPartPurchase,
+        handleAddServiceEvent,
+        handleMaintenanceReportFormChange,
+        handleMaintenanceReportSubmission,
+        handlePartPurchaseChange,
+        handleRemovePartPurchase,
+        handleRemoveServiceEvent,
+        handleServiceProviderChange,
+        isLoading,
+        maintenanceReportFormData,
+        openFormDialog,
+        partPurchaseEvent,
+        serviceProviderEvent,
+        setError,
+        setOpenFormDialog,
+        request,
+    } = useMaintenanceReport(undefined, setOpenSnackBar)
+
     useEffect(() => {
         fetchMaintenanceReports();
     }, [fetchMaintenanceReports]);
@@ -85,13 +80,13 @@ const MaintenanceOverview = () => {
                 key={day.toString()}
                 overlap="circular"
                 badgeContent={hasReports ? reportsByDate[dateStr] : undefined}
-                color="primary"
                 sx={{
                     '& .MuiBadge-badge': {
                         fontSize: '0.65rem',
                         height: '1.2rem',
                         minWidth: '1.2rem',
-                    }
+                        backgroundColor: "#ffa726",
+                    },
                 }}
             >
                 <PickersDay day={day} outsideCurrentMonth={false} {...other} />
@@ -110,6 +105,9 @@ const MaintenanceOverview = () => {
         const reportsOnDay = maintenanceReports.filter(report =>
             report.start_date && isSameDay(parseISO(report.start_date), date)
         );
+        if (reportsOnDay.length === 0) {
+            return
+        }
         setSelectedReports(reportsOnDay);
         setShowReportsList(true);
         setSelectedDate(date);
@@ -117,55 +115,29 @@ const MaintenanceOverview = () => {
 
     const handleAddingNewReport = () => {
         setOpenFormDialog(true);
+        setRequest('add');
     }
 
-    const handlePartPurchaseChange = (name: string, value: string) => {
-        setPartPurchaseEvent({
-            ...partPurchaseEvent,
-            [name]: value,
-        })
+    const getSnackBarMessage = () => {
+        switch (request) {
+            case 'add':
+                return 'Report added successfully!';
+            case 'edit':
+                return 'Report edited successfully!';
+            case 'delete':
+                return 'Report deleted successfully!';
+            default:
+                return '';
+        }
     }
-    const handleServiceProviderChange = (name: string, value: string) => {
-        setServiceProviderEvent({
-            ...serviceProviderEvent,
-            [name]: value,
-        })
-    }
-    const handleAddPartPurchase = () => {
-        setMaintenanceReportFormData({
-            ...maintenanceReportFormData,
-            part_purchase_events: [...maintenanceReportFormData.part_purchase_events, partPurchaseEvent]
-        })
-    }
-    const handleAddServiceEvent = () => {
-        setMaintenanceReportFormData({
-            ...maintenanceReportFormData,
-            service_provider_events: [...maintenanceReportFormData.service_provider_events, serviceProviderEvent]
-        })
-    }
-    const handleRemovePartPurchase = (idx: number) => {
-        setMaintenanceReportFormData({
-            ...maintenanceReportFormData,
-            part_purchase_events: maintenanceReportFormData.part_purchase_events.filter((_, i) => i !== idx)
-        })
-    }
-    const handleRemoveServiceEvent = (idx: number) => {
-        setMaintenanceReportFormData({
-            ...maintenanceReportFormData,
-            service_provider_events: maintenanceReportFormData.service_provider_events.filter((_, i) => i !== idx)
-        })
-    }
-    const handleMaintenanceReportFormChange = (name: string, value: string) => {
-        setMaintenanceReportFormData({
-            ...maintenanceReportFormData,
-            [name]: value,
-        })
-    }
+
+
     return (
-        <>
+        <div>
             {showReportsList ? <MaintenanceReportsList reports={selectedReports}
-                                                       onDeleteReport={() => console.log("Delete report")}
-                                                       onEditReport={() => console.log("Edit report")}
+                                                       setOpenSnackBar={setOpenSnackBar}
+                                                       openSnackbar={openSnackbar}
+                                                       snackBarMessage={getSnackBarMessage()}
                                                        setShowReportsList={setShowReportsList}
                 /> :
                 <Paper sx={{p: 3, borderRadius: 2, boxShadow: 3}}>
@@ -179,36 +151,44 @@ const MaintenanceOverview = () => {
                             New Report
                         </Button>
                     </Box>
-
-                    {isLoading ? (
-                        <Box sx={{display: 'flex', justifyContent: 'center', p: 4}}>
-                            <Typography>Loading maintenance data...</Typography>
-                        </Box>
-                    ) : (
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DateCalendar
-                                slots={{
-                                    day: ServerDay // Use our properly typed component
-                                }}
-                                value={selectedDate}
-                                onChange={handleDateClick}
-                                sx={{
-                                    width: '100%',
-                                    '& .MuiDayCalendar-weekDayLabel': {
-                                        color: 'primary.main',
-                                        fontWeight: 'bold'
-                                    },
-                                    '& .MuiPickersDay-root': {
-                                        fontSize: '0.9rem',
-                                        margin: '2px'
-                                    },
-                                }}
-                            />
-                        </LocalizationProvider>
-                    )}
+                    <Snackbar open={openSnackbar}
+                              autoHideDuration={6000}
+                              onClose={() => {
+                                  setOpenSnackBar(false);
+                                  setRequest('idle');
+                              }}
+                              anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    >
+                        <Alert onClose={() => setOpenSnackBar(false)} severity="success" sx={{width: '100%'}} variant="filled">
+                            {getSnackBarMessage()}
+                        </Alert>
+                    </Snackbar>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateCalendar
+                            slots={{
+                                day: ServerDay // Use our properly typed component
+                            }}
+                            value={selectedDate}
+                            onChange={handleDateClick}
+                            sx={{
+                                width: '100%',
+                                '& .MuiDayCalendar-weekDayLabel': {
+                                    color: 'primary.main',
+                                    fontWeight: 'bold'
+                                },
+                                '& .MuiPickersDay-root': {
+                                    fontSize: '0.9rem',
+                                    margin: '2px'
+                                },
+                            }}
+                        />
+                    </LocalizationProvider>
 
                     <Box sx={{mt: 2, display: 'flex', alignItems: 'center'}}>
-                        <Badge color="primary" badgeContent=" " sx={{mr: 2}}/>
+                        <Badge badgeContent=" " sx={{
+                            mr: 2,
+                            '& .MuiBadge-badge': {fontSize: '0.65rem', height: '1.2rem', minWidth: '1.2rem', backgroundColor: "#ffa726",}
+                        }}/>
                         <Typography variant="body2">
                             Dates with badges indicate scheduled maintenance activities
                         </Typography>
@@ -220,7 +200,10 @@ const MaintenanceOverview = () => {
                 </Paper>
             }
             <NewMaintenanceReportDialog open={openFormDialog}
-                                        onClose={() => setOpenFormDialog(false)}
+                                        onClose={() => {
+                                            setOpenFormDialog(false);
+                                            setRequest('idle');
+                                        }}
                                         partPurchaseEvent={partPurchaseEvent}
                                         serviceProviderEvent={serviceProviderEvent}
                                         handleServiceProviderChange={handleServiceProviderChange}
@@ -228,15 +211,18 @@ const MaintenanceOverview = () => {
                                         handleAddPartPurchase={handleAddPartPurchase}
                                         handleAddServiceEvent={handleAddServiceEvent}
                                         maintenanceReportFormData={maintenanceReportFormData}
-                                        handleMaintenanceReportSubmission={() => console.log("Submit report")}
+                                        handleMaintenanceReportSubmission={handleMaintenanceReportSubmission}
                                         handleRemovePartPurchase={handleRemovePartPurchase}
                                         handleRemoveServiceEvent={handleRemoveServiceEvent}
                                         handleMaintenanceReportFormChange={handleMaintenanceReportFormChange}
+                                        isLoading={isLoading}
+                                        errorState={error}
+                                        handleErrorClosing={() => setError({isError: false, message: ""})}
 
             />
-        </>
+        </div>
 
     );
 };
 
-export default MaintenanceOverview;
+export default Reports;
