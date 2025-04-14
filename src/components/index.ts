@@ -15,3 +15,7 @@ export {default as ServiceProviderCard} from "./cards/ServiceProviderCard";
 export {default as MaintenanceReportCard} from "./cards/MaintenanceReportCard";
 export {default as MaintenanceReportsList} from "./MaintenanceReportsList";
 export {default as NewMaintenanceReportDialog} from "./dialogs/NewMaintenanceReportDialog";
+export {default as MaintenanceTimeLine} from "./maintenance/MaintenanceTimeLine.tsx";
+export {default as SummaryMetrics} from "./maintenance/SummaryMetrics.tsx";
+export {default as YearlyComparisonChart} from "./maintenance/YearlyComparisonChart.tsx";
+export {default as VehicleInformationPanel} from "./maintenance/VehicleInformationPanel.tsx"

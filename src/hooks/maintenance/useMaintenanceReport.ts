@@ -10,7 +10,7 @@ export const useMaintenanceReport = (
     setShowReportsList?: (show: boolean) => void,
     setOpenSnackBar?: (open: boolean) => void,
 ) => {
-    const {maintenanceReports, vehicleID, setMaintenanceReports, request} = useGeneralDataStore();
+    const {maintenanceReports, vehicle, setMaintenanceReports, request} = useGeneralDataStore();
     const maintenanceReportFormInitState: MaintenanceReportWithStringsType = {
         maintenance_type: "PREVENTIVE",
         start_date: "",
@@ -19,7 +19,7 @@ export const useMaintenanceReport = (
         description: "",
         part_purchase_events: [],
         service_provider_events: [],
-        vehicle: vehicleID,
+        vehicle: vehicle?.id || "",
     }
     const partPurchaseEventInitState: PartPurchaseEventWithNumbersType = {
         part: "",

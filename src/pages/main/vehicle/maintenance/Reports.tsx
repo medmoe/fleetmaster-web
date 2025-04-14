@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
 import {DateCalendar} from "@mui/x-date-pickers/DateCalendar";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
@@ -13,7 +13,7 @@ import {useMaintenanceReport} from "../../../../hooks/maintenance/useMaintenance
 
 
 const Reports = () => {
-    const {fetchMaintenanceReports, maintenanceReports, setRequest} = useGeneralDataStore();
+    const {maintenanceReports, setRequest} = useGeneralDataStore();
     const [selectedReports, setSelectedReports] = useState<MaintenanceReportWithStringsType[]>([])
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [showReportsList, setShowReportsList] = useState(false);
@@ -37,10 +37,6 @@ const Reports = () => {
         setOpenFormDialog,
         request,
     } = useMaintenanceReport(undefined, setOpenSnackBar)
-
-    useEffect(() => {
-        fetchMaintenanceReports();
-    }, [fetchMaintenanceReports]);
 
     // Group reports by date
     const reportsByDate = useMemo(() => {
@@ -139,6 +135,7 @@ const Reports = () => {
                                                        openSnackbar={openSnackbar}
                                                        snackBarMessage={getSnackBarMessage()}
                                                        setShowReportsList={setShowReportsList}
+                                                       showBackButton={true}
                 /> :
                 <Paper sx={{p: 3, borderRadius: 2, boxShadow: 3}}>
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3}}>

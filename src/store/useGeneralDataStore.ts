@@ -3,6 +3,7 @@ import {createJSONStorage, devtools, persist} from 'zustand/middleware';
 import axios from 'axios';
 import {GeneralDataType, MaintenanceReportWithStringsType} from "../types/maintenance.ts";
 import {API} from "../constants/endpoints.ts";
+import {VehicleType} from "../types/types.ts";
 
 
 type requestType = 'delete' | 'add' | 'edit' | 'idle';
@@ -13,17 +14,18 @@ interface GeneralDataStore {
     isLoading: boolean;
     error: string | null;
     maintenanceReports: MaintenanceReportWithStringsType[];
-    vehicleID?: string;
     request: requestType;
+    vehicle: VehicleType | null;
 
     // Actions
-    setVehicleID: (id: string) => void;
     fetchGeneralData: () => Promise<void>;
     setGeneralData: (data: GeneralDataType) => void;
     fetchMaintenanceReports: () => Promise<void>;
     setMaintenanceReports: (reports: MaintenanceReportWithStringsType[]) => void;
     clearError: () => void;
     setRequest: (request: requestType) => void;
+    setVehicle: (vehicle: VehicleType) => void;
+    setError: (error: string | null) => void;
 }
 
 const generalDataInitialState: GeneralDataType = {
@@ -42,6 +44,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 error: null,
                 maintenanceReports: [],
                 request: 'idle',
+                vehicle: null,
 
                 // Actions
                 fetchGeneralData: async () => {
@@ -53,8 +56,12 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         });
                         set({generalData: response.data, isLoading: false});
                     } catch (error: any) {
-                        console.error('Error fetching general data:', error);
-                        set({error: error.message});
+                        if (error.response?.status === 401) {
+                            set({error: 'Unauthorized. Please log in again.'});
+                        } else {
+                            console.error('Error fetching general data:', error);
+                            set({error: error.message});
+                        }
                     } finally {
                         set({isLoading: false});
                     }
@@ -63,7 +70,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 clearError: () => set({error: null}),
                 fetchMaintenanceReports: async () => {
                     set({isLoading: true, error: null});
-                    const vehicleID = get().vehicleID;
+                    const vehicleID = get().vehicle?.id;
                     try {
                         const response = await axios.get(`${API}maintenance/overview/?vehicle_id=${vehicleID}`, {
                             headers: {"accept": "application/json", "Content-Type": "application/json"},
@@ -71,15 +78,20 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         })
                         set({maintenanceReports: response.data, isLoading: false});
                     } catch (error: any) {
-                        console.error('Error fetching maintenance reports:', error);
-                        set({error: error.message});
+                        if (error.response?.status === 401) {
+                            set({error: 'Unauthorized. Please log in again.'});
+                        } else {
+                            console.error('Error fetching maintenance reports:', error);
+                            set({error: error.message});
+                        }
                     } finally {
                         set({isLoading: false});
                     }
                 },
                 setMaintenanceReports: (reports: MaintenanceReportWithStringsType[]) => set({maintenanceReports: reports}),
-                setVehicleID: (id: string) => set({vehicleID: id}),
                 setRequest: (request: requestType) => set({request: request}),
+                setVehicle: (vehicle: VehicleType) => set({vehicle: vehicle}),
+                setError: (error: string | null) => set({error: error}),
             }),
             {
                 name: 'general-data-storage', // unique name for the storage

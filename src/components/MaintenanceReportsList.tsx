@@ -33,12 +33,14 @@ interface MaintenanceReportsListProps {
     openSnackbar: boolean;
     snackBarMessage: string;
     setShowReportsList: (show: boolean) => void;
+    showBackButton: boolean;
 }
 
 const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                                                                            reports,
                                                                            setOpenSnackBar,
                                                                            setShowReportsList,
+                                                                           showBackButton,
                                                                        }) => {
     const {setMaintenanceReports, maintenanceReports} = useGeneralDataStore();
     const {
@@ -133,20 +135,23 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
             {/* Filters and Search */}
             <Grid container spacing={2} sx={{mb: 3}}>
                 <Grid sx={{width: {xs: '100%', sm: '50%'}}}>
-                    <Button
-                        variant="outlined"
-                        startIcon={<ArrowBackIcon/>}
-                        onClick={() => setShowReportsList(false)}
-                        size="medium"
-                        sx={{
-                            height: '100%',
-                            borderColor: "#3f51b5",
-                            color: "#3f51b5",
-                            '&:hover': {borderColor: "#30349f", backgroundColor: "rgba(63, 81, 181, 0.04)"}
-                        }}
-                    >
-                        Go Back
-                    </Button>
+                    {showBackButton && (
+                        <Button
+                            variant="outlined"
+                            startIcon={<ArrowBackIcon/>}
+                            onClick={() => setShowReportsList(false)}
+                            size="medium"
+                            sx={{
+                                height: '100%',
+                                borderColor: "#3f51b5",
+                                color: "#3f51b5",
+                                '&:hover': {borderColor: "#30349f", backgroundColor: "rgba(63, 81, 181, 0.04)"}
+                            }}
+                        >
+                            Go Back
+                        </Button>
+                    )}
+
                 </Grid>
 
                 <Grid sx={{width: {xs: '100%', sm: '50%'}}}>

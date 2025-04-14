@@ -1,11 +1,10 @@
 import {useEffect} from "react";
 import useGeneralDataStore from "../../store/useGeneralDataStore.ts";
-import {CircularProgress} from "@mui/material";
-import ErrorAlert from "../../components/common/ErrorAlert.tsx";
+import {Alert, CircularProgress} from "@mui/material";
 
 
 const Dashboard = () => {
-    const {fetchGeneralData, isLoading, error} = useGeneralDataStore();
+    const {fetchGeneralData, isLoading, error, setError} = useGeneralDataStore();
     useEffect(() => {
         fetchGeneralData();
     }, [])
@@ -21,7 +20,22 @@ const Dashboard = () => {
     return (
         <div>
             <p className={"font-open-sans"}>Dashboard</p>
-            {error && <ErrorAlert severity="error" message={error}/>}
+            {error && (
+                <Alert severity="error"
+                       sx={{
+                           position: 'fixed',
+                           bottom: 16,
+                           left: '50%',
+                           transform: 'translateX(-50%)',
+                           zIndex: 9999,
+                           maxWidth: 'calc(100% - 32px'
+                       }}
+                       onClose={() => setError(null)}
+                >
+                    {error}
+                </Alert>
+            )}
+
         </div>
     )
 };
