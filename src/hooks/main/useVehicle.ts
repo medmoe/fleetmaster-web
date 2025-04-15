@@ -1,9 +1,9 @@
 import {useState} from "react";
-import {VehicleType} from "../../types/types.ts";
-import {isPositiveInteger} from "../../utils/common.ts";
-import {API} from "../../constants/endpoints.ts";
+import {VehicleType} from "@/types/types";
+import {isPositiveInteger} from "@/utils/common";
+import {API} from "@/constants/endpoints";
 import axios from "axios";
-import useAuthStore from "../../store/useAuthStore.ts";
+import useAuthStore from "../../store/useAuthStore";
 
 
 export const useVehicle = () => {
@@ -66,15 +66,23 @@ export const useVehicle = () => {
             const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
             await axios.delete(`${API}vehicles/${vehicle.id}`, options)
             removeVehicle(vehicle.id as string)
-        } catch (error: any) {
-            setErrorState({isError: true, errorMessage: error.message,})
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                setErrorState({isError: true, errorMessage: "Unauthorized, please log in again."})
+            }
+            const errorMessage = axios.isAxiosError(error)
+                ? error.message
+                : error instanceof Error
+                    ? error.message
+                    : 'An unknown error occurred';
+            setErrorState({isError: true, errorMessage})
         } finally {
             setIsLoading(false)
         }
     }
     const submitVehicleForm = async () => {
-        let vehicleDateKeys = ["purchase_date", "last_service_date", "next_service_due", "insurance_expiry_date", "license_expiry_date"]
-        for (let key of vehicleDateKeys) {
+        const vehicleDateKeys = ["purchase_date", "last_service_date", "next_service_due", "insurance_expiry_date", "license_expiry_date"]
+        for (const key of vehicleDateKeys) {
             if (key in vehicleDates && vehicleDates[key] !== null) {
                 vehicleForm[key as keyof VehicleType] = vehicleDates[key]?.toLocaleDateString("en-CA", {
                     year: "numeric",
@@ -110,6 +118,9 @@ export const useVehicle = () => {
             setIsLoading(false)
         } catch (error: any) {
             console.error(error)
+            if (error.response?.status === 401) {
+                setErrorState({isError: true, errorMessage: "Unauthorized, please log in again."})
+            }
         } finally {
             setIsLoading(false)
         }
@@ -120,6 +131,7 @@ export const useVehicle = () => {
         vehicleDates,
         vehicleForm,
         showVehicleForm,
+        setErrorState,
         setShowVehicleForm,
         handleVehicleFormChange,
         handleVehicleFormDateChange,

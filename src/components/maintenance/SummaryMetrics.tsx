@@ -9,7 +9,7 @@ import {
     TrendingDown as TrendingDownIcon,
     TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
-import {MaintenanceReportWithStringsType} from "../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {isValid, parse} from 'date-fns';
 
 interface SummaryMetricsProps {

@@ -1,9 +1,9 @@
 import {create} from 'zustand';
 import {createJSONStorage, devtools, persist} from 'zustand/middleware';
 import axios from 'axios';
-import {GeneralDataType, MaintenanceReportWithStringsType} from "../types/maintenance.ts";
-import {API} from "../constants/endpoints.ts";
-import {VehicleType} from "../types/types.ts";
+import {GeneralDataType, MaintenanceReportWithStringsType} from "@/types/maintenance";
+import {API} from "@/constants/endpoints";
+import {VehicleType} from "@/types/types";
 
 
 type requestType = 'delete' | 'add' | 'edit' | 'idle';

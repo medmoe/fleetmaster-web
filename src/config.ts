@@ -3,7 +3,7 @@ const ENV = {
         API: "http://localhost:8000/",
     },
     prod: {
-        API: "https://fleet-master-back-env.eba-gvt2xidk.us-east-2.elasticbeanstalk.com/"
+        API: "http://fleet-master-back-env.eba-gvt2xidk.us-east-2.elasticbeanstalk.com/"
     }
 };
 

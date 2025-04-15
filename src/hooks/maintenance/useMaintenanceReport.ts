@@ -1,9 +1,9 @@
-import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "../../types/maintenance.ts";
-import useGeneralDataStore from "../../store/useGeneralDataStore.ts";
+import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "@/types/maintenance";
+import useGeneralDataStore from "../../store/useGeneralDataStore";
 import {useState} from "react";
-import {API} from "../../constants/endpoints.ts";
+import {API} from "@/constants/endpoints";
 import axios from "axios";
-import {isEndDateAfterStartDate} from "../../utils/common.ts";
+import {isEndDateAfterStartDate} from "@/utils/common";
 
 
 export const useMaintenanceReport = (

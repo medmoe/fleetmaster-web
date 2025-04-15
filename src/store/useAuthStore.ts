@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-import {AuthResponseDataType, DriverType, VehicleType} from "../types/types.ts";
+import {AuthResponseDataType, DriverType, VehicleType} from "@/types/types";
 
 interface AuthStore {
     // state

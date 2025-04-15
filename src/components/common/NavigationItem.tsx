@@ -7,6 +7,14 @@ interface NavigationItemProps {
     label: string;
 }
 
+// Define a type for elements with sx prop
+// Define a more specific type for Material UI icon elements
+interface ElementWithSx extends React.ReactElement {
+    props: {
+        sx?: React.CSSProperties | Record<string, unknown>;
+    };
+}
+
 const NavigationItem = ({to, icon, label}: NavigationItemProps) => (
     <NavLink
         to={to}
@@ -20,10 +28,10 @@ const NavigationItem = ({to, icon, label}: NavigationItemProps) => (
             <>
                 <div className="text-xl">
                     {isValidElement(icon) ?
-                        cloneElement(icon, {
+                        cloneElement(icon as ElementWithSx, {
                             sx: {
                                 color: isActive ? 'white' : "#3f51b5",
-                                ...(isValidElement(icon) && icon.props.sx)
+                                ...((icon as ElementWithSx).props.sx || {})
                             }
                         }) :
                         icon

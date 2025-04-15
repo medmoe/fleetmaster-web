@@ -1,6 +1,6 @@
 import {Button, Container} from "@mui/material";
-import ListItemDetail from "../common/ListItemDetail.tsx";
-import {ServiceProviderType} from "../../types/maintenance.ts";
+import ListItemDetail from "../common/ListItemDetail";
+import {ServiceProviderType} from "@/types/maintenance";
 import {Delete, Edit} from "@mui/icons-material";
 
 interface ServiceProviderCardProps {

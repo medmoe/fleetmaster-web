@@ -1,5 +1,5 @@
-import {TEXT_ERROR, TEXT_WARNING, TEXT_WIN} from "../constants.ts";
-import {PickerItemType} from "../../types/types.ts";
+import {TEXT_ERROR, TEXT_WARNING, TEXT_WIN} from "../constants";
+import {PickerItemType} from "@/types/types";
 
 
 export const vehicleStatusMapping: { [key: string]: [string, string] } = {

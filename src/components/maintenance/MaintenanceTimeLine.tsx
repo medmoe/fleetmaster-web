@@ -2,7 +2,7 @@
 import React, {useMemo} from 'react';
 import {Box, Paper, Tooltip, Typography} from '@mui/material';
 import {format, parseISO} from 'date-fns';
-import {MaintenanceReportWithStringsType} from "../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 
 interface MaintenanceTimelineProps {
     reports: MaintenanceReportWithStringsType[];

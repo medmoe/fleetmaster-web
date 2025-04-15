@@ -1,4 +1,4 @@
-import {VehicleType} from "./types.ts";
+import {VehicleType} from "./types";
 
 export interface VehicleDatesType {
     purchase_date: Date

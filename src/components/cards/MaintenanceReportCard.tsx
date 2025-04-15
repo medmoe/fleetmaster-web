@@ -14,7 +14,7 @@ import {
     Store as StoreIcon
 } from '@mui/icons-material';
 import {format, parseISO} from 'date-fns';
-import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "@/types/maintenance";
 
 interface MaintenanceReportCardProps {
     report: MaintenanceReportWithStringsType;

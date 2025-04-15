@@ -1,5 +1,5 @@
 import {Chip, Grid, Paper, Typography} from '@mui/material';
-import {VehicleType} from "../../types/types.ts";
+import {VehicleType} from "@/types/types";
 
 interface VehicleInformationPanelProps {
     vehicle: VehicleType | null;

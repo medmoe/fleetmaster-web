@@ -1,6 +1,6 @@
 import {Box, Button, CircularProgress, Container, InputAdornment, Paper, TextField, Typography} from "@mui/material";
 import {House, Person, Phone} from "@mui/icons-material";
-import {PartProviderType} from "../../types/maintenance.ts";
+import {PartProviderType} from "@/types/maintenance";
 import React from "react";
 
 interface PartProviderFormProps {

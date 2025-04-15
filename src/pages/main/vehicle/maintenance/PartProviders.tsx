@@ -15,11 +15,11 @@ import {
     TextField
 } from "@mui/material";
 import {Add, Close, Delete} from "@mui/icons-material";
-import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
+import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {PartProviderCard} from "../../../../components";
-import {PartProviderType} from "../../../../types/maintenance.ts";
+import {PartProviderType} from "@/types/maintenance";
 import axios from "axios";
-import {API} from "../../../../constants/endpoints.ts";
+import {API} from "@/constants/endpoints";
 
 const PartProviders = () => {
     const {generalData, setGeneralData} = useGeneralDataStore();

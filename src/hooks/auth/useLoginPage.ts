@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import {API} from "../../constants/endpoints.ts";
-import useAuthStore from "../../store/useAuthStore.ts";
+import {API} from "@/constants/endpoints";
+import useAuthStore from "../../store/useAuthStore";
 
 export const useLoginPage = () => {
     const {setAuthResponse} = useAuthStore()
@@ -40,7 +40,7 @@ export const useLoginPage = () => {
     const verifyToken = async () => {
         setIsLoading(true)
         try {
-            await axios.get(`${API}/accounts/refresh/`, {withCredentials: true})
+            await axios.get(`${API}accounts/refresh/`, {withCredentials: true})
             navigate("/dashboard");
         } catch (error) {
             console.warn("verify token error")

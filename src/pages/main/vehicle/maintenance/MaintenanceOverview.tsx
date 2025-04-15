@@ -2,7 +2,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Alert, Box, CircularProgress, Container, Paper, Tab, Tabs, Typography} from '@mui/material';
 import {MaintenanceReportsList, MaintenanceTimeLine, SummaryMetrics, VehicleInformationPanel, YearlyComparisonChart} from "../../../../components";
-import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
+import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 
 const MaintenanceOverview: React.FC = () => {
     const currentYear = new Date().getFullYear();

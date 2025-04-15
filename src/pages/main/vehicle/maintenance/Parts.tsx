@@ -23,9 +23,9 @@ import {
     Typography,
 } from '@mui/material';
 import {Add as AddIcon, Close as CloseIcon, Delete as DeleteIcon, Edit as EditIcon, Search as SearchIcon} from '@mui/icons-material';
-import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
-import {PartType} from "../../../../types/maintenance.ts";
-import {API} from '../../../../constants/endpoints.ts';
+import useGeneralDataStore from "../../../../store/useGeneralDataStore";
+import {PartType} from "@/types/maintenance";
+import {API} from '@/constants/endpoints';
 import axios from 'axios';
 
 const Parts: React.FC = () => {

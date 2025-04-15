@@ -1,5 +1,5 @@
 import {useMemo, useState} from "react";
-import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
+import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {DateCalendar} from "@mui/x-date-pickers/DateCalendar";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
@@ -7,9 +7,9 @@ import {Alert, Badge, Box, Button, Paper, Snackbar, Typography} from "@mui/mater
 import {Add as AddIcon} from "@mui/icons-material";
 import {format, isSameDay, parseISO} from "date-fns";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
-import {MaintenanceReportWithStringsType} from "../../../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {MaintenanceReportsList, NewMaintenanceReportDialog} from "../../../../components";
-import {useMaintenanceReport} from "../../../../hooks/maintenance/useMaintenanceReport.ts";
+import {useMaintenanceReport} from "@/hooks/maintenance/useMaintenanceReport";
 
 
 const Reports = () => {

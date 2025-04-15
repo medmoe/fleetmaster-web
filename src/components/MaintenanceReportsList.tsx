@@ -19,13 +19,13 @@ import {
     Typography
 } from '@mui/material';
 import {ArrowBack as ArrowBackIcon, Search as SearchIcon} from '@mui/icons-material';
-import MaintenanceReportCard from "./cards/MaintenanceReportCard.tsx";
-import {MaintenanceReportWithStringsType} from '../types/maintenance';
+import MaintenanceReportCard from "./cards/MaintenanceReportCard";
+import {MaintenanceReportWithStringsType} from '@/types/maintenance';
 import axios from "axios";
-import {API} from "../constants/endpoints.ts";
-import {useMaintenanceReport} from "../hooks/maintenance/useMaintenanceReport.ts";
-import useGeneralDataStore from '../store/useGeneralDataStore.ts';
-import NewMaintenanceReportDialog from "./dialogs/NewMaintenanceReportDialog.tsx";
+import {API} from "@/constants/endpoints";
+import {useMaintenanceReport} from "@/hooks/maintenance/useMaintenanceReport";
+import useGeneralDataStore from '../store/useGeneralDataStore';
+import NewMaintenanceReportDialog from "./dialogs/NewMaintenanceReportDialog";
 
 interface MaintenanceReportsListProps {
     reports: MaintenanceReportWithStringsType[];

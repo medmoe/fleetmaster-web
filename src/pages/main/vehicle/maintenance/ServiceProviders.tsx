@@ -21,11 +21,11 @@ import {
     Stack,
     TextField
 } from "@mui/material";
-import useGeneralDataStore from "../../../../store/useGeneralDataStore.ts";
+import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {Add, Close, Delete} from "@mui/icons-material";
-import {ServiceProviderType} from "../../../../types/maintenance.ts";
+import {ServiceProviderType} from "@/types/maintenance";
 import axios from "axios";
-import {API} from "../../../../constants/endpoints.ts";
+import {API} from "../../../../constants/endpoints";
 
 const ServiceProviders = () => {
     const [isLoading, setIsLoading] = useState(false);

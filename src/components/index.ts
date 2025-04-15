@@ -1,11 +1,6 @@
-export {default as ListItemDetail} from "./common/ListItemDetail.tsx";
-export {default as TableEntry} from "./TableEntry";
+export {default as ListItemDetail} from "./common/ListItemDetail";
 export {default as VehicleCardComponent} from "./cards/VehicleCardComponent";
 export {default as VehicleForm} from "./forms/VehicleForm";
-export {default as ErrorAlert} from "./common/ErrorAlert";
-export {default as Percentage} from "./Percentage";
-export {default as StatCard} from "./cards/StatCard";
-export {default as RangeCard} from "./cards/RangeCard";
 export {default as NavigationItem} from "./common/NavigationItem";
 export {default as ProtectedRoute} from "./common/ProtectedRoute";
 export {default as PartProviderCard} from "./cards/PartProviderCard";
@@ -15,7 +10,7 @@ export {default as ServiceProviderCard} from "./cards/ServiceProviderCard";
 export {default as MaintenanceReportCard} from "./cards/MaintenanceReportCard";
 export {default as MaintenanceReportsList} from "./MaintenanceReportsList";
 export {default as NewMaintenanceReportDialog} from "./dialogs/NewMaintenanceReportDialog";
-export {default as MaintenanceTimeLine} from "./maintenance/MaintenanceTimeLine.tsx";
-export {default as SummaryMetrics} from "./maintenance/SummaryMetrics.tsx";
-export {default as YearlyComparisonChart} from "./maintenance/YearlyComparisonChart.tsx";
-export {default as VehicleInformationPanel} from "./maintenance/VehicleInformationPanel.tsx"
+export {default as MaintenanceTimeLine} from "./maintenance/MaintenanceTimeLine";
+export {default as SummaryMetrics} from "./maintenance/SummaryMetrics";
+export {default as YearlyComparisonChart} from "./maintenance/YearlyComparisonChart";
+export {default as VehicleInformationPanel} from "./maintenance/VehicleInformationPanel"

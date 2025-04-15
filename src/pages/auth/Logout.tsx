@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import {API} from "../../constants/endpoints.ts";
-import useAuthStore from "../../store/useAuthStore.ts";
+import {API} from "@/constants/endpoints";
+import useAuthStore from "../../store/useAuthStore";
 
 interface LogoutButtonProps {
     icon: React.ReactNode;
@@ -15,7 +15,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({icon, label}) => {
     const handleLogout = async () => {
         try {
             // Call your logout API endpoint with credentials to include cookies
-            await axios.post(`${API}/accounts/logout/`, {}, {
+            await axios.post(`${API}accounts/logout/`, {}, {
                 withCredentials: true
             });
 

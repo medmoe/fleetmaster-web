@@ -2,7 +2,7 @@
 import React, {useMemo} from 'react';
 import {Box, Paper} from '@mui/material';
 import {format, parseISO} from 'date-fns';
-import {MaintenanceReportWithStringsType} from "../../types/maintenance.ts";
+import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 
 interface YearlyComparisonChartProps {
     currentYearData: MaintenanceReportWithStringsType[];

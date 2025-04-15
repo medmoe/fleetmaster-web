@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import {useLoginPage} from "../../hooks/auth/useLoginPage.ts";
+import {useLoginPage} from "@/hooks/auth/useLoginPage";
 import {CircularProgress} from "@mui/material";
 import {Link} from 'react-router-dom'
 

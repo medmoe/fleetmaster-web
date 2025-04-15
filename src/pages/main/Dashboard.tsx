@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import useGeneralDataStore from "../../store/useGeneralDataStore.ts";
+import useGeneralDataStore from "../../store/useGeneralDataStore";
 import {Alert, CircularProgress} from "@mui/material";
 
 

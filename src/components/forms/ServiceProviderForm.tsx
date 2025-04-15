@@ -1,5 +1,5 @@
 import React from 'react';
-import {ServiceProviderType} from "../../types/maintenance.ts";
+import {ServiceProviderType} from "@/types/maintenance";
 import {
     Box,
     Button,

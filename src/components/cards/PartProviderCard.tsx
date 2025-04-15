@@ -1,6 +1,6 @@
-import {PartProviderType} from "../../types/maintenance.ts";
+import {PartProviderType} from "@/types/maintenance";
 import {Button, Container} from "@mui/material";
-import ListItemDetail from "../common/ListItemDetail.tsx";
+import ListItemDetail from "../common/ListItemDetail";
 import {Delete, Edit} from "@mui/icons-material";
 
 

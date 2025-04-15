@@ -3,7 +3,7 @@ import {Alert, Box, Button, CircularProgress, Container, Divider, IconButton, In
 import {Email, Person, Phone, Visibility, VisibilityOff} from "@mui/icons-material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import {useSignup} from "../../hooks/auth/useSignup.ts";
+import {useSignup} from "@/hooks/auth/useSignup";
 
 const SignUp = () => {
     const {
@@ -12,8 +12,6 @@ const SignUp = () => {
         formData,
         handleSubmit,
         handleChange,
-        handleBlur,
-        formErrors,
         showPassword,
         showConfirmPassword,
         showAddressFields,
@@ -39,9 +37,9 @@ const SignUp = () => {
                             </Typography>
                         </Box>
 
-                        {error && (
+                        {error.isError && (
                             <Alert severity="error" className="mb-4">
-                                {error}
+                                {error.message}
                             </Alert>
                         )}
 
@@ -53,9 +51,6 @@ const SignUp = () => {
                                 label="First Name"
                                 value={formData.user.first_name}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors['user.first_name']}
-                                helperText={formErrors['user.first_name']}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -74,9 +69,6 @@ const SignUp = () => {
                                 label="Last Name"
                                 value={formData.user.last_name}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors['user.last_name']}
-                                helperText={formErrors['user.last_name']}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -97,9 +89,6 @@ const SignUp = () => {
                                 label="Username"
                                 value={formData.user.username}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors.username}
-                                helperText={formErrors.username}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -120,9 +109,6 @@ const SignUp = () => {
                                 type="email"
                                 value={formData.user.email}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors.email}
-                                helperText={formErrors.email}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -141,9 +127,6 @@ const SignUp = () => {
                                 label="Phone Number"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors.phone}
-                                helperText={formErrors.phone}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -163,9 +146,6 @@ const SignUp = () => {
                                 type={showPassword ? "text" : "password"}
                                 value={formData.user.password}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors.password}
-                                helperText={formErrors.password}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -188,9 +168,6 @@ const SignUp = () => {
                                 type={showConfirmPassword ? "text" : "password"}
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={!!formErrors.confirmPassword}
-                                helperText={formErrors.confirmPassword}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
@@ -239,8 +216,6 @@ const SignUp = () => {
                                         label="Street Address"
                                         value={formData.address}
                                         onChange={handleChange}
-                                        error={!!formErrors['address']}
-                                        helperText={formErrors['address']}
                                     />
                                 </Box>
 
@@ -254,8 +229,6 @@ const SignUp = () => {
                                             label="City"
                                             value={formData.city}
                                             onChange={handleChange}
-                                            error={!!formErrors['city']}
-                                            helperText={formErrors['city']}
                                         />
                                     </Box>
                                     <Box sx={{flexGrow: 1, minWidth: '250px'}}>
@@ -266,8 +239,6 @@ const SignUp = () => {
                                             label="State/Province"
                                             value={formData.state}
                                             onChange={handleChange}
-                                            error={!!formErrors['state']}
-                                            helperText={formErrors['state']}
                                         />
                                     </Box>
                                 </Box>
@@ -282,8 +253,6 @@ const SignUp = () => {
                                             label="Country"
                                             value={formData.country}
                                             onChange={handleChange}
-                                            error={!!formErrors['country']}
-                                            helperText={formErrors['country']}
                                         />
                                     </Box>
                                     <Box sx={{flexGrow: 1, minWidth: '250px'}}>
@@ -294,8 +263,6 @@ const SignUp = () => {
                                             label="ZIP / Postal Code"
                                             value={formData.zip_code}
                                             onChange={handleChange}
-                                            error={!!formErrors['zip_code']}
-                                            helperText={formErrors['zip_code']}
                                         />
                                     </Box>
                                 </Box>

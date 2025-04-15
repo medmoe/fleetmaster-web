@@ -24,9 +24,9 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
-import {getLocalDateString} from '../../utils/common.ts';
-import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from '../../types/maintenance.ts';
-import useGeneralDataStore from '../../store/useGeneralDataStore.ts';
+import {getLocalDateString} from '@/utils/common';
+import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from '@/types/maintenance';
+import useGeneralDataStore from '../../store/useGeneralDataStore';
 
 interface NewReportDialogProps {
     open: boolean;

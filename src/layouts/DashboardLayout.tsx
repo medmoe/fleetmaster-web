@@ -13,7 +13,7 @@ import {
 } from '@mui/icons-material';
 import {useMediaQuery} from '@mui/material';
 import {NavigationItem} from "../components";
-import LogoutButton from "../pages/auth/Logout.tsx";
+import LogoutButton from "../pages/auth/Logout";
 
 const DashboardLayout: React.FC = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');

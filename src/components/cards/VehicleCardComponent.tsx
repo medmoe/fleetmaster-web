@@ -1,6 +1,6 @@
-import {VehicleType} from "../../types/types.ts";
-import {ListItemDetail} from "../index.ts";
-import {vehicleStatusMapping} from "../../constants/forms/vehicle.ts";
+import {VehicleType} from "@/types/types";
+import {ListItemDetail} from "../index";
+import {vehicleStatusMapping} from "@/constants/forms/vehicle";
 import {Button, Container} from "@mui/material";
 import {Delete, Edit, Handyman} from "@mui/icons-material";
 

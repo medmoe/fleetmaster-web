@@ -1,12 +1,11 @@
-import {Button, CircularProgress, Container} from "@mui/material";
+import {Alert, Button, CircularProgress, Container} from "@mui/material";
 import {Add} from "@mui/icons-material";
 import {VehicleCardComponent, VehicleForm} from "../../../components";
-import useAuthStore from "../../../store/useAuthStore.ts";
-import {useVehicle} from "../../../hooks/main/useVehicle.ts";
-import ErrorAlert from "../../../components/common/ErrorAlert.tsx";
+import useAuthStore from "../../../store/useAuthStore";
+import {useVehicle} from "@/hooks/main/useVehicle";
 import {useNavigate} from "react-router-dom";
-import useGeneralDataStore from "../../../store/useGeneralDataStore.ts";
-import {VehicleType} from "../../../types/types.ts";
+import useGeneralDataStore from "../../../store/useGeneralDataStore";
+import {VehicleType} from "@/types/types";
 
 const Vehicles = () => {
     const {authResponse} = useAuthStore()
@@ -16,6 +15,7 @@ const Vehicles = () => {
         vehicleDates,
         vehicleForm,
         errorState,
+        setErrorState,
         setShowVehicleForm,
         handleVehicleFormChange,
         handleVehicleFormDateChange,
@@ -38,12 +38,20 @@ const Vehicles = () => {
     }
     return (
         <div className={"min-h-screen bg-gray-100 py-8"}>
-            {isLoading && <div className={"w-full h-screen flex items-center justify-center"}>
-                <CircularProgress color="primary" size={200} thickness={5}/>
-            </div>}
+            {isLoading && (
+                <div className={"w-full h-screen flex items-center justify-center"}>
+                    <CircularProgress color="primary" size={200} thickness={5}/>
+                </div>
+            )}
+            {errorState.isError && (
+                <Alert severity="error" sx={{mb: 2}} onClose={() => setErrorState({isError: false, errorMessage: ""})}>
+                    {errorState.errorMessage}
+                </Alert>
+            )}
             {showVehicleForm ?
                 <div>
-                    {errorState.isError && <ErrorAlert severity="error" message={errorState.errorMessage} key={errorState.errorMessage}/>}
+                    {errorState.isError && <Alert severity="error" sx={{mb: 2}}
+                                                  onClose={() => setErrorState({isError: false, errorMessage: ""})}>{errorState.errorMessage}</Alert>}
                     <VehicleForm vehicleData={vehicleForm}
                                  submitForm={submitVehicleForm}
                                  cancelSubmission={() => setShowVehicleForm(false)}
