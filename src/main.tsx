@@ -7,16 +7,20 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import MaintenanceLayout from "./layouts/MaintenanceLayout";
 import {ProtectedRoute} from "./components";
 import WebFont from "webfontloader";
-
-const LoginPage = React.lazy(() => import ('./pages/auth/LoginPage'))
-const SignUp = React.lazy(() => import ('./pages/auth/SignUp'))
-const Dashboard = React.lazy(() => import ('./pages/main/Dashboard'))
-const Vehicles = React.lazy(() => import ('./pages/main/vehicle/Vehicles'));
-const MaintenanceOverview = React.lazy(() => import ('./pages/main/vehicle/maintenance/MaintenanceOverview'));
-const Parts = React.lazy(() => import ('./pages/main/vehicle/maintenance/Parts'));
-const PartProviders = React.lazy(() => import ('./pages/main/vehicle/maintenance/PartProviders'));
-const ServiceProviders = React.lazy(() => import ('./pages/main/vehicle/maintenance/ServiceProviders'));
-const Reports = React.lazy(() => import ('./pages/main/vehicle/maintenance/Reports'));
+import {
+    Dashboard,
+    Drivers,
+    LoginPage,
+    MaintenanceLibrary,
+    MaintenanceOverview,
+    PartProviders,
+    Parts,
+    Reports,
+    ReportsLibrary,
+    ServiceProviders,
+    SignUp,
+    Vehicles
+} from "./pages";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -45,6 +49,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                         <Route element={<DashboardLayout/>}>
                             <Route path="/dashboard" element={<Dashboard/>}/>
                             <Route path="/vehicles" element={<Vehicles/>}/>
+                            <Route path="/drivers" element={<Drivers/>}/>
+                            <Route path="/reports-overview" element={<ReportsLibrary/>}/>
+                            <Route path="/maintenance-library" element={<MaintenanceLibrary/>}/>
                         </Route>
                         <Route element={<MaintenanceLayout/>}>
                             <Route path="/maintenance-overview" element={<MaintenanceOverview/>}/>

@@ -46,8 +46,8 @@ const DashboardLayout: React.FC = () => {
                     <NavigationItem to="/dashboard" icon={<DashboardIcon/>} label="Dashboard"/>
                     <NavigationItem to="/vehicles" icon={<VehiclesIcon/>} label="Vehicles"/>
                     <NavigationItem to="/drivers" icon={<DriversIcon/>} label="Drivers"/>
-                    <NavigationItem to="/maintenance" icon={<MaintenanceIcon/>} label="Maintenance"/>
-                    <NavigationItem to="/reports" icon={<ReportsIcon/>} label="Reports"/>
+                    <NavigationItem to="/maintenance-library" icon={<MaintenanceIcon/>} label="Maintenance"/>
+                    <NavigationItem to="/reports-overview" icon={<ReportsIcon/>} label="Reports Overview"/>
                     <div className={"border-t border-gray-200 my-4"}></div>
                     <LogoutButton icon={<LogoutIcon/>} label="Logout"/>
                 </nav>
