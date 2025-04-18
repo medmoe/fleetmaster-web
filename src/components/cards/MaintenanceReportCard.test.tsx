@@ -1,10 +1,10 @@
 // MaintenanceReportCard.test.tsx
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-import '@testing-library/jest-dom';
 import MaintenanceReportCard from './MaintenanceReportCard';
 import {MaintenanceReportWithStringsType} from '@/types/maintenance';
 import {expect, test, vi} from 'vitest';
+import '@testing-library/jest-dom'
 
 // Mock data
 const mockReport: MaintenanceReportWithStringsType = {

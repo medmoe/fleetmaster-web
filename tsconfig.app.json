@@ -1,16 +1,30 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["node", "jest", "vitest/globals", "vitest/config", "@testing-library/jest-dom"],
+    "types": [
+      "node",
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ],
     "outDir": "./dist",
     "module": "ESNext",
-    "target": "ESNext",
+    "target": "ES2022",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -22,11 +36,12 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.vue"
+    "src/**/*.jsx"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.test.ts",
+    "node_modules/@types/jest"
   ]
 }

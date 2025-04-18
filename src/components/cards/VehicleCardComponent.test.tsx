@@ -2,6 +2,7 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import VehicleCardComponent from "./VehicleCardComponent";
 import {VehicleType} from "@/types/types";
 import {expect, test, vi} from 'vitest';
+import '@testing-library/jest-dom'
 
 describe("VehicleCardComponent", () => {
     // Mock vehicle data

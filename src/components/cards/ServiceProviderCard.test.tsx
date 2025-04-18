@@ -2,6 +2,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import ServiceProviderCard from './ServiceProviderCard';
 import {ServiceProviderType} from "@/types/maintenance";
 import {expect, it, vi} from 'vitest';
+import '@testing-library/jest-dom'
 
 describe('ServiceProviderCard', () => {
     const mockServiceProvider: ServiceProviderType = {
