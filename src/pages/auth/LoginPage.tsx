@@ -1,10 +1,10 @@
 import {useEffect} from "react";
 import {useLoginPage} from "@/hooks/auth/useLoginPage";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Alert} from "@mui/material";
 import {Link} from 'react-router-dom'
 
 const LoginPage = () => {
-    const {isLoading, loginFormData, handleLoginFormChange, submitLoginForm, verifyToken} = useLoginPage();
+    const {isLoading, loginFormData, handleLoginFormChange, submitLoginForm, verifyToken, error, setError} = useLoginPage();
     useEffect(() => {
         verifyToken();
     }, [])
@@ -12,6 +12,11 @@ const LoginPage = () => {
         <div className="flex items-center justify-center h-screen bg-background">
             {isLoading ? <CircularProgress color="primary" size={200} thickness={5}/> :
                 <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-lg">
+                    {error.isError && (
+                        <Alert severity="error"
+                               onClose={() => setError({isError: false, message: ''})}
+                        >{error.message}</Alert>
+                    )}
                     <h1 className="text-2xl font-bold text-center text-txt">Login</h1>
                     <form className="space-y-6" onSubmit={submitLoginForm}>
                         <div>

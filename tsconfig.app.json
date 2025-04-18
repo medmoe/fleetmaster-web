@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["node", "jest", "vitest/globals", "vitest/config", "@testing-library/jest-dom"],
     "outDir": "./dist",
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
-    "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,

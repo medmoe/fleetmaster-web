@@ -9,6 +9,7 @@ export const useLoginPage = () => {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [loginFormData, setLoginFormData] = useState({username: "", password: ""})
+    const [error, setError] = useState({isError: false, message: ""})
 
     const handleLoginFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
@@ -32,6 +33,7 @@ export const useLoginPage = () => {
             navigate("/dashboard");
         } catch (error) {
             console.log(error)
+            setError({isError: true, message: "No account found with the provided credentials. Please try again."})
         } finally {
             setIsLoading(false)
         }
@@ -50,8 +52,10 @@ export const useLoginPage = () => {
     }
 
     return {
+        error,
         isLoading,
         loginFormData,
+        setError,
         verifyToken,
         handleLoginFormChange,
         submitLoginForm,

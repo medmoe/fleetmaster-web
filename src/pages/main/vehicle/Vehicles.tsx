@@ -44,14 +44,22 @@ const Vehicles = () => {
                 </div>
             )}
             {errorState.isError && (
-                <Alert severity="error" sx={{mb: 2}} onClose={() => setErrorState({isError: false, errorMessage: ""})}>
+                <Alert severity="error"
+                       sx={{
+                           mb: 2,
+                           position: 'fixed',
+                           bottom: 16,
+                           left: '50%',
+                           transform: 'translateX(-50%)',
+                           zIndex: 9999,
+                           maxWidth: 'calc(100% - 32px'
+                       }}
+                       onClose={() => setErrorState({isError: false, errorMessage: ""})}>
                     {errorState.errorMessage}
                 </Alert>
             )}
             {showVehicleForm ?
                 <div>
-                    {errorState.isError && <Alert severity="error" sx={{mb: 2}}
-                                                  onClose={() => setErrorState({isError: false, errorMessage: ""})}>{errorState.errorMessage}</Alert>}
                     <VehicleForm vehicleData={vehicleForm}
                                  submitForm={submitVehicleForm}
                                  cancelSubmission={() => setShowVehicleForm(false)}
