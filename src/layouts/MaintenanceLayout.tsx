@@ -13,6 +13,7 @@ import {
 import {NavigationItem} from "../components";
 import {Outlet} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {LanguageSwitcher} from "@/components";
 
 const MaintenanceLayout: React.FC = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -38,6 +39,7 @@ const MaintenanceLayout: React.FC = () => {
                 </div>
 
                 <nav className="mt-4 px-2 space-y-2">
+                    <LanguageSwitcher/>
                     <NavigationItem to={"/maintenance-overview"} icon={<DashboardIcon />} label={t('layout.maintenance.overview')}/>
                     <NavigationItem to="/parts" icon={<SettingsIcon />} label={t('layout.maintenance.parts')}/>
                     <NavigationItem to="/part-providers" icon={<ShippingIcon />} label={t('layout.maintenance.partProviders')}/>

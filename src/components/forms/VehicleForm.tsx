@@ -17,6 +17,8 @@ import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {VehicleType} from "@/types/types";
+import {useTranslation} from "react-i18next";
+import {TOptions} from "i18next";
 
 interface VehicleFormProps {
     vehicleData: VehicleType;
@@ -48,29 +50,36 @@ const fuelTypes = ['GASOLINE', 'DIESEL', 'ELECTRIC', 'HYBRID'];
 // Helper functions to create input groups
 const createFirstInputTextPropsBlock = (
     vehicleData: VehicleType,
-    handleChange: (name: string, value: string) => void
+    handleChange: (name: string, value: string) => void,
+    t: (key: string | string[], options?: TOptions) => string
 ): TextFieldProps[] => [
-    {placeholder: "Registration number", value: vehicleData.registration_number || "", onChange: handleChange, name: "registration_number"},
-    {placeholder: "Make", value: vehicleData.make || "", onChange: handleChange, name: "make"},
-    {placeholder: "Model", value: vehicleData.model || "", onChange: handleChange, name: "model"},
-    {placeholder: "Year", value: vehicleData.year || "", onChange: handleChange, name: "year"},
-    {placeholder: "Vin", value: vehicleData.vin || "", onChange: handleChange, name: "vin"},
+    {
+        placeholder: t('pages.vehicle.vehicles.form.registration'),
+        value: vehicleData.registration_number || "",
+        onChange: handleChange,
+        name: "registration_number"
+    },
+    {placeholder: t('pages.vehicle.vehicles.form.make'), value: vehicleData.make || "", onChange: handleChange, name: "make"},
+    {placeholder: t('pages.vehicle.vehicles.form.model'), value: vehicleData.model || "", onChange: handleChange, name: "model"},
+    {placeholder: t('pages.vehicle.vehicles.form.year'), value: vehicleData.year || "", onChange: handleChange, name: "year"},
+    {placeholder: t('pages.vehicle.vehicles.form.vin'), value: vehicleData.vin || "", onChange: handleChange, name: "vin"},
 ];
 
 const createSecondInputTextPropsBlock = (
     vehicleData: VehicleType,
-    handleChange: (name: string, value: string) => void
+    handleChange: (name: string, value: string) => void,
+    t: (key: string | string[], options?: TOptions) => string
 ): TextFieldProps[] => [
-    {placeholder: "Color", value: vehicleData.color || "", onChange: handleChange, name: "color"},
-    {placeholder: "Mileage", value: vehicleData.mileage, onChange: handleChange, name: "mileage"},
-    {placeholder: "Capacity", value: vehicleData.capacity, onChange: handleChange, name: "capacity"},
+    {placeholder: t('pages.vehicle.vehicles.form.color'), value: vehicleData.color || "", onChange: handleChange, name: "color"},
+    {placeholder: t('pages.vehicle.vehicles.form.mileage'), value: vehicleData.mileage, onChange: handleChange, name: "mileage"},
+    {placeholder: t('pages.vehicle.vehicles.form.capacity'), value: vehicleData.capacity, onChange: handleChange, name: "capacity"},
     {
-        placeholder: "Insurance policy number",
+        placeholder: t('pages.vehicle.vehicles.form.insurancePolicyNum'),
         value: vehicleData.insurance_policy_number || "",
         onChange: handleChange,
         name: "insurance_policy_number"
     },
-    {placeholder: "Notes", value: vehicleData.notes || "", onChange: handleChange, name: "notes"}
+    {placeholder: t('pages.vehicle.vehicles.form.notes'), value: vehicleData.notes || "", onChange: handleChange, name: "notes"}
 ];
 
 const VehicleForm: React.FC<VehicleFormProps> = ({
@@ -81,6 +90,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                                                      submitForm,
                                                      cancelSubmission,
                                                  }) => {
+    const {t} = useTranslation();
     // Create an adapter for MUI's handleChange to work with our API
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e.target.name, e.target.value);
@@ -96,17 +106,15 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
             <Paper elevation={3} sx={{p: 4, borderRadius: 2}}>
                 <Box>
                     <Typography variant="h6" color="text.primary" fontWeight={600}>
-                        Vehicle Form
+                        {t('pages.vehicle.vehicles.form.title')}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{mt: 1}}>
-                        Fill in vehicle's details below.
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{mt: 1}}>{t('pages.vehicle.vehicles.form.subtitle')}</Typography>
                 </Box>
 
                 <Box sx={{mt: 3}}>
                     {/* First block of text fields */}
                     <Grid container spacing={2}>
-                        {createFirstInputTextPropsBlock(vehicleData, handleChange).map((field, idx) => (
+                        {createFirstInputTextPropsBlock(vehicleData, handleChange, t).map((field, idx) => (
                             <Grid key={idx}>
                                 <TextField
                                     fullWidth
@@ -123,24 +131,24 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                     {/* Vehicle Type Picker */}
                     <FormControl fullWidth sx={{mt: 2}}>
-                        <InputLabel id="type-label">Vehicle Type</InputLabel>
+                        <InputLabel id="type-label">{t('pages.vehicle.vehicles.form.type.title')}</InputLabel>
                         <Select
                             labelId="type-label"
                             id="type"
                             name="type"
                             value={vehicleData.type || ''}
                             onChange={handleSelectChange}
-                            label="Vehicle Type"
+                            label={t('pages.vehicle.vehicles.form.type.title')}
                         >
                             {vehicleTypes.map((type) => (
-                                <MenuItem key={type} value={type}>{type}</MenuItem>
+                                <MenuItem key={type} value={type}>{t(`pages.vehicle.vehicles.form.type.types.${type}`)}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
 
                     {/* Vehicle Status Picker */}
                     <FormControl fullWidth sx={{mt: 2}}>
-                        <InputLabel id="status-label">Vehicle Status</InputLabel>
+                        <InputLabel id="status-label">{t('pages.vehicle.vehicles.form.status.title')}</InputLabel>
                         <Select
                             labelId="status-label"
                             id="status"
@@ -150,7 +158,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                             label="Vehicle Status"
                         >
                             {vehicleStatuses.map((status) => (
-                                <MenuItem key={status} value={status}>{status}</MenuItem>
+                                <MenuItem key={status} value={status}>{t(`pages.vehicle.vehicles.form.status.statuses.${status}`)}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -160,7 +168,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                         <Grid container spacing={2} sx={{mt: 1}}>
                             <Grid>
                                 <DatePicker
-                                    label="Purchase Date"
+                                    label={t('pages.vehicle.vehicles.form.purchaseDate')}
                                     value={dates.purchase_date}
                                     onChange={(newValue) => handleDateChange('purchase_date', newValue)}
                                     slotProps={{
@@ -172,7 +180,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                             </Grid>
                             <Grid>
                                 <DatePicker
-                                    label="Last Service Date"
+                                    label={t('pages.vehicle.vehicles.form.lastServiceDate')}
                                     value={dates.last_service_date}
                                     onChange={(newValue) => handleDateChange('last_service_date', newValue)}
                                     slotProps={{
@@ -186,7 +194,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                         <Box sx={{mt: 2}}>
                             <DatePicker
-                                label="Next Service Due"
+                                label={t('pages.vehicle.vehicles.form.nextServiceDue')}
                                 value={dates.next_service_due}
                                 onChange={(newValue) => handleDateChange('next_service_due', newValue)}
                                 slotProps={{textField: {fullWidth: true}, popper: {disablePortal: true}, openPickerIcon: {sx: {color: "#9c27b0"}}}}
@@ -196,17 +204,17 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                     {/* Fuel Type Picker */}
                     <FormControl fullWidth sx={{mt: 2}}>
-                        <InputLabel id="fuel-type-label">Fuel Type</InputLabel>
+                        <InputLabel id="fuel-type-label">{t('pages.vehicle.vehicles.form.fuel.title')}</InputLabel>
                         <Select
                             labelId="fuel-type-label"
                             id="fuel_type"
                             name="fuel_type"
                             value={vehicleData.fuel_type || ''}
                             onChange={handleSelectChange}
-                            label="Fuel Type"
+                            label={t('pages.vehicle.vehicles.form.fuel.title')}
                         >
                             {fuelTypes.map((type) => (
-                                <MenuItem key={type} value={type}>{type}</MenuItem>
+                                <MenuItem key={type} value={type}>{t(`pages.vehicle.vehicles.form.fuel.types.${type}`)}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -216,7 +224,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                         <Grid container spacing={2} sx={{mt: 2}}>
                             <Grid>
                                 <DatePicker
-                                    label="Insurance Expiry Date"
+                                    label={t('pages.vehicle.vehicles.form.insuranceExpiryDate')}
                                     value={dates.insurance_expiry_date}
                                     onChange={(newValue) => handleDateChange('insurance_expiry_date', newValue)}
                                     slotProps={{
@@ -228,7 +236,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                             </Grid>
                             <Grid>
                                 <DatePicker
-                                    label="License Expiry Date"
+                                    label={t('pages.vehicle.vehicles.form.licenseExpiryDate')}
                                     value={dates.license_expiry_date}
                                     onChange={(newValue) => handleDateChange('license_expiry_date', newValue)}
                                     slotProps={{
@@ -243,7 +251,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
                     {/* Second block of text fields */}
                     <Grid container spacing={2} sx={{mt: 1}}>
-                        {createSecondInputTextPropsBlock(vehicleData, handleChange).map((field, idx) => (
+                        {createSecondInputTextPropsBlock(vehicleData, handleChange, t).map((field, idx) => (
                             <Grid key={idx}>
                                 <TextField
                                     fullWidth
@@ -269,7 +277,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                         onClick={submitForm}
                         sx={{py: 1.5}}
                     >
-                        Submit
+                        {t('common.submit')}
                     </Button>
                     <Button
                         variant="contained"
@@ -278,7 +286,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                         onClick={cancelSubmission}
                         sx={{mt: 1.5, py: 1.5, bgcolor: "#9BA1A6"}}
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                 </Box>
             </Paper>

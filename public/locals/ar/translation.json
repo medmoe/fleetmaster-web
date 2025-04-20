@@ -69,54 +69,67 @@
       "exit": "خروج"
     }
   },
-  "vehicles": {
-    "pageTitle": "قائمة المركبات",
-    "pageDescription": "فيما يلي قائمة المركبات.",
-    "addButton": "إضافة مركبة",
-    "details": {
-      "vehicleName": "اسم المركبة",
-      "purchaseDate": "تاريخ الشراء",
-      "capacity": "السعة",
-      "mileage": "المسافة المقطوعة",
-      "nextServiceDue": "موعد الصيانة القادمة",
-      "status": "الحالة",
-      "lastServiceDate": "تاريخ آخر صيانة",
-      "insuranceExpiryDate": "تاريخ انتهاء التأمين",
-      "licenseExpiryDate": "تاريخ انتهاء الترخيص"
-    },
-    "actions": {
-      "maintenance": "الصيانة",
-      "editVehicle": "تعديل المركبة",
-      "deleteVehicle": "حذف المركبة"
-    },
-    "status": {
-      "available": "متاح",
-      "inUse": "قيد الاستخدام",
-      "maintenance": "قيد الصيانة",
-      "outOfService": "خارج الخدمة",
-      "unknown": "غير معروف"
-    },
-    "form": {
-      "title": "نموذج المركبة",
-      "make": "الصانع",
-      "model": "الطراز",
-      "year": "السنة",
-      "registrationNumber": "رقم التسجيل",
-      "vin": "رقم التعريف",
-      "type": "نوع المركبة",
-      "fuelType": "نوع الوقود"
-    }
-  },
-  "serviceProviders": {
-    "details": {
-      "providerName": "اسم المزود",
-      "phoneNumber": "رقم الهاتف",
-      "address": "العنوان",
-      "serviceType": "نوع الخدمة"
-    },
-    "actions": {
-      "editProvider": "تعديل المزود",
-      "deleteProvider": "حذف المزود"
+  "pages": {
+    "vehicle": {
+      "vehicles": {
+        "title": "قائمة المركبات",
+        "subtitle": "فيما يلي قائمة المركبات",
+        "addButton": "إضافة مركبة",
+        "form": {
+          "title": "نموذج المركبة",
+          "subtitle": "املأ تفاصيل المركبة أدناه.",
+          "registration": "رقم التسجيل",
+          "make": "الصانع",
+          "model": "الطراز",
+          "year": "السنة",
+          "vin": "رقم التعريف",
+          "color": "اللون",
+          "mileage": "المسافة المقطوعة",
+          "capacity": "السعة",
+          "insurancePolicyNum": "رقم بوليصة التأمين",
+          "notes": "ملاحظات",
+          "purchaseDate": "تاريخ الشراء",
+          "lastServiceDate": "تاريخ آخر صيانة",
+          "nextServiceDue": "موعد الصيانة القادمة",
+          "insuranceExpiryDate": "تاريخ انتهاء التأمين",
+          "licenseExpiryDate": "تاريخ انتهاء الترخيص",
+          "type": {
+            "title": "نوع المركبة",
+            "types": {
+              "CAR": "سيارة",
+              "MOTORCYCLE": "دراجة نارية",
+              "TRUCK": "شاحنة",
+              "VAN": "شاحنة صغيرة"
+            }
+          },
+          "status": {
+            "title": "حالة المركبة",
+            "statuses": {
+              "ACTIVE": "نشطة",
+              "IN_MAINTENANCE": "قيد الصيانة",
+              "OUT_OF_SERVICE": "خارج الخدمة"
+            }
+          },
+          "fuel": {
+            "title": "نوع الوقود",
+            "types": {
+              "GASOLINE": "بنزين",
+              "DIESEL": "ديزل",
+              "ELECTRIC": "كهربائي",
+              "HYBRID": "هجين"
+            }
+          }
+        },
+        "card": {
+          "name": "اسم المركبة",
+          "purchaseDate": "تاريخ الشراء",
+          "capacity": "السعة",
+          "mileage": "المسافة المقطوعة",
+          "nextServiceDue": "موعد الصيانة القادمة",
+          "status": "الحالة",
+          "maintenance": "الصيانة"
+        }
+      }
     }
   }
 }

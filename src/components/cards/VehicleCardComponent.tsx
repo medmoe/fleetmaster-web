@@ -3,6 +3,7 @@ import {ListItemDetail} from "../index";
 import {vehicleStatusMapping} from "@/constants/forms/vehicle";
 import {Button, Container} from "@mui/material";
 import {Delete, Edit, Handyman} from "@mui/icons-material";
+import {useTranslation} from "react-i18next";
 
 interface VehicleProps {
     vehicle: VehicleType
@@ -14,6 +15,7 @@ interface VehicleProps {
 
 const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion, handleVehicleEdition}: VehicleProps) => {
     const [style, label] = vehicleStatusMapping[vehicle.status] || ["text-gray-500", "Unknown"];
+    const {t} = useTranslation();
     return (
         <Container maxWidth="md">
             <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 p-4">
@@ -21,32 +23,32 @@ const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion
                     {/* Vehicle Details Section */}
                     <div className="flex-1 space-y-2">
                         <ListItemDetail
-                            label="Vehicle name"
+                            label={t('pages.vehicle.vehicles.card.name')}
                             value={`${vehicle.make} ${vehicle.model} ${vehicle.year}`}
                             textStyle="text-txt font-medium"
                         />
                         <ListItemDetail
-                            label="Purchase date"
+                            label={t('pages.vehicle.vehicles.card.purchaseDate')}
                             value={vehicle.purchase_date}
                             textStyle="text-txt"
                         />
                         <ListItemDetail
-                            label="Capacity"
+                            label={t('pages.vehicle.vehicles.card.capacity')}
                             value={vehicle.capacity}
                             textStyle="text-txt"
                         />
                         <ListItemDetail
-                            label="Mileage"
+                            label={t('pages.vehicle.vehicles.card.mileage')}
                             value={vehicle.mileage}
                             textStyle="text-txt"
                         />
                         <ListItemDetail
-                            label="Next service due"
+                            label={t('pages.vehicle.vehicles.card.nextServiceDue')}
                             value={vehicle.next_service_due}
                             textStyle="text-txt"
                         />
                         <ListItemDetail
-                            label="Status"
+                            label={t('pages.vehicle.vehicles.card.status')}
                             value={label}
                             textStyle={`${style} font-medium`}
                         />
@@ -60,7 +62,7 @@ const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion
                             size="medium"
                             onClick={handleVehicleEdition}
                         >
-                            Edit
+                            {t('common.edit')}
                         </Button>
                         <Button
                             variant="outlined"
@@ -69,7 +71,7 @@ const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion
                             size="medium"
                             onClick={handleVehicleDeletion}
                         >
-                            Delete
+                            {t("common.delete")}
                         </Button>
                         <Button
                             variant="outlined"
@@ -78,7 +80,7 @@ const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion
                             size="medium"
                             onClick={handleMaintenance}
                         >
-                            Maintenance
+                            {t('pages.vehicle.vehicles.card.maintenance')}
                         </Button>
                     </div>
                 </div>

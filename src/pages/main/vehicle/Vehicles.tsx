@@ -6,9 +6,11 @@ import {useVehicle} from "@/hooks/main/useVehicle";
 import {useNavigate} from "react-router-dom";
 import useGeneralDataStore from "../../../store/useGeneralDataStore";
 import {VehicleType} from "@/types/types";
+import {useTranslation} from "react-i18next";
 
 const Vehicles = () => {
     const {authResponse} = useAuthStore()
+    const {t} = useTranslation();
     const {
         isLoading,
         showVehicleForm,
@@ -70,10 +72,10 @@ const Vehicles = () => {
                 <div className={"w-full flex justify-center"}>
                     <div className={"w-full max-w-3xl bg-white rounded-lg shadow p-5"}>
                         <div>
-                            <h1 className={"font-semibold text-lg text-txt"}>Vehicle's list</h1>
+                            <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.vehicles.title')}</h1>
                         </div>
                         <div className={"mt-5"}>
-                            <p className={"font-open-sans text-txt"}>Here is the list of vehicles.</p>
+                            <p className={"font-open-sans text-txt"}>{t('pages.vehicle.vehicles.subtitle')}</p>
                         </div>
                         <div className={"mt-4 space-y-4"}>
                             {authResponse?.vehicles?.map((vehicle) => {
@@ -93,7 +95,7 @@ const Vehicles = () => {
                                         startIcon={<Add/>}
                                         size={"large"}
                                         onClick={() => setShowVehicleForm(true)}>
-                                    Add vehicle
+                                    {t('pages.vehicle.vehicles.addButton')}
                                 </Button>
                             </Container>
                         </div>
