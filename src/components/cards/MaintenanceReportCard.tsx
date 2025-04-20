@@ -15,6 +15,7 @@ import {
 } from '@mui/icons-material';
 import {format, parseISO} from 'date-fns';
 import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from "@/types/maintenance";
+import {useTranslation} from "react-i18next";
 
 interface MaintenanceReportCardProps {
     report: MaintenanceReportWithStringsType;
@@ -32,7 +33,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-
+    const {t} = useTranslation();
     // Format dates nicely
     const startDate = report.start_date ? format(parseISO(report.start_date), 'MMM d, yyyy') : 'N/A';
     const endDate = report.end_date ? format(parseISO(report.end_date), 'MMM d, yyyy') : 'N/A';
@@ -86,13 +87,13 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                     </Avatar>
                     <Box>
                         <Typography variant="h6" component="div">
-                            {report.vehicle_details?.make || 'Unknown'} {report.vehicle_details?.model || 'Vehicle'}
+                            {report.vehicle_details?.make || t('pages.vehicle.maintenance.overview.reports.list.card.unknown')} {report.vehicle_details?.model || t('pages.vehicle.maintenance.overview.reports.list.card.vehicle')}
                         </Typography>
                     </Box>
                 </Box>
                 <Chip
                     icon={<BuildIcon fontSize="small"/>}
-                    label={report.maintenance_type}
+                    label={t(`pages.vehicle.maintenance.overview.reports.list.type.types.${report.maintenance_type}`)}
                     color={typeColor}
                     size="small"
                 />
@@ -106,13 +107,13 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <CalendarIcon color="action" sx={{mr: 1, fontSize: 20}}/>
                             <Typography variant="body2">
-                                <strong>Period:</strong> {startDate} to {endDate}
+                                <strong>{t('pages.vehicle.maintenance.overview.reports.list.card.label.period')}:</strong> {startDate} {t('pages.vehicle.maintenance.overview.reports.list.card.value.to')} {endDate}
                             </Typography>
                         </Box>
                         <Box sx={{display: 'flex', alignItems: 'center'}}>
                             <MileageIcon color="action" sx={{mr: 1, fontSize: 20}}/>
                             <Typography variant="body2">
-                                <strong>Mileage:</strong> {report.mileage || 'Not recorded'}
+                                <strong>{t('pages.vehicle.maintenance.overview.reports.list.card.label.mileage')}:</strong> {report.mileage || t('pages.vehicle.maintenance.overview.reports.list.card.value.notRecorded')}
                             </Typography>
                         </Box>
                     </Grid>
@@ -122,13 +123,13 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <MoneyIcon color="action" sx={{mr: 1, fontSize: 20}}/>
                             <Typography variant="body2">
-                                <strong>Total Cost:</strong> ${report.total_cost || 'N/A'}
+                                <strong>{t('pages.vehicle.maintenance.overview.reports.list.card.label.totalCost')}:</strong> ${report.total_cost || t('common.notAvailable')}
                             </Typography>
                         </Box>
                         <Box sx={{display: 'flex', alignItems: 'center'}}>
                             <StoreIcon color="action" sx={{mr: 1, fontSize: 20}}/>
                             <Typography variant="body2">
-                                <strong>Providers:</strong> {report.service_provider_events?.length || 0}
+                                <strong>{t('pages.vehicle.maintenance.overview.reports.list.card.label.providers')}:</strong> {report.service_provider_events?.length || 0}
                             </Typography>
                         </Box>
                     </Grid>
@@ -155,21 +156,22 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
             <CardActions disableSpacing sx={{px: 2, pt: 0, pb: 1, justifyContent: 'space-between'}}>
                 <Box>
                     {onEdit && (
-                        <Tooltip title="Edit Report">
+                        <Tooltip title={t('pages.vehicle.maintenance.overview.reports.list.card.actions.edit')}>
                             <IconButton onClick={() => onEdit(report)} size="small">
                                 <EditIcon fontSize="small"/>
                             </IconButton>
                         </Tooltip>
                     )}
                     {onDelete && (
-                        <Tooltip title="Delete Report">
+                        <Tooltip title={t('pages.vehicle.maintenance.overview.reports.list.card.actions.delete')}>
                             <IconButton onClick={() => onDelete(report)} size="small" color="error">
                                 <DeleteIcon fontSize="small"/>
                             </IconButton>
                         </Tooltip>
                     )}
                 </Box>
-                <Tooltip title={expanded ? "Show Less" : "Show More"}>
+                <Tooltip
+                    title={expanded ? t('pages.vehicle.maintenance.overview.reports.list.card.actions.less') : t('pages.vehicle.maintenance.overview.reports.list.card.actions.more')}>
                     <IconButton
                         onClick={handleExpandClick}
                         aria-expanded={expanded}
@@ -187,7 +189,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                 <CardContent>
                     {/* Parts Section */}
                     <Typography variant="subtitle2" color="primary" gutterBottom>
-                        Parts Used ({report.part_purchase_events?.length || 0})
+                        {t('pages.vehicle.maintenance.overview.reports.list.card.parts.title')} ({report.part_purchase_events?.length || 0})
                     </Typography>
 
                     {report.part_purchase_events && report.part_purchase_events.length > 0 ? (
@@ -204,14 +206,14 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                                     >
                                         <Card variant="outlined" sx={{p: 1}}>
                                             <Typography variant="body2">
-                                                <strong>{part.part_details?.name || 'Unnamed Part'}</strong>
+                                                <strong>{part.part_details?.name || t('pages.vehicle.maintenance.overview.reports.list.card.parts.unnamed')}</strong>
                                             </Typography>
                                             <Stack direction="row" justifyContent="space-between">
                                                 <Typography variant="caption" color="text.secondary">
-                                                    Qty: 1
+                                                    {t('pages.vehicle.maintenance.overview.reports.list.card.parts.quantity')}
                                                 </Typography>
                                                 <Typography variant="caption" color="text.secondary">
-                                                    ${part.cost || 'N/A'}
+                                                    ${part.cost || t('common.notAvailable')}
                                                 </Typography>
                                             </Stack>
                                         </Card>
@@ -220,19 +222,19 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                             </Grid>
                             <Box sx={{mt: 1, textAlign: 'right'}}>
                                 <Typography variant="body2">
-                                    Parts Total: ${partsCost.toFixed(2)}
+                                    {t('pages.vehicle.maintenance.overview.reports.list.card.parts.cost')}: ${partsCost.toFixed(2)}
                                 </Typography>
                             </Box>
                         </Box>
                     ) : (
                         <Typography variant="body2" color="text.secondary" sx={{mb: 3}}>
-                            No parts used in this maintenance.
+                            {t('pages.vehicle.maintenance.overview.reports.list.card.parts.none')}
                         </Typography>
                     )}
 
                     {/* Service Providers Section */}
                     <Typography variant="subtitle2" color="primary" gutterBottom>
-                        Service Providers ({report.service_provider_events?.length || 0})
+                        {t('pages.vehicle.maintenance.overview.reports.list.card.services.title')} ({report.service_provider_events?.length || 0})
                     </Typography>
 
                     {report.service_provider_events && report.service_provider_events.length > 0 ? (
@@ -250,10 +252,10 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                                         <Card variant="outlined" sx={{p: 1}}>
                                             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                                                 <Typography variant="body2">
-                                                    <strong>{service.service_provider_details?.name || 'Unknown Provider'}</strong>
+                                                    <strong>{service.service_provider_details?.name || t('pages.vehicle.maintenance.overview.reports.list.card.services.unknown')}</strong>
                                                 </Typography>
                                                 <Typography variant="body2">
-                                                    ${service.cost || 'N/A'}
+                                                    ${service.cost || t('common.notAvailable')}
                                                 </Typography>
                                             </Box>
                                             {service.description && (
@@ -267,13 +269,13 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                             </Grid>
                             <Box sx={{mt: 1, textAlign: 'right'}}>
                                 <Typography variant="body2">
-                                    Services Total: ${serviceCost.toFixed(2)}
+                                    {t('pages.vehicle.maintenance.overview.reports.list.card.services.cost')}: ${serviceCost.toFixed(2)}
                                 </Typography>
                             </Box>
                         </Box>
                     ) : (
                         <Typography variant="body2" color="text.secondary">
-                            No external service providers used for this maintenance.
+                            {t('pages.vehicle.maintenance.overview.reports.list.card.services.none')}
                         </Typography>
                     )}
                 </CardContent>

@@ -109,7 +109,7 @@ const MaintenanceOverview: React.FC = () => {
                         </Box>
 
                         <Box className="my-8">
-                            <Typography variant="h6" className="mb-4">Maintenance Reports</Typography>
+                            <Typography variant="h6" className="mb-4">{t('pages.vehicle.maintenance.overview.reports.title')}</Typography>
                             {/* Your existing reports list component */}
                             <MaintenanceReportsList reports={selectedYearData}
                                                     setOpenSnackBar={() => false}

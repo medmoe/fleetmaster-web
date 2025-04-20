@@ -27,6 +27,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {getLocalDateString} from '@/utils/common';
 import {MaintenanceReportWithStringsType, PartPurchaseEventWithNumbersType, ServiceProviderEventWithNumbersType} from '@/types/maintenance';
 import useGeneralDataStore from '../../store/useGeneralDataStore';
+import {useTranslation} from "react-i18next";
 
 interface NewReportDialogProps {
     open: boolean;
@@ -70,11 +71,12 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
     const [showPartPurchaseForm, setShowPartPurchaseForm] = useState(false);
     const [showServiceProviderForm, setShowServiceProviderForm] = useState(false);
     const {generalData} = useGeneralDataStore();
+    const {t} = useTranslation();
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
-                    New Maintenance Report
+                    {t('pages.vehicle.maintenance.overview.reports.dialog.title')}
                     <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
                         <CloseIcon/>
                     </IconButton>
@@ -100,16 +102,16 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     {/* Basic Report Info */}
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                         <FormControl fullWidth margin="normal">
-                            <InputLabel id="maintenance-type-label">Maintenance Type</InputLabel>
+                            <InputLabel id="maintenance-type-label">{t('pages.vehicle.maintenance.overview.reports.dialog.type.title')}</InputLabel>
                             <Select
                                 labelId="maintenance-type-label"
                                 value={maintenanceReportFormData.maintenance_type}
                                 name="maintenance_type"
                                 onChange={(e) => handleMaintenanceReportFormChange(e.target.name, e.target.value)}
-                                label="Maintenance Type"
+                                label={t('pages.vehicle.maintenance.overview.reports.dialog.type.title')}
                             >
-                                <MenuItem value="PREVENTIVE">Preventive</MenuItem>
-                                <MenuItem value="CURATIVE">Curative</MenuItem>
+                                <MenuItem value="PREVENTIVE">{t('pages.vehicle.maintenance.overview.reports.dialog.type.types.PREVENTIVE')}</MenuItem>
+                                <MenuItem value="CURATIVE">{t('pages.vehicle.maintenance.overview.reports.dialog.type.types.CURATIVE')}</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -117,7 +119,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                         <TextField
                             fullWidth
                             margin="normal"
-                            label="Mileage"
+                            label={t('pages.vehicle.maintenance.overview.reports.dialog.mileage')}
                             value={maintenanceReportFormData.mileage}
                             name="mileage"
                             onChange={(e) => handleMaintenanceReportFormChange(e.target.name, e.target.value)}
@@ -127,7 +129,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label="Start Date"
+                                label={t('pages.vehicle.maintenance.overview.reports.dialog.startDate')}
                                 value={maintenanceReportFormData.start_date ? new Date(`${maintenanceReportFormData.start_date}T12:00:00`) : null}
                                 onChange={(newValue) => {
                                     if (newValue) {
@@ -153,7 +155,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
-                                label="End Date"
+                                label={t('pages.vehicle.maintenance.overview.reports.dialog.endDate')}
                                 value={maintenanceReportFormData.end_date ? new Date(`${maintenanceReportFormData.end_date}T12:00:00`) : null}
                                 onChange={(newValue) => {
                                     if (newValue) {
@@ -180,7 +182,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                         <TextField
                             fullWidth
                             margin="normal"
-                            label="Description"
+                            label={t('pages.vehicle.maintenance.overview.reports.dialog.description')}
                             name={"description"}
                             value={maintenanceReportFormData.description}
                             onChange={(e) => handleMaintenanceReportFormChange(e.target.name, e.target.value)}
@@ -192,7 +194,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     {/* Part Purchases Section */}
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                         <Typography variant="subtitle1" gutterBottom>
-                            Part Purchases
+                            {t('pages.vehicle.maintenance.overview.reports.dialog.part.title')}
                         </Typography>
                         <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
                             {maintenanceReportFormData.part_purchase_events.map((purchaseEvent, idx) => {
@@ -226,7 +228,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    label="Part Name"
+                                                    label={t('pages.vehicle.maintenance.overview.reports.dialog.part.name')}
                                                     margin="normal"
                                                     error={!!partPurchaseEvent.part_details?.name &&
                                                         !generalData.parts.some(part =>
@@ -236,7 +238,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                                         partPurchaseEvent.part_details?.name &&
                                                         !generalData.parts.some(part =>
                                                             part.name === partPurchaseEvent.part_details?.name
-                                                        ) ? "Part not found" : ""
+                                                        ) ? t('pages.vehicle.maintenance.overview.reports.dialog.part.notFound') : ""
                                                     }
                                                 />
                                             )}
@@ -244,12 +246,13 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     </Grid>
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <FormControl fullWidth>
-                                            <InputLabel id={"parts-provider"}>Parts provider</InputLabel>
+                                            <InputLabel
+                                                id={"parts-provider"}>{t('pages.vehicle.maintenance.overview.reports.dialog.part.provider.title')}</InputLabel>
                                             <Select labelId={"parts-provider-label"}
                                                     name={"provider"}
                                                     value={partPurchaseEvent.provider}
                                                     onChange={(e) => handlePartPurchaseChange(e.target.name, e.target.value)}
-                                                    label={"Parts Provider"}
+                                                    label={t('pages.vehicle.maintenance.overview.reports.dialog.part.provider.title')}
                                             >
                                                 {generalData.part_providers.map((provider) => (
                                                     <MenuItem key={provider.id} value={provider.id}>{provider.name}</MenuItem>
@@ -260,7 +263,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                             <DatePicker
-                                                label="Purchase Date"
+                                                label={t('pages.vehicle.maintenance.overview.reports.dialog.part.purchaseDate')}
                                                 value={partPurchaseEvent.purchase_date ? new Date(`${partPurchaseEvent.purchase_date}T12:00:00`) : null}
                                                 onChange={(newValue) => {
                                                     if (newValue) {
@@ -284,7 +287,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <TextField
                                             fullWidth
-                                            label="Cost"
+                                            label={t('pages.vehicle.maintenance.overview.reports.dialog.part.cost')}
                                             name={"cost"}
                                             value={partPurchaseEvent.cost}
                                             onChange={(e) => handlePartPurchaseChange(e.target.name, e.target.value)}
@@ -297,7 +300,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         onClick={() => setShowPartPurchaseForm(false)}
                                         sx={{mr: 1}}
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -307,7 +310,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         }}
                                         disabled={!partPurchaseEvent.part || !partPurchaseEvent.provider || !partPurchaseEvent.purchase_date}
                                     >
-                                        Add Part
+                                        {t('pages.vehicle.maintenance.overview.reports.dialog.part.actions.add')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -319,7 +322,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                 size="small"
                                 sx={{mb: 2}}
                             >
-                                Add Part Purchase
+                                {t('pages.vehicle.maintenance.overview.reports.dialog.part.actions.addPurchase')}
                             </Button>
                         )}
                     </Grid>
@@ -327,7 +330,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     {/* Service Providers Section */}
                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                         <Typography variant="subtitle1" gutterBottom>
-                            Services
+                            {t('pages.vehicle.maintenance.overview.reports.dialog.service.title')}
                         </Typography>
                         <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
                             {maintenanceReportFormData.service_provider_events.map((serviceEvent, idx) => {
@@ -350,12 +353,13 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                 <Grid container spacing={2}>
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <FormControl fullWidth>
-                                            <InputLabel id={"provider"}>Service provider</InputLabel>
+                                            <InputLabel
+                                                id={"provider"}>{t('pages.vehicle.maintenance.overview.reports.dialog.service.provider.title')}</InputLabel>
                                             <Select labelId={"provider-label"}
                                                     name={"service_provider"}
                                                     value={serviceProviderEvent.service_provider}
                                                     onChange={(e) => handleServiceProviderChange(e.target.name, e.target.value)}
-                                                    label={"Service Provider"}
+                                                    label={t('pages.vehicle.maintenance.overview.reports.dialog.service.provider.title')}
                                             >
                                                 {generalData.service_providers.map((provider) => (
                                                     <MenuItem key={provider.id} value={provider.id}>{provider.name}</MenuItem>
@@ -366,7 +370,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                             <DatePicker
-                                                label="Service Date"
+                                                label={t('pages.vehicle.maintenance.overview.reports.dialog.service.serviceDate')}
                                                 value={serviceProviderEvent.service_date ? new Date(`${serviceProviderEvent.service_date}T12:00:00`) : null}
                                                 onChange={(newValue) => {
                                                     if (newValue) {
@@ -391,7 +395,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <TextField
                                             fullWidth
-                                            label="Cost"
+                                            label={t('pages.vehicle.maintenance.overview.reports.dialog.cost')}
                                             name={"cost"}
                                             value={serviceProviderEvent.cost}
                                             onChange={(e) => handleServiceProviderChange(e.target.name, e.target.value)}
@@ -401,7 +405,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <TextField
                                             fullWidth
-                                            label="Description"
+                                            label={t('pages.vehicle.maintenance.overview.reports.dialog.description')}
                                             name={"description"}
                                             value={serviceProviderEvent.description}
                                             onChange={(e) => handleServiceProviderChange(e.target.name, e.target.value)}
@@ -414,7 +418,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         onClick={() => setShowServiceProviderForm(false)}
                                         sx={{mr: 1}}
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -424,7 +428,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                         }}
                                         disabled={!serviceProviderEvent.service_provider || !serviceProviderEvent.service_date}
                                     >
-                                        Add Service
+                                        {t('pages.vehicle.maintenance.overview.reports.dialog.service.actions.add')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -436,14 +440,14 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                 size="small"
                                 color="primary"
                             >
-                                Add Service Event
+                                {t('pages.vehicle.maintenance.overview.reports.dialog.service.actions.addEvent')}
                             </Button>
                         )}
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>{t('common.cancel')}</Button>
                 <Button
                     onClick={handleMaintenanceReportSubmission}
                     variant="contained"
@@ -453,7 +457,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                     {isLoading && (
                         <CircularProgress size={24} color={"inherit"} sx={{mr: 1}}/>
                     )}
-                    Save Report
+                    {t('pages.vehicle.maintenance.overview.reports.dialog.actions.save')}
                 </Button>
             </DialogActions>
         </Dialog>

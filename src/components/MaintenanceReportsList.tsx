@@ -26,6 +26,7 @@ import {API} from "@/constants/endpoints";
 import {useMaintenanceReport} from "@/hooks/maintenance/useMaintenanceReport";
 import useGeneralDataStore from '../store/useGeneralDataStore';
 import NewMaintenanceReportDialog from "./dialogs/NewMaintenanceReportDialog";
+import {useTranslation} from "react-i18next";
 
 interface MaintenanceReportsListProps {
     reports: MaintenanceReportWithStringsType[];
@@ -64,6 +65,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
         setMaintenanceReportFormData,
     } = useMaintenanceReport(setShowReportsList, setOpenSnackBar);
     const {setRequest} = useGeneralDataStore();
+    const {t} = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('ALL');
     const [sortBy, setSortBy] = useState('date_desc');
@@ -148,7 +150,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                                 '&:hover': {borderColor: "#30349f", backgroundColor: "rgba(63, 81, 181, 0.04)"}
                             }}
                         >
-                            Go Back
+                            {t('pages.vehicle.maintenance.overview.reports.list.goBack')}
                         </Button>
                     )}
 
@@ -159,7 +161,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                         fullWidth
                         variant="outlined"
                         size="small"
-                        placeholder="Search reports..."
+                        placeholder={t('pages.vehicle.maintenance.overview.reports.list.search')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         slotProps={{
@@ -176,35 +178,35 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
 
                 <Grid sx={{width: {xs: '100%', sm: '50%'}}}>
                     <FormControl fullWidth size="small">
-                        <InputLabel id="filter-type-label">Type</InputLabel>
+                        <InputLabel id="filter-type-label">{t('pages.vehicle.maintenance.overview.reports.list.type.title')}</InputLabel>
                         <Select
                             labelId="filter-type-label"
                             id="filter-type"
                             value={filterType}
-                            label="Type"
+                            label={t('pages.vehicle.maintenance.overview.reports.list.type.title')}
                             onChange={(e) => setFilterType(e.target.value)}
                         >
-                            <MenuItem value="ALL">All Types</MenuItem>
-                            <MenuItem value="PREVENTIVE">Preventive</MenuItem>
-                            <MenuItem value="CURATIVE">Curative</MenuItem>
+                            <MenuItem value="ALL">{t('pages.vehicle.maintenance.overview.reports.list.type.types.ALL')}</MenuItem>
+                            <MenuItem value="PREVENTIVE">{t('pages.vehicle.maintenance.overview.reports.list.type.types.PREVENTIVE')}</MenuItem>
+                            <MenuItem value="CURATIVE">{t('pages.vehicle.maintenance.overview.reports.list.type.types.CURATIVE')}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
 
                 <Grid sx={{width: {xs: '100%', sm: '50%'}}}>
                     <FormControl fullWidth size="small">
-                        <InputLabel id="sort-by-label">Sort By</InputLabel>
+                        <InputLabel id="sort-by-label">{t('pages.vehicle.maintenance.overview.reports.list.sort.title')}</InputLabel>
                         <Select
                             labelId="sort-by-label"
                             id="sort-by"
                             value={sortBy}
-                            label="Sort By"
+                            label={t('pages.vehicle.maintenance.overview.reports.list.sort.title')}
                             onChange={(e) => setSortBy(e.target.value)}
                         >
-                            <MenuItem value="date_desc">Newest First</MenuItem>
-                            <MenuItem value="date_asc">Oldest First</MenuItem>
-                            <MenuItem value="cost_desc">Highest Cost</MenuItem>
-                            <MenuItem value="cost_asc">Lowest Cost</MenuItem>
+                            <MenuItem value="date_desc">{t('pages.vehicle.maintenance.overview.reports.list.sort.types.date_desc')}</MenuItem>
+                            <MenuItem value="date_asc">{t('pages.vehicle.maintenance.overview.reports.list.sort.types.date_asc')}</MenuItem>
+                            <MenuItem value="cost_desc">{t('pages.vehicle.maintenance.overview.reports.list.sort.types.cost_desc')}</MenuItem>
+                            <MenuItem value="cost_asc">{t('pages.vehicle.maintenance.overview.reports.list.sort.types.cost_asc')}</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -213,7 +215,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
             {/* Results Summary */}
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
                 <Typography variant="subtitle1">
-                    {sortedReports.length} {sortedReports.length === 1 ? 'Report' : 'Reports'} Found
+                    {sortedReports.length} {sortedReports.length === 1 ? t('pages.vehicle.maintenance.overview.reports.list.resultSummary.single') : t('pages.vehicle.maintenance.overview.reports.list.resultSummary.plural')}
                 </Typography>
             </Box>
 
@@ -234,10 +236,10 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
             ) : (
                 <Box sx={{textAlign: 'center', py: 5}}>
                     <Typography variant="h6" color="text.secondary">
-                        No maintenance reports found
+                        {t('pages.vehicle.maintenance.overview.reports.list.none')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Try adjusting your search or filters
+                        {t('pages.vehicle.maintenance.overview.reports.list.try')}
                     </Typography>
                 </Box>
             )}
@@ -247,24 +249,23 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                 open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
             >
-                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogTitle>{t('pages.vehicle.maintenance.overview.reports.list.deleteDialog.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this maintenance report for?
-                        This action cannot be undone.
+                        {t('pages.vehicle.maintenance.overview.reports.list.deleteDialog.subtitle')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
                         setDeleteDialogOpen(false)
                         setRequest('idle')
-                    }}>Cancel</Button>
+                    }}>{t('common.cancel')}</Button>
                     <Button onClick={handleConfirmDelete}
                             color="error"
                             startIcon={isLoading && (
                                 <CircularProgress size={20} color={"inherit"}/>
                             )}
-                    >Delete</Button>
+                    >{t('common.delete')}</Button>
                 </DialogActions>
             </Dialog>
 

@@ -48,7 +48,8 @@
     "error": "Error",
     "success": "Success",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "notAvailable": "N/A"
   },
   "layout": {
     "dashboard": {
@@ -243,6 +244,117 @@
             },
             "preventiveLabel": "P",
             "curativeLabel": "C"
+          },
+          "reports": {
+            "title": "Maintenance Reports",
+            "list": {
+              "goBack": "Go Back",
+              "search": "Search reports...",
+              "type": {
+                "title": "Type",
+                "types": {
+                  "ALL": "All Types",
+                  "PREVENTIVE": "Preventive",
+                  "CURATIVE": "Curative"
+                }
+              },
+              "sort": {
+                "title": "Sort By",
+                "types": {
+                  "date_desc": "Newest First",
+                  "date_asc": "Oldest First",
+                  "cost_desc": "Highest Cost",
+                  "cost_asc": "Lowest Cost"
+                }
+              },
+              "resultSummary": {
+                "plural": "Reports Found",
+                "single": "Report Found"
+              },
+              "card": {
+                "unknown": "Unknown",
+                "vehicle": "Vehicle",
+                "label": {
+                  "period": "Period",
+                  "mileage": "Mileage",
+                  "totalCost": "Total Cost",
+                  "providers": "Providers"
+                },
+                "value": {
+                  "to": "to",
+                  "notRecorded": "Not recorded"
+                },
+                "actions": {
+                  "edit": "Edit Report",
+                  "delete": "Delete Report",
+                  "less": "Show Less",
+                  "more": "Show More"
+                },
+                "parts": {
+                  "title": "Parts Used",
+                  "unnamed": "Unnamed Part",
+                  "quantity": "Qty: 1",
+                  "cost": "Parts Total",
+                  "none": "No parts used in this maintenance"
+                },
+                "services": {
+                  "title": "Service Providers",
+                  "unknown": "Unknown Provider",
+                  "cost": "Services Total",
+                  "none": "No external service providers used for this maintenance"
+                }
+              },
+              "none": "No maintenance reports found",
+              "try": "Try adjusting your search or filters"
+            },
+            "deleteDialog": {
+              "title": "Confirm Deletion",
+              "subtitle": "Are you sure you want to delete this maintenance report? This action cannot be undone."
+            },
+            "dialog": {
+              "title": "New Maintenance Report",
+              "type": {
+                "title": "Maintenance Type",
+                "types": {
+                  "PREVENTIVE": "Preventive",
+                  "CURATIVE": "Curative"
+                }
+              },
+              "mileage": "Mileage",
+              "startDate": "Start Date",
+              "endDate": "End Date",
+              "description": "Description",
+              "part": {
+                "title": "Part Purchases",
+                "name": "Part name",
+                "notFound": "Part not found",
+                "provider": {
+                  "title": "Parts provider"
+                },
+                "purchaseDate": "Purchase Date",
+                "cost": "Cost",
+                "actions": {
+                  "add": "Add Part",
+                  "addPurchase": "Add Part Purchase"
+                }
+              },
+              "service": {
+                "title": "Services",
+                "provider": {
+                  "title": "Service provider"
+                },
+                "serviceDate": "Service Date",
+                "cost": "Cost",
+                "description": "Description",
+                "actions": {
+                  "add": "Add Service",
+                  "addEvent": "Add Service Event"
+                }
+              },
+              "actions": {
+                "save": "Save Report"
+              }
+            }
           }
         }
       }
