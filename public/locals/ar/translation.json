@@ -1,0 +1,122 @@
+{
+  "common": {
+    "edit": "تعديل",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "save": "حفظ",
+    "close": "إغلاق"
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "username": "اسم المستخدم:",
+      "password": "كلمة المرور:",
+      "loginButton": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "التسجيل"
+    },
+    "register": {
+      "title": "مرحبًا بك في Fleet Master",
+      "subtitle": "ابدأ بإدارة أسطولك بسهولة. سجّل الآن لتتبع أسطولك والبقاء منظمًا.",
+      "registerButton": "تسجيل",
+      "hasAccount": "هل لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول",
+      "form": {
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "username": "اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "addressInformationTitle": "معلومات العنوان (اختياري)",
+        "collapseAddress": "إضافة عنوان",
+        "toggleAddress": "إخفاء",
+        "street": "عنوان الشارع",
+        "city": "المدينة",
+        "state": "الولاية/المقاطعة",
+        "country": "البلد",
+        "zip": "الرمز البريدي"
+      },
+      "agreement": {
+        "title": "بالمتابعة أنت توافق على",
+        "terms": "شروط الخدمة",
+        "policy": "سياسة الخصوصية",
+        "and": "و"
+      }
+    }
+  },
+  "layout": {
+    "dashboard": {
+      "dashboard": "لوحة التحكم",
+      "vehicles": "المركبات",
+      "drivers": "السائقون",
+      "maintenance": "الصيانة",
+      "reports": "نظرة عامة على التقارير",
+      "logout": "تسجيل الخروج"
+    },
+    "maintenance": {
+      "title": "الصيانة",
+      "overview": "نظرة عامة على الصيانة",
+      "parts": "قطع الغيار",
+      "partProviders": "موردو قطع الغيار",
+      "serviceProviders": "مقدمو الخدمة",
+      "reports": "التقارير",
+      "exit": "خروج"
+    }
+  },
+  "vehicles": {
+    "pageTitle": "قائمة المركبات",
+    "pageDescription": "فيما يلي قائمة المركبات.",
+    "addButton": "إضافة مركبة",
+    "details": {
+      "vehicleName": "اسم المركبة",
+      "purchaseDate": "تاريخ الشراء",
+      "capacity": "السعة",
+      "mileage": "المسافة المقطوعة",
+      "nextServiceDue": "موعد الصيانة القادمة",
+      "status": "الحالة",
+      "lastServiceDate": "تاريخ آخر صيانة",
+      "insuranceExpiryDate": "تاريخ انتهاء التأمين",
+      "licenseExpiryDate": "تاريخ انتهاء الترخيص"
+    },
+    "actions": {
+      "maintenance": "الصيانة",
+      "editVehicle": "تعديل المركبة",
+      "deleteVehicle": "حذف المركبة"
+    },
+    "status": {
+      "available": "متاح",
+      "inUse": "قيد الاستخدام",
+      "maintenance": "قيد الصيانة",
+      "outOfService": "خارج الخدمة",
+      "unknown": "غير معروف"
+    },
+    "form": {
+      "title": "نموذج المركبة",
+      "make": "الصانع",
+      "model": "الطراز",
+      "year": "السنة",
+      "registrationNumber": "رقم التسجيل",
+      "vin": "رقم التعريف",
+      "type": "نوع المركبة",
+      "fuelType": "نوع الوقود"
+    }
+  },
+  "serviceProviders": {
+    "details": {
+      "providerName": "اسم المزود",
+      "phoneNumber": "رقم الهاتف",
+      "address": "العنوان",
+      "serviceType": "نوع الخدمة"
+    },
+    "actions": {
+      "editProvider": "تعديل المزود",
+      "deleteProvider": "حذف المزود"
+    }
+  }
+}

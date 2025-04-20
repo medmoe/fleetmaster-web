@@ -14,3 +14,4 @@ export {default as MaintenanceTimeLine} from "./maintenance/MaintenanceTimeLine"
 export {default as SummaryMetrics} from "./maintenance/SummaryMetrics";
 export {default as YearlyComparisonChart} from "./maintenance/YearlyComparisonChart";
 export {default as VehicleInformationPanel} from "./maintenance/VehicleInformationPanel"
+export {default as LanguageSwitcher} from "./LanguageSwitcher";

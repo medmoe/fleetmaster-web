@@ -12,13 +12,14 @@ import {
     Person as DriversIcon,
 } from '@mui/icons-material';
 import {useMediaQuery} from '@mui/material';
-import {NavigationItem} from "../components";
 import LogoutButton from "../pages/auth/Logout";
+import {LanguageSwitcher, NavigationItem} from "@/components";
+import {useTranslation} from "react-i18next";
 
 const DashboardLayout: React.FC = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-
+    const {t} = useTranslation();
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -43,13 +44,14 @@ const DashboardLayout: React.FC = () => {
                 </div>
 
                 <nav className="mt-4 px-2 space-y-2">
-                    <NavigationItem to="/dashboard" icon={<DashboardIcon/>} label="Dashboard"/>
-                    <NavigationItem to="/vehicles" icon={<VehiclesIcon/>} label="Vehicles"/>
-                    <NavigationItem to="/drivers" icon={<DriversIcon/>} label="Drivers"/>
-                    <NavigationItem to="/maintenance-library" icon={<MaintenanceIcon/>} label="Maintenance"/>
-                    <NavigationItem to="/reports-overview" icon={<ReportsIcon/>} label="Reports Overview"/>
+                    <LanguageSwitcher/>
+                    <NavigationItem to="/dashboard" icon={<DashboardIcon/>} label={t('layout.dashboard.dashboard')}/>
+                    <NavigationItem to="/vehicles" icon={<VehiclesIcon/>} label={t('layout.dashboard.vehicles')}/>
+                    <NavigationItem to="/drivers" icon={<DriversIcon/>} label={t('layout.dashboard.drivers')}/>
+                    <NavigationItem to="/maintenance-library" icon={<MaintenanceIcon/>} label={t('layout.dashboard.maintenance')}/>
+                    <NavigationItem to="/reports-overview" icon={<ReportsIcon/>} label={t('layout.dashboard.reports')}/>
                     <div className={"border-t border-gray-200 my-4"}></div>
-                    <LogoutButton icon={<LogoutIcon/>} label="Logout"/>
+                    <LogoutButton icon={<LogoutIcon/>} label={t('layout.dashboard.logout')}/>
                 </nav>
             </div>
 

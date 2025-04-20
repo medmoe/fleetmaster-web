@@ -1,0 +1,122 @@
+{
+  "common": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "close": "Close"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "username": "Username:",
+      "password": "Password:",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Welcome to Fleet Master",
+      "subtitle": "Start managing your fleet with ease. Sign up now to keep track of your fleet and stay organized.",
+      "registerButton": "Register",
+      "hasAccount": "Already have an account?",
+      "login": "Login",
+      "form": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "username": "Username",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "addressInformationTitle": "Address Information (Optional)",
+        "collapseAddress": "ADD ADDRESS",
+        "toggleAddress": "HIDE",
+        "street": "Street Address",
+        "city": "City",
+        "state": "State/Province",
+        "country": "Country",
+        "zip": "ZIP/Postal Code"
+      },
+      "agreement": {
+        "title": "By continuing you agree to Fleet Master's",
+        "terms": "Terms of Service",
+        "policy": "Privacy Policy",
+        "and": "and"
+      }
+    }
+  },
+  "layout": {
+    "dashboard": {
+      "dashboard": "Dashboard",
+      "vehicles": "Vehicles",
+      "drivers": "Drivers",
+      "maintenance": "Maintenance",
+      "reports": "Reports Overview",
+      "logout": "Logout"
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "overview": "Maintenance Overview",
+      "parts": "Parts",
+      "partProviders": "Part Providers",
+      "serviceProviders": "ServiceProviders",
+      "reports": "Reports",
+      "exit": "Exit"
+    }
+  },
+  "vehicles": {
+    "pageTitle": "Vehicle's list",
+    "pageDescription": "Here is the list of vehicles.",
+    "addButton": "Add vehicle",
+    "details": {
+      "vehicleName": "Vehicle name",
+      "purchaseDate": "Purchase date",
+      "capacity": "Capacity",
+      "mileage": "Mileage",
+      "nextServiceDue": "Next service due",
+      "status": "Status",
+      "lastServiceDate": "Last service date",
+      "insuranceExpiryDate": "Insurance expiry date",
+      "licenseExpiryDate": "License expiry date"
+    },
+    "actions": {
+      "maintenance": "Maintenance",
+      "editVehicle": "Edit vehicle",
+      "deleteVehicle": "Delete vehicle"
+    },
+    "status": {
+      "available": "Available",
+      "inUse": "In Use",
+      "maintenance": "Under Maintenance",
+      "outOfService": "Out of Service",
+      "unknown": "Unknown"
+    },
+    "form": {
+      "title": "Vehicle Form",
+      "make": "Make",
+      "model": "Model",
+      "year": "Year",
+      "registrationNumber": "Registration Number",
+      "vin": "VIN",
+      "type": "Vehicle Type",
+      "fuelType": "Fuel Type"
+    }
+  },
+  "serviceProviders": {
+    "details": {
+      "providerName": "Provider name",
+      "phoneNumber": "Phone number",
+      "address": "Address",
+      "serviceType": "Service type"
+    },
+    "actions": {
+      "editProvider": "Edit provider",
+      "deleteProvider": "Delete provider"
+    }
+  }
+}

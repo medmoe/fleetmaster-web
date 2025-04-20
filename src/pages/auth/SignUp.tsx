@@ -4,6 +4,8 @@ import {Email, Person, Phone, Visibility, VisibilityOff} from "@mui/icons-materi
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import {useSignup} from "@/hooks/auth/useSignup";
+import {useTranslation} from "react-i18next";
+import {LanguageSwitcher} from "@/components";
 
 const SignUp = () => {
     const {
@@ -19,6 +21,7 @@ const SignUp = () => {
         setShowConfirmPassword,
         setShowPassword,
     } = useSignup();
+    const {t} = useTranslation();
     return (
         <Container maxWidth="sm" className="py-10">
             <Paper elevation={3} className="p-8 rounded-lg">
@@ -28,12 +31,13 @@ const SignUp = () => {
                     </Box>
                 ) : (
                     <Box component="form" onSubmit={handleSubmit} className="space-y-5">
+                        <LanguageSwitcher/>
                         <Box className="text-center mb-6">
                             <Typography variant="h4" component="h1" className="font-bold text-gray-800">
-                                Welcome to Fleet Master
+                                {t('auth.register.title')}
                             </Typography>
                             <Typography variant="body1" color="textSecondary" className="mt-2">
-                                Start managing your fleet with ease. Sign up now to keep track of your fleet and stay organized.
+                                {t('auth.register.subtitle')}
                             </Typography>
                         </Box>
 
@@ -48,7 +52,7 @@ const SignUp = () => {
                                 fullWidth
                                 id="firstname"
                                 name="user.first_name"
-                                label="First Name"
+                                label={t('auth.register.form.firstName')}
                                 value={formData.user.first_name}
                                 onChange={handleChange}
                                 slotProps={{
@@ -66,7 +70,7 @@ const SignUp = () => {
                                 fullWidth
                                 id="lastname"
                                 name="user.last_name"
-                                label="Last Name"
+                                label={t('auth.register.form.lastName')}
                                 value={formData.user.last_name}
                                 onChange={handleChange}
                                 slotProps={{
@@ -86,7 +90,7 @@ const SignUp = () => {
                                 required
                                 id="username"
                                 name="user.username"
-                                label="Username"
+                                label={t('auth.register.form.username')}
                                 value={formData.user.username}
                                 onChange={handleChange}
                                 slotProps={{
@@ -105,7 +109,7 @@ const SignUp = () => {
                                 required
                                 id="email"
                                 name="user.email"
-                                label="Email Address"
+                                label={t('auth.register.form.email')}
                                 type="email"
                                 value={formData.user.email}
                                 onChange={handleChange}
@@ -124,7 +128,7 @@ const SignUp = () => {
                                 fullWidth
                                 id="phone"
                                 name="phone"
-                                label="Phone Number"
+                                label={t('auth.register.form.phone')}
                                 value={formData.phone}
                                 onChange={handleChange}
                                 slotProps={{
@@ -142,7 +146,7 @@ const SignUp = () => {
                                 fullWidth
                                 id="password"
                                 name="user.password"
-                                label="Password"
+                                label={t('auth.register.form.password')}
                                 type={showPassword ? "text" : "password"}
                                 value={formData.user.password}
                                 onChange={handleChange}
@@ -164,7 +168,7 @@ const SignUp = () => {
                                 fullWidth
                                 id="confirmPassword"
                                 name="confirmPassword"
-                                label="Confirm Password"
+                                label={t('auth.register.form.confirmPassword')}
                                 type={showConfirmPassword ? "text" : "password"}
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
@@ -185,16 +189,14 @@ const SignUp = () => {
                         </Box>
                         <Box sx={{mt: 4, mb: 3}}>
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
-                                <Typography variant="h6" sx={{mr: 2}}>
-                                    Address Information (Optional)
-                                </Typography>
+                                <Typography variant="h6" sx={{mr: 2}}>{t('auth.register.form.addressInformationTitle')}</Typography>
                                 <Button
                                     size="small"
                                     variant="outlined"
                                     onClick={() => setShowAddressFields(!showAddressFields)}
                                     startIcon={showAddressFields ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                                 >
-                                    {showAddressFields ? 'Hide' : 'Add Address'}
+                                    {showAddressFields ? t('auth.register.form.toggleAddress') : t('auth.register.form.collapseAddress')}
                                 </Button>
                             </Box>
 
@@ -213,7 +215,7 @@ const SignUp = () => {
                                         fullWidth
                                         id="address"
                                         name="address"
-                                        label="Street Address"
+                                        label={t('auth.register.form.street')}
                                         value={formData.address}
                                         onChange={handleChange}
                                     />
@@ -226,7 +228,7 @@ const SignUp = () => {
                                             fullWidth
                                             id="city"
                                             name="city"
-                                            label="City"
+                                            label={t('auth.register.form.city')}
                                             value={formData.city}
                                             onChange={handleChange}
                                         />
@@ -236,7 +238,7 @@ const SignUp = () => {
                                             fullWidth
                                             id="state"
                                             name="state"
-                                            label="State/Province"
+                                            label={t('auth.register.form.state')}
                                             value={formData.state}
                                             onChange={handleChange}
                                         />
@@ -250,7 +252,7 @@ const SignUp = () => {
                                             fullWidth
                                             id="country"
                                             name="country"
-                                            label="Country"
+                                            label={t('auth.register.form.country')}
                                             value={formData.country}
                                             onChange={handleChange}
                                         />
@@ -260,7 +262,7 @@ const SignUp = () => {
                                             fullWidth
                                             id="zip_code"
                                             name="zip_code"
-                                            label="ZIP / Postal Code"
+                                            label={t('auth.register.form.zip')}
                                             value={formData.zip_code}
                                             onChange={handleChange}
                                         />
@@ -272,10 +274,10 @@ const SignUp = () => {
 
                         <Box className={"flex flex-col items-center gap-3"}>
                             <Typography variant="body2" color="textSecondary" className="text-sm mt-4">
-                                By continuing you agree to Fleet Master's
-                                <Link to="/terms" className="text-secondary-500 hover:underline"> Terms of Service </Link>
-                                and
-                                <Link to="/privacy" className="text-secondary-500 hover:underline"> Privacy Policy</Link>
+                                {t('auth.register.agreement.title')}
+                                <Link to="/terms" className="text-secondary-500 hover:underline"> {t('auth.register.agreement.terms')}</Link>
+                                {t('auth.register.agreement.and')}
+                                <Link to="/privacy" className="text-secondary-500 hover:underline"> {t('auth.register.agreement.policy')}</Link>
                             </Typography>
                             <Button
                                 type="submit"
@@ -286,13 +288,13 @@ const SignUp = () => {
                                 className="py-3 mt-4 bg-blue-600 hover:bg-blue-700"
                                 disabled={loading}
                             >
-                                {loading ? <CircularProgress size={24} color="inherit"/> : "Create Account"}
+                                {loading ? <CircularProgress size={24} color="inherit"/> : t('auth.register.registerButton')}
                             </Button>
                             <Divider className="my-4"/>
                             <Typography variant="body1" align="center" className="mt-4">
-                                Already registered?{" "}
+                                {t('auth.register.hasAccount')}{" "}
                                 <Link to="/" className="text-secondary-500 font-medium hover:underline">
-                                    Sign in
+                                    {t('auth.register.login')}
                                 </Link>
                             </Typography>
                         </Box>

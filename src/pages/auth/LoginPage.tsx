@@ -1,10 +1,13 @@
 import {useEffect} from "react";
 import {useLoginPage} from "@/hooks/auth/useLoginPage";
-import {CircularProgress, Alert} from "@mui/material";
+import {Alert, CircularProgress} from "@mui/material";
 import {Link} from 'react-router-dom'
+import {LanguageSwitcher} from "@/components";
+import {useTranslation} from "react-i18next";
 
 const LoginPage = () => {
     const {isLoading, loginFormData, handleLoginFormChange, submitLoginForm, verifyToken, error, setError} = useLoginPage();
+    const {t} = useTranslation();
     useEffect(() => {
         verifyToken();
     }, [])
@@ -17,11 +20,12 @@ const LoginPage = () => {
                                onClose={() => setError({isError: false, message: ''})}
                         >{error.message}</Alert>
                     )}
-                    <h1 className="text-2xl font-bold text-center text-txt">Login</h1>
+                    <LanguageSwitcher/>
+                    <h1 className="text-2xl font-bold text-center text-txt">{t('auth.login.title')}</h1>
                     <form className="space-y-6" onSubmit={submitLoginForm}>
                         <div>
                             <label htmlFor="username" className="block text-sm font-medium text-gray-600">
-                                Username:
+                                {t('auth.login.username')}
                             </label>
                             <input
                                 type="username"
@@ -35,7 +39,7 @@ const LoginPage = () => {
                         </div>
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                                Password:
+                                {t('auth.login.password')}
                             </label>
                             <input
                                 type="password"
@@ -51,11 +55,12 @@ const LoginPage = () => {
                             type="submit"
                             className="w-full px-4 py-2 text-sm font-medium text-white bg-primary-500 rounded hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400"
                         >
-                            Login
+                            {t('auth.login.loginButton')}
                         </button>
                     </form>
                     <div className="text-sm text-center text-default">
-                        Don't have an account? <Link to={"/register"} className="text-secondary-500 hover:underline">Register</Link>
+                        {t('auth.login.noAccount')} <Link to={"/register"}
+                                                          className="text-secondary-500 hover:underline">{t('auth.login.register')}</Link>
                     </div>
                 </div>
             }
@@ -64,4 +69,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-4
