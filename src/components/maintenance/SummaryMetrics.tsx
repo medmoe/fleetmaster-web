@@ -11,6 +11,7 @@ import {
 } from '@mui/icons-material';
 import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {isValid, parse} from 'date-fns';
+import {useTranslation} from 'react-i18next';
 
 interface SummaryMetricsProps {
     currentYearData: MaintenanceReportWithStringsType[];
@@ -28,6 +29,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                                                        }) => {
     const [viewMode, setViewMode] = useState<ViewMode>('yearly');
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(new Date().getMonth());
+    const {t} = useTranslation();
 
     const metrics = useMemo(() => {
         // Calculate total costs
@@ -162,8 +164,8 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
     }, [currentYearData, prevYearData, selectedYear]);
 
     const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'
     ];
 
     const handlePrevMonth = () => {
@@ -186,8 +188,8 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                     onChange={(_, newValue) => setViewMode(newValue)}
                     aria-label="metrics view mode"
                 >
-                    <Tab label="Yearly Overview" value="yearly"/>
-                    <Tab label="Monthly Breakdown" value="monthly"/>
+                    <Tab label={t('pages.vehicle.maintenance.overview.summaryMetrics.tabs.yearly')} value="yearly"/>
+                    <Tab label={t('pages.vehicle.maintenance.overview.summaryMetrics.tabs.monthly')} value="monthly"/>
                 </Tabs>
             </Box>
 
@@ -196,13 +198,13 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                     <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                         <Paper sx={{p: 3, height: '100%'}}>
                             <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                Total Maintenance Cost
+                                {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.totalCost.title')}
                             </Typography>
                             <Typography variant="h4" sx={{fontWeight: 'bold'}}>
                                 ${metrics.selectedYearTotal.toFixed(2)}
                             </Typography>
                             <Typography variant="body2" sx={{mt: 2}}>
-                                {selectedYear} • {metrics.selectedYearData.length} maintenance events
+                                {selectedYear} • {metrics.selectedYearData.length} {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.totalCost.events')}
                             </Typography>
                         </Paper>
                     </Grid>
@@ -210,18 +212,20 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                     <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                         <Paper sx={{p: 3, height: '100%'}}>
                             <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                Maintenance by Type
+                                {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.byType.title')}
                             </Typography>
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
                                 <BuildIcon color="primary" sx={{mr: 1}}/>
                                 <Typography variant="body1">
-                                    Preventive: ${metrics.preventiveCost.toFixed(2)}
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.byType.preventive')}:
+                                    ${metrics.preventiveCost.toFixed(2)}
                                 </Typography>
                             </Box>
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <MedicalServicesIcon color="error" sx={{mr: 1}}/>
                                 <Typography variant="body1">
-                                    Curative: ${metrics.curativeCost.toFixed(2)}
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.byType.curative')}:
+                                    ${metrics.curativeCost.toFixed(2)}
                                 </Typography>
                             </Box>
                         </Paper>
@@ -230,7 +234,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                     <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                         <Paper sx={{p: 3, height: '100%'}}>
                             <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                Year-over-Year Comparison
+                                {t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.yearComparison.title')}
                             </Typography>
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <Typography variant="h4" sx={{fontWeight: 'bold', mr: 2}}>
@@ -243,7 +247,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                                 )}
                             </Box>
                             <Typography variant="body2" sx={{mt: 2}}>
-                                {metrics.isIncrease ? 'Higher' : 'Lower'} than previous year
+                                {metrics.isIncrease ? t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.yearComparison.higher') : t('pages.vehicle.maintenance.overview.summaryMetrics.yearly.yearComparison.lower')}
                             </Typography>
                         </Paper>
                     </Grid>
@@ -271,13 +275,13 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                         <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                             <Paper sx={{p: 3, height: '100%'}}>
                                 <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                    Monthly Maintenance Cost
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.title')}
                                 </Typography>
                                 <Typography variant="h4" sx={{fontWeight: 'bold'}}>
                                     ${currentMonthMetrics.total.toFixed(2)}
                                 </Typography>
                                 <Typography variant="body2" sx={{mt: 2}}>
-                                    {currentMonthMetrics.events} maintenance events
+                                    {currentMonthMetrics.events} {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.events')}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -285,18 +289,20 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                         <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                             <Paper sx={{p: 3, height: '100%'}}>
                                 <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                    Monthly Breakdown
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.breakdown.title')}
                                 </Typography>
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 2}}>
                                     <BuildIcon color="primary" sx={{mr: 1}}/>
                                     <Typography variant="body1">
-                                        Preventive: ${currentMonthMetrics.preventive.toFixed(2)}
+                                        {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.breakdown.preventive')}:
+                                        ${currentMonthMetrics.preventive.toFixed(2)}
                                     </Typography>
                                 </Box>
                                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                                     <MedicalServicesIcon color="error" sx={{mr: 1}}/>
                                     <Typography variant="body1">
-                                        Curative: ${currentMonthMetrics.curative.toFixed(2)}
+                                        {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.breakdown.curative')}:
+                                        ${currentMonthMetrics.curative.toFixed(2)}
                                     </Typography>
                                 </Box>
                             </Paper>
@@ -305,7 +311,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                         <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                             <Paper sx={{p: 3, height: '100%'}}>
                                 <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                    Month-over-Month Change
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.monthChange.title')}
                                 </Typography>
                                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                                     <Typography variant="h4" sx={{fontWeight: 'bold', mr: 2}}>
@@ -318,7 +324,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                                     )}
                                 </Box>
                                 <Typography variant="body2" sx={{mt: 2}}>
-                                    {currentMonthMetrics.isMoMIncrease ? 'Higher' : 'Lower'} than {prevMonthName}
+                                    {currentMonthMetrics.isMoMIncrease ? t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.monthChange.higher') : t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.monthChange.lower')} {t(`pages.vehicle.maintenance.overview.summaryMetrics.months.${prevMonthName}`)}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -326,7 +332,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                         <Grid sx={{width: {xs: '100%', sm: '50%', md: '33.33%'}}}>
                             <Paper sx={{p: 3, height: '100%'}}>
                                 <Typography variant="subtitle2" color="text.secondary" sx={{mb: 2}}>
-                                    Year-over-Year Monthly Change
+                                    {t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.yearChange.title')}
                                 </Typography>
                                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                                     <Typography variant="h4" sx={{fontWeight: 'bold', mr: 2}}>
@@ -339,7 +345,7 @@ const SummaryMetrics: React.FC<SummaryMetricsProps> = ({
                                     )}
                                 </Box>
                                 <Typography variant="body2" sx={{mt: 2}}>
-                                    {currentMonthMetrics.isYoYIncrease ? 'Higher' : 'Lower'} than same month last year
+                                    {currentMonthMetrics.isYoYIncrease ? t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.yearChange.higher') : t('pages.vehicle.maintenance.overview.summaryMetrics.monthly.yearChange.lower')}
                                 </Typography>
                             </Paper>
                         </Grid>

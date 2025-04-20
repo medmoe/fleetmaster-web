@@ -3,12 +3,13 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Alert, Box, CircularProgress, Container, Paper, Tab, Tabs, Typography} from '@mui/material';
 import {MaintenanceReportsList, MaintenanceTimeLine, SummaryMetrics, VehicleInformationPanel, YearlyComparisonChart} from "../../../../components";
 import useGeneralDataStore from "../../../../store/useGeneralDataStore";
+import {useTranslation} from "react-i18next";
 
 const MaintenanceOverview: React.FC = () => {
     const currentYear = new Date().getFullYear();
     const prevYear = currentYear - 1;
     const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-
+    const {t} = useTranslation();
     const {fetchMaintenanceReports, maintenanceReports, isLoading, vehicle, error, setError} = useGeneralDataStore();
 
     useEffect(() => {
@@ -50,9 +51,7 @@ const MaintenanceOverview: React.FC = () => {
     return (
         <Container maxWidth="lg" className="py-8">
             <Paper className="p-6 mb-6">
-                <Typography variant="h4" component="h1" className="font-bold mb-6">
-                    Maintenance Overview
-                </Typography>
+                <Typography variant="h4" component="h1" className="font-bold mb-6">{t('pages.vehicle.maintenance.overview.title')}</Typography>
                 {error && (
                     <Alert severity="error"
                            sx={{
@@ -93,7 +92,7 @@ const MaintenanceOverview: React.FC = () => {
                         />
 
                         <Box className="my-8">
-                            <Typography variant="h6" className="mb-4">Yearly Comparison</Typography>
+                            <Typography variant="h6" className="mb-4">{t('pages.vehicle.maintenance.overview.yearlyComparisonChart.title')}</Typography>
                             <YearlyComparisonChart
                                 currentYearData={filteredData.currentYearData}
                                 prevYearData={filteredData.prevYearData}
@@ -102,7 +101,7 @@ const MaintenanceOverview: React.FC = () => {
                         </Box>
 
                         <Box className="my-8">
-                            <Typography variant="h6" className="mb-4">Maintenance Timeline</Typography>
+                            <Typography variant="h6" className="mb-4">{t('pages.vehicle.maintenance.overview.timeline.title')}</Typography>
                             <MaintenanceTimeLine
                                 reports={maintenanceReports || []}
                                 selectedYear={selectedYear}

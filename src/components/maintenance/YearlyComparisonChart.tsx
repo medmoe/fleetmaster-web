@@ -1,8 +1,9 @@
 // src/components/maintenance/YearlyComparisonChart.tsx
 import React, {useMemo} from 'react';
 import {Box, Paper} from '@mui/material';
-import {format, parseISO} from 'date-fns';
+import {parseISO} from 'date-fns';
 import {MaintenanceReportWithStringsType} from "@/types/maintenance";
+import {useTranslation} from "react-i18next";
 
 interface YearlyComparisonChartProps {
     currentYearData: MaintenanceReportWithStringsType[];
@@ -56,6 +57,11 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({
         };
     }, [currentYearData, prevYearData, selectedYear]);
 
+    const monthAbbreviations = [
+        'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'
+    ]
+    const {t} = useTranslation();
+
     return (
         <Paper className="p-4">
             <Box className="flex flex-col h-64">
@@ -102,7 +108,7 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({
                     <Box className="flex-1 flex">
                         {chartData.months.map(month => (
                             <Box key={month} className="flex-1 text-center">
-                                {format(new Date(2023, month, 1), 'MMM')}
+                                {t(`pages.vehicle.maintenance.overview.yearlyComparisonChart.axis.months.${monthAbbreviations[month]}`)}
                             </Box>
                         ))}
                     </Box>
@@ -112,11 +118,11 @@ const YearlyComparisonChart: React.FC<YearlyComparisonChartProps> = ({
                 <Box className="flex justify-center mt-4 gap-4">
                     <Box className="flex items-center">
                         <Box className="w-4 h-4 bg-blue-500 mr-2"></Box>
-                        <span>{chartData.currentYear}</span>
+                        <span>{chartData.currentYear} {t('pages.vehicle.maintenance.overview.yearlyComparisonChart.legend.currentYear')}</span>
                     </Box>
                     <Box className="flex items-center">
                         <Box className="w-4 h-4 bg-gray-300 mr-2"></Box>
-                        <span>{chartData.prevYear}</span>
+                        <span>{chartData.prevYear} {t('pages.vehicle.maintenance.overview.yearlyComparisonChart.legend.prevYear')}</span>
                     </Box>
                 </Box>
             </Box>

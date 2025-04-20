@@ -1,15 +1,4 @@
 {
-  "common": {
-    "edit": "Edit",
-    "delete": "Delete",
-    "cancel": "Cancel",
-    "submit": "Submit",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "save": "Save",
-    "close": "Close"
-  },
   "auth": {
     "login": {
       "title": "Login",
@@ -49,6 +38,17 @@
         "and": "and"
       }
     }
+  },
+  "common": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "close": "Close"
   },
   "layout": {
     "dashboard": {
@@ -128,6 +128,122 @@
           "nextServiceDue": "Next service due",
           "status": "status",
           "maintenance": "Maintenance"
+        }
+      },
+      "maintenance": {
+        "overview": {
+          "title": "Maintenance Overview",
+          "summaryMetrics": {
+            "tabs": {
+              "yearly": "Yearly Overview",
+              "monthly": "Monthly Breakdown"
+            },
+            "yearly": {
+              "totalCost": {
+                "title": "Total Maintenance Cost",
+                "events": "maintenance events"
+              },
+              "byType": {
+                "title": "Maintenance by Type",
+                "preventive": "Preventive",
+                "curative": "Curative"
+              },
+              "yearComparison": {
+                "title": "Year-over-Year Comparison",
+                "higher": "Higher than previous year",
+                "lower": "Lower than previous year"
+              }
+            },
+            "monthly": {
+              "title": "Monthly Maintenance Cost",
+              "events": "maintenance events",
+              "breakdown": {
+                "title": "Monthly Breakdown",
+                "preventive": "Preventive",
+                "curative": "Curative"
+              },
+              "monthChange": {
+                "title": "Month-over-Month Change",
+                "higher": "Higher than",
+                "lower": "Lower than"
+              },
+              "yearChange": {
+                "title": "Year-over-Year Monthly Change",
+                "higher": "Higher than same month last year",
+                "lower": "Lower than same month last year"
+              }
+            },
+            "months": {
+              "january": "January",
+              "february": "February",
+              "march": "March",
+              "april": "April",
+              "may": "May",
+              "june": "June",
+              "july": "July",
+              "august": "August",
+              "september": "September",
+              "october": "October",
+              "november": "November",
+              "december": "December"
+            }
+          },
+          "vehiclePanel": {
+            "title": "Vehicle Details",
+            "registration": "Registration",
+            "vehicle": "Vehicle",
+            "vin": "VIN",
+            "type": "Type",
+            "mileage": "Mileage",
+            "status": "Status",
+            "lastService": "Last Service",
+            "nextServiceDue": "Next Service Due",
+            "notAvailable": "N/A",
+            "km": "km"
+          },
+          "yearlyComparisonChart": {
+            "title": "Annual Cost Comparison",
+            "legend": {
+              "currentYear": "Current Year",
+              "prevYear": "Previous Year"
+            },
+            "axis": {
+              "dollar": "$",
+              "months": {
+                "jan": "Jan",
+                "feb": "Feb",
+                "mar": "Mar",
+                "apr": "Apr",
+                "may": "May",
+                "jun": "Jun",
+                "jul": "Jul",
+                "aug": "Aug",
+                "sep": "Sep",
+                "oct": "Oct",
+                "nov": "Nov",
+                "dec": "Dec"
+              }
+            },
+            "tooltip": {
+              "cost": "Cost"
+            }
+          },
+          "timeline": {
+            "title": "Maintenance Timeline",
+            "noEvents": "No maintenance events found for the selected timeframe.",
+            "legend": {
+              "preventive": "Preventive",
+              "curative": "Curative"
+            },
+            "tooltip": {
+              "date": "Date",
+              "type": "Type",
+              "cost": "Cost",
+              "description": "Description"
+            },
+            "preventiveLabel": "P",
+            "curativeLabel": "C"
+          }
         }
       }
     }

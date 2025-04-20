@@ -129,7 +129,124 @@
           "status": "الحالة",
           "maintenance": "الصيانة"
         }
+      },
+      "maintenance": {
+        "overview": {
+          "title": "نظرة عامة على الصيانة",
+          "summaryMetrics": {
+            "tabs": {
+              "yearly": "نظرة عامة سنوية",
+              "monthly": "التفصيل الشهري"
+            },
+            "yearly": {
+              "totalCost": {
+                "title": "إجمالي تكلفة الصيانة",
+                "events": "عمليات صيانة"
+              },
+              "byType": {
+                "title": "الصيانة حسب النوع",
+                "preventive": "وقائية",
+                "curative": "علاجية"
+              },
+              "yearComparison": {
+                "title": "المقارنة السنوية",
+                "higher": "أعلى من العام السابق",
+                "lower": "أقل من العام السابق"
+              }
+            },
+            "monthly": {
+              "title": "تكلفة الصيانة الشهرية",
+              "events": "عمليات صيانة",
+              "breakdown": {
+                "title": "التفصيل الشهري",
+                "preventive": "وقائية",
+                "curative": "علاجية"
+              },
+              "monthChange": {
+                "title": "التغيير الشهري",
+                "higher": "أعلى من",
+                "lower": "أقل من"
+              },
+              "yearChange": {
+                "title": "التغيير السنوي الشهري",
+                "higher": "أعلى من نفس الشهر في العام الماضي",
+                "lower": "أقل من نفس الشهر في العام الماضي"
+              }
+            },
+            "months": {
+              "january": "يناير",
+              "february": "فبراير",
+              "march": "مارس",
+              "april": "أبريل",
+              "may": "مايو",
+              "june": "يونيو",
+              "july": "يوليو",
+              "august": "أغسطس",
+              "september": "سبتمبر",
+              "october": "أكتوبر",
+              "november": "نوفمبر",
+              "december": "ديسمبر"
+            }
+          },
+          "vehiclePanel": {
+            "title": "تفاصيل المركبة",
+            "registration": "رقم التسجيل",
+            "vehicle": "المركبة",
+            "vin": "رقم التعريف",
+            "type": "النوع",
+            "mileage": "المسافة المقطوعة",
+            "status": "الحالة",
+            "lastService": "آخر صيانة",
+            "nextServiceDue": "موعد الصيانة القادمة",
+            "notAvailable": "غير متوفر",
+            "km": "كم"
+          },
+          "yearlyComparisonChart": {
+            "title": "مقارنة التكاليف السنوية",
+            "legend": {
+              "currentYear": "العام الحالي",
+              "prevYear": "العام السابق"
+            },
+            "axis": {
+              "dollar": "$",
+              "months": {
+                "jan": "يناير",
+                "feb": "فبراير",
+                "mar": "مارس",
+                "apr": "أبريل",
+                "may": "مايو",
+                "jun": "يونيو",
+                "jul": "يوليو",
+                "aug": "أغسطس",
+                "sep": "سبتمبر",
+                "oct": "أكتوبر",
+                "nov": "نوفمبر",
+                "dec": "ديسمبر"
+              }
+            },
+            "tooltip": {
+              "cost": "التكلفة"
+            }
+          },
+          "timeline": {
+            "title": "الجدول الزمني للصيانة",
+            "noEvents": "لم يتم العثور على أحداث صيانة للفترة الزمنية المحددة.",
+            "legend": {
+              "preventive": "وقائية",
+              "curative": "علاجية"
+            },
+            "tooltip": {
+              "date": "التاريخ",
+              "type": "النوع",
+              "cost": "التكلفة",
+              "description": "الوصف"
+            },
+            "preventiveLabel": "و",
+            "curativeLabel": "ع"
+          }
+        }
       }
     }
   }
 }
+

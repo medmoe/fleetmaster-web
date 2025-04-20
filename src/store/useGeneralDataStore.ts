@@ -99,6 +99,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 partialize: (state) => ({
                     generalData: state.generalData,
                     maintenanceReports: state.maintenanceReports,
+                    vehicle: state.vehicle,
                     // Only persist the generalData, not loading states or errors
                 }),
             }
