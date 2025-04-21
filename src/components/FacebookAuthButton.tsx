@@ -1,5 +1,5 @@
 import React from 'react';
-import FacebookLogin from '@greatsumini/react-facebook-login';
+import FacebookLogin, {SuccessResponse } from '@greatsumini/react-facebook-login';
 
 // Define your backend endpoint URL
 // This usually comes from dj-rest-auth or a similar library integrating with allauth
@@ -9,7 +9,7 @@ const BACKEND_FACEBOOK_LOGIN_URL = 'https://fleetmaster.onrender.com/rest-auth/f
 
 const FacebookAuthButton = () => {
 
-  const handleFacebookLoginSuccess = async (response) => {
+  const handleFacebookLoginSuccess = async (response: SuccessResponse) => {
     console.log('Facebook Login Success:', response);
     // The key piece of information is the accessToken
     const accessToken = response.accessToken;
@@ -60,7 +60,7 @@ const FacebookAuthButton = () => {
     }
   };
 
-  const handleFacebookLoginFail = (error) => {
+  const handleFacebookLoginFail = (error: any) => {
     console.error('Facebook Login Failed:', error);
     // Handle error display to user (e.g., "Facebook login was cancelled or failed.")
   };
