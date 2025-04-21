@@ -9,6 +9,7 @@ import {ProtectedRoute, ThemeConfig} from "./components";
 import WebFont from "webfontloader";
 import {
     Dashboard,
+    DeletionConfirmation,
     Drivers,
     LoginPage,
     MaintenanceLibrary,
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                         <Route path="/register" element={<SignUp/>}/>
 
                         <Route element={<ProtectedRoute/>}>
+                            <Route path="/deletion-confirmation" element={<DeletionConfirmation />} />
                             <Route element={<DashboardLayout/>}>
                                 <Route path="/dashboard" element={<Dashboard/>}/>
                                 <Route path="/vehicles" element={<Vehicles/>}/>

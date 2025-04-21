@@ -10,4 +10,4 @@ export {default as Reports} from "./main/vehicle/maintenance/Reports";
 export {default as Drivers} from "./main/driver/Drivers";
 export {default as MaintenanceLibrary} from "./main/maintenance/MaintenanceLibrary";
 export {default as ReportsLibrary} from "./main/reports/ReportsLibrary";
-
+export {default as DeletionConfirmation} from "./DeletionConfirmation";
