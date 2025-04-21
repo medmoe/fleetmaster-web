@@ -1,5 +1,5 @@
-import {fireEvent, render, screen} from '@testing-library/react';
 import PartProviderCard from './PartProviderCard';
+import {fireEvent, render, screen} from '../../__test__/test-utils.tsx';
 import {PartProviderType} from "@/types/maintenance";
 import {expect, it, vi} from 'vitest';
 import '@testing-library/jest-dom'

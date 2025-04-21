@@ -228,7 +228,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                         </Box>
                     ) : (
                         <Typography variant="body2" color="text.secondary" sx={{mb: 3}}>
-                            {t('pages.vehicle.maintenance.overview.reports.list.card.parts.none')}
+                            {t('pages.vehicle.maintenance.overview.reports.list.card.parts.none')}.
                         </Typography>
                     )}
 
@@ -275,7 +275,7 @@ const MaintenanceReportCard: React.FC<MaintenanceReportCardProps> = ({
                         </Box>
                     ) : (
                         <Typography variant="body2" color="text.secondary">
-                            {t('pages.vehicle.maintenance.overview.reports.list.card.services.none')}
+                            {t('pages.vehicle.maintenance.overview.reports.list.card.services.none')}.
                         </Typography>
                     )}
                 </CardContent>
