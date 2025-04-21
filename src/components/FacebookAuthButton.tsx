@@ -5,7 +5,7 @@ import FacebookLogin, {SuccessResponse } from '@greatsumini/react-facebook-login
 // This usually comes from dj-rest-auth or a similar library integrating with allauth
 // Common patterns are /rest-auth/facebook/ or /api/auth/facebook/
 // CHECK YOUR project's urls.py to confirm the exact path!
-const BACKEND_FACEBOOK_LOGIN_URL = 'https://fleetmaster.onrender.com/rest-auth/facebook/'; // <-- VERIFY THIS URL
+const BACKEND_FACEBOOK_LOGIN_URL = 'https://fleetmaster.onrender.com/auth/facebook/'; // <-- VERIFY THIS URL
 
 const FacebookAuthButton = () => {
 
