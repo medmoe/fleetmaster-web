@@ -395,7 +395,7 @@ const NewMaintenanceReportDialog: React.FC<NewReportDialogProps> = ({
                                     <Grid sx={{width: {xs: "100%", sm: "50%"}}}>
                                         <TextField
                                             fullWidth
-                                            label={t('pages.vehicle.maintenance.overview.reports.dialog.cost')}
+                                            label={t('pages.vehicle.maintenance.overview.reports.dialog.service.cost')}
                                             name={"cost"}
                                             value={serviceProviderEvent.cost}
                                             onChange={(e) => handleServiceProviderChange(e.target.name, e.target.value)}

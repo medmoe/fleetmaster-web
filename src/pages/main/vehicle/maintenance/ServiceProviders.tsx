@@ -25,9 +25,11 @@ import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {Add, Close, Delete} from "@mui/icons-material";
 import {ServiceProviderType} from "@/types/maintenance";
 import axios from "axios";
-import {API} from "../../../../constants/endpoints";
+import {API} from "@/constants/endpoints.ts";
+import {useTranslation} from "react-i18next";
 
 const ServiceProviders = () => {
+    const {t} = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({
         isError: false,
@@ -78,7 +80,7 @@ const ServiceProviders = () => {
             console.error(error);
             setError({
                 isError: true,
-                message: "Error while deleting service provider"
+                message: t('pages.vehicle.maintenance.serviceProviders.errors.deleteError')
             });
         } finally {
             setIsLoading(false);
@@ -114,8 +116,8 @@ const ServiceProviders = () => {
             setError({
                 isError: true,
                 message: isPostRequest
-                    ? "Error while creating service provider"
-                    : "Error while updating service provider"
+                    ? t('pages.vehicle.maintenance.serviceProviders.errors.createError')
+                    : t('pages.vehicle.maintenance.serviceProviders.errors.updateError')
             });
         } finally {
             setIsLoading(false);
@@ -161,10 +163,10 @@ const ServiceProviders = () => {
             <div className={"w-full flex justify-center"}>
                 <div className={"w-full max-w-3xl bg-white rounded-lg shadow p-5"}>
                     <div>
-                        <h1 className={"font-semibold text-lg text-txt"}>Service Provider's List</h1>
+                        <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.maintenance.serviceProviders.title')}</h1>
                     </div>
                     <div className={"mt-5 flex items-center gap-2"}>
-                        <p className={"font-open-sans text-txt"}>Here is the list of service providers.</p>
+                        <p className={"font-open-sans text-txt"}>{t('pages.vehicle.maintenance.serviceProviders.subtitle')}</p>
                     </div>
 
                     <Snackbar
@@ -195,7 +197,7 @@ const ServiceProviders = () => {
                                 size={"large"}
                                 onClick={openAddDialog}
                             >
-                                Add service provider
+                                {t('pages.vehicle.maintenance.serviceProviders.addButton')}
                             </Button>
                         </Container>
                     </div>
@@ -211,7 +213,7 @@ const ServiceProviders = () => {
             >
                 <DialogTitle>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                        {isPostRequest ? "Add New Service Provider" : "Edit Service Provider"}
+                        {isPostRequest ? t('pages.vehicle.maintenance.serviceProviders.dialog.add') : t('pages.vehicle.maintenance.serviceProviders.dialog.edit')}
                         <IconButton edge="end" onClick={closeFormDialog}>
                             <Close/>
                         </IconButton>
@@ -222,7 +224,7 @@ const ServiceProviders = () => {
                     <Stack spacing={2} sx={{mt: 1}}>
                         <TextField
                             name="name"
-                            label="Provider Name"
+                            label={t('pages.vehicle.maintenance.serviceProviders.dialog.name')}
                             fullWidth
                             value={serviceProviderFormData.name}
                             onChange={(e) => handleChange(e.target.name, e.target.value)}
@@ -231,7 +233,7 @@ const ServiceProviders = () => {
                         />
                         <TextField
                             name="address"
-                            label="Address"
+                            label={t('pages.vehicle.maintenance.serviceProviders.dialog.address')}
                             fullWidth
                             value={serviceProviderFormData.address}
                             onChange={(e) => handleChange(e.target.name, e.target.value)}
@@ -242,24 +244,24 @@ const ServiceProviders = () => {
                         <TextField
                             required
                             name="phone_number"
-                            label="Phone Number"
+                            label={t('pages.vehicle.maintenance.serviceProviders.dialog.phoneNumber')}
                             fullWidth
                             value={serviceProviderFormData.phone_number}
                             onChange={(e) => handleChange(e.target.name, e.target.value)}
                             variant="outlined"
                         />
                         <FormControl fullWidth>
-                            <InputLabel id="service-type-label">Service Type</InputLabel>
+                            <InputLabel id="service-type-label">{t('pages.vehicle.maintenance.serviceProviders.dialog.serviceType')}</InputLabel>
                             <Select
                                 labelId="service-type-label"
                                 name="service_type"
                                 value={serviceProviderFormData.service_type}
                                 onChange={(e) => handleChange(e.target.name, e.target.value)}
-                                label="Service Type"
+                                label={t('pages.vehicle.maintenance.serviceProviders.dialog.serviceType')}
                             >
-                                <MenuItem value="MECHANIC">Mechanic</MenuItem>
-                                <MenuItem value="ELECTRICIAN">Electrician</MenuItem>
-                                <MenuItem value="CLEANING">Cleaning</MenuItem>
+                                <MenuItem value="MECHANIC">{t('pages.vehicle.maintenance.serviceProviders.dialog.serviceTypes.MECHANIC')}</MenuItem>
+                                <MenuItem value="ELECTRICIAN">{t('pages.vehicle.maintenance.serviceProviders.dialog.serviceTypes.ELECTRICIAN')}</MenuItem>
+                                <MenuItem value="CLEANING">{t('pages.vehicle.maintenance.serviceProviders.dialog.serviceTypes.CLEANING')}</MenuItem>
                             </Select>
                         </FormControl>
                     </Stack>
@@ -270,7 +272,7 @@ const ServiceProviders = () => {
                         color="inherit"
                         variant="outlined"
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button
                         onClick={handleSubmit}
@@ -279,7 +281,7 @@ const ServiceProviders = () => {
                         disabled={isLoading || !serviceProviderFormData.name}
                         startIcon={isLoading ? <CircularProgress size={20}/> : null}
                     >
-                        {isPostRequest ? "Add Provider" : "Save Changes"}
+                        {isPostRequest ? t('pages.vehicle.maintenance.serviceProviders.dialog.actions.add') : t('pages.vehicle.maintenance.serviceProviders.dialog.actions.save')}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -289,15 +291,15 @@ const ServiceProviders = () => {
                 open={openDeleteDialog}
                 onClose={closeDeleteDialog}
             >
-                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogTitle>{t('pages.vehicle.maintenance.serviceProviders.deleteDialog.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this service provider? This action cannot be undone.
+                        {t('pages.vehicle.maintenance.serviceProviders.deleteDialog.subtitle')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeDeleteDialog} color="primary">
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button
                         onClick={handleDelete}
@@ -306,7 +308,7 @@ const ServiceProviders = () => {
                         startIcon={isLoading ? <CircularProgress size={20} color="inherit"/> : <Delete/>}
                         disabled={isLoading}
                     >
-                        Delete
+                        {t('common.delete')}
                     </Button>
                 </DialogActions>
             </Dialog>

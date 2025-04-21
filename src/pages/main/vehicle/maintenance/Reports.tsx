@@ -10,9 +10,11 @@ import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
 import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {MaintenanceReportsList, NewMaintenanceReportDialog} from "../../../../components";
 import {useMaintenanceReport} from "@/hooks/maintenance/useMaintenanceReport";
+import {useTranslation} from "react-i18next";
 
 
 const Reports = () => {
+    const {t, i18n} = useTranslation();
     const {maintenanceReports, setRequest} = useGeneralDataStore();
     const [selectedReports, setSelectedReports] = useState<MaintenanceReportWithStringsType[]>([])
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -77,6 +79,7 @@ const Reports = () => {
                 overlap="circular"
                 badgeContent={hasReports ? reportsByDate[dateStr] : undefined}
                 sx={{
+                    direction: i18n.language === 'ar' ? 'rtl' : 'ltr',
                     '& .MuiBadge-badge': {
                         fontSize: '0.65rem',
                         height: '1.2rem',
@@ -117,11 +120,11 @@ const Reports = () => {
     const getSnackBarMessage = () => {
         switch (request) {
             case 'add':
-                return 'Report added successfully!';
+                return t('pages.vehicle.maintenance.reports.snack.add');
             case 'edit':
-                return 'Report edited successfully!';
+                return t('pages.vehicle.maintenance.reports.snack.edit');
             case 'delete':
-                return 'Report deleted successfully!';
+                return t('pages.vehicle.maintenance.reports.snack.delete');
             default:
                 return '';
         }
@@ -139,13 +142,13 @@ const Reports = () => {
                 /> :
                 <Paper sx={{p: 3, borderRadius: 2, boxShadow: 3}}>
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3}}>
-                        <Typography variant="h5" sx={{mb: 3}}>Maintenance Overview</Typography>
+                        <Typography variant="h5" sx={{mb: 3}}>{t('pages.vehicle.maintenance.reports.title')}</Typography>
                         <Button variant={"contained"}
                                 startIcon={<AddIcon/>}
                                 onClick={handleAddingNewReport}
                                 sx={{backgroundColor: '#3f51b5', '&:hover': {backgroundColor: '#3847a3'}}}
                         >
-                            New Report
+                            {t('pages.vehicle.maintenance.reports.addButton')}
                         </Button>
                     </Box>
                     <Snackbar open={openSnackbar}
@@ -169,6 +172,7 @@ const Reports = () => {
                             onChange={handleDateClick}
                             sx={{
                                 width: '100%',
+                                direction: i18n.language === 'ar' ? 'rtl' : 'ltr',
                                 '& .MuiDayCalendar-weekDayLabel': {
                                     color: 'primary.main',
                                     fontWeight: 'bold'
@@ -187,12 +191,12 @@ const Reports = () => {
                             '& .MuiBadge-badge': {fontSize: '0.65rem', height: '1.2rem', minWidth: '1.2rem', backgroundColor: "#ffa726",}
                         }}/>
                         <Typography variant="body2">
-                            Dates with badges indicate scheduled maintenance activities
+                            {t('pages.vehicle.maintenance.reports.badgeText')}
                         </Typography>
                     </Box>
 
                     <Typography variant="body2" sx={{mt: 2, color: 'text.secondary'}}>
-                        Total maintenance records: {maintenanceReports?.length || 0}
+                        {t('pages.vehicle.maintenance.reports.count')}: {maintenanceReports?.length || 0}
                     </Typography>
                 </Paper>
             }
