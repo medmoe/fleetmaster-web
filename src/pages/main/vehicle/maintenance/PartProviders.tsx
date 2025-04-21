@@ -20,9 +20,11 @@ import {PartProviderCard} from "../../../../components";
 import {PartProviderType} from "@/types/maintenance";
 import axios from "axios";
 import {API} from "@/constants/endpoints";
+import {useTranslation} from "react-i18next";
 
 const PartProviders = () => {
     const {generalData, setGeneralData} = useGeneralDataStore();
+    const {t} = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [partProviderFormData, setPartProviderFormData] = useState<PartProviderType>({
         name: "",
@@ -135,10 +137,10 @@ const PartProviders = () => {
             <div className={"w-full flex justify-center"}>
                 <div className={"w-full max-w-3xl bg-white rounded-lg shadow p-5"}>
                     <div>
-                        <h1 className={"font-semibold text-lg text-txt"}>Part Provider's List</h1>
+                        <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.maintenance.partProviders.title')}</h1>
                     </div>
                     <div className={"mt-5 flex items-center gap-2"}>
-                        <p className={"font-open-sans text-txt"}>Here is the list of part providers.</p>
+                        <p className={"font-open-sans text-txt"}>{t('pages.vehicle.maintenance.partProviders.subtitle')}</p>
                     </div>
                     <div className={"mt-4 space-y-4"}>
                         {generalData.part_providers.map((partProvider) => (
@@ -157,7 +159,7 @@ const PartProviders = () => {
                                 size={"large"}
                                 onClick={openAddDialog}
                             >
-                                Add part provider
+                                {t('pages.vehicle.maintenance.partProviders.addButton')}
                             </Button>
                         </Container>
                     </div>
@@ -173,7 +175,7 @@ const PartProviders = () => {
             >
                 <DialogTitle>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                        {isPostRequest ? "Add New Part Provider" : "Edit Part Provider"}
+                        {isPostRequest ? t('pages.vehicle.maintenance.partProviders.dialog.add') : t('pages.vehicle.maintenance.partProviders.dialog.edit')}
                         <IconButton edge="end" onClick={closeFormDialog}>
                             <Close/>
                         </IconButton>
@@ -184,7 +186,7 @@ const PartProviders = () => {
                     <Stack spacing={2} sx={{mt: 1}}>
                         <TextField
                             name="name"
-                            label="Provider Name"
+                            label={t('pages.vehicle.maintenance.partProviders.dialog.name')}
                             fullWidth
                             value={partProviderFormData.name}
                             onChange={handleChange}
@@ -193,7 +195,7 @@ const PartProviders = () => {
                         />
                         <TextField
                             name="address"
-                            label="Address"
+                            label={t('pages.vehicle.maintenance.partProviders.dialog.address')}
                             fullWidth
                             value={partProviderFormData.address}
                             onChange={handleChange}
@@ -203,7 +205,7 @@ const PartProviders = () => {
                         />
                         <TextField
                             required
-                            name="phone_number"
+                            name={t('pages.vehicle.maintenance.partProviders.dialog.phoneNumber')}
                             label="Phone Number"
                             fullWidth
                             value={partProviderFormData.phone_number}
@@ -219,7 +221,7 @@ const PartProviders = () => {
                         color="inherit"
                         variant="outlined"
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button
                         onClick={handleSubmit}
@@ -228,7 +230,7 @@ const PartProviders = () => {
                         disabled={isLoading || !partProviderFormData.name}
                         startIcon={isLoading ? <CircularProgress size={20}/> : null}
                     >
-                        {isPostRequest ? "Add Provider" : "Save Changes"}
+                        {isPostRequest ? t('pages.vehicle.maintenance.partProviders.dialog.actions.add') : t('pages.vehicle.maintenance.partProviders.dialog.actions.save')}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -238,15 +240,15 @@ const PartProviders = () => {
                 open={openDeleteDialog}
                 onClose={closeDeleteDialog}
             >
-                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogTitle>{t('pages.vehicle.maintenance.partProviders.deleteDialog.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete this part provider? This action cannot be undone.
+                        {t('pages.vehicle.maintenance.partProviders.deleteDialog.subtitle')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeDeleteDialog} color="primary">
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button
                         onClick={handleDelete}
@@ -255,7 +257,7 @@ const PartProviders = () => {
                         startIcon={isLoading ? <CircularProgress size={20} color="inherit"/> : <Delete/>}
                         disabled={isLoading}
                     >
-                        Delete
+                        {t('common.delete')}
                     </Button>
                 </DialogActions>
             </Dialog>

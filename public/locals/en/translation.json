@@ -356,6 +356,78 @@
               }
             }
           }
+        },
+        "parts": {
+          "title": "Parts Management",
+          "subtitle": "Here is the list of parts.",
+          "search": "Search parts...",
+          "addButton": "Add Part",
+          "resultsCount": {
+            "found": "results found",
+            "total": "total parts"
+          },
+          "noResults": {
+            "withSearch": "No parts match your search",
+            "empty": "No parts available. Add your first part!"
+          },
+          "pagination": {
+            "itemsPerPage": "Items per page:",
+            "of": "of"
+          },
+          "dialog": {
+            "add": "Add New Part",
+            "edit": "Edit Part",
+            "name": "Part Name",
+            "description": "Description",
+            "actions": {
+              "cancel": "Cancel",
+              "add": "Add Part",
+              "save": "Save Changes"
+            }
+          },
+          "deleteDialog": {
+            "title": "Confirm Deletion",
+            "subtitle": "Are you sure you want to delete the part \"{name}\"? This action cannot be undone.",
+            "actions": {
+              "cancel": "Cancel",
+              "delete": "Delete"
+            }
+          },
+          "errors": {
+            "createError": "Error while creating part",
+            "updateError": "Error while updating part",
+            "deleteError": "Error while deleting part"
+          }
+        },
+        "partProviders": {
+          "title": "Part Provider's List",
+          "subtitle": "Here is the list of part providers.",
+          "addButton": "Add part provider",
+          "dialog": {
+            "add": "Add New Part Provider",
+            "edit": "Edit Part Provider",
+            "name": "Provider Name",
+            "address": "Address",
+            "phoneNumber": "Phone Number",
+            "actions": {
+              "cancel": "Cancel",
+              "add": "Add Provider",
+              "save": "Save Changes"
+            }
+          },
+          "deleteDialog": {
+            "title": "Confirm Deletion",
+            "subtitle": "Are you sure you want to delete this part provider? This action cannot be undone.",
+            "actions": {
+              "cancel": "Cancel",
+              "delete": "Delete"
+            }
+          },
+          "errors": {
+            "createError": "Error while creating part provider",
+            "updateError": "Error while updating part provider",
+            "deleteError": "Error while deleting part provider"
+          }
         }
       }
     }

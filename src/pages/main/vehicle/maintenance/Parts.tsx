@@ -27,6 +27,7 @@ import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {PartType} from "@/types/maintenance";
 import {API} from '@/constants/endpoints';
 import axios from 'axios';
+import {useTranslation} from "react-i18next";
 
 const Parts: React.FC = () => {
     // Get data from store
@@ -49,6 +50,7 @@ const Parts: React.FC = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
     const url = `${API}maintenance/parts/`
+    const {t} = useTranslation();
 
     // Filter parts when search query changes
     useEffect(() => {
@@ -124,7 +126,10 @@ const Parts: React.FC = () => {
                 parts: isEditMode ? [...generalData.parts.filter(part => part.id !== newPart?.id), response.data] : [...generalData.parts, response.data]
             });
         } catch (error) {
-            setError({isError: true, message: isEditMode ? "Error while updating part" : "Error while creating part"})
+            setError({
+                isError: true,
+                message: isEditMode ? t('pages.vehicle.maintenance.parts.errors.updateError') : t('pages.vehicle.maintenance.parts.errors.createError')
+            })
             console.error(error);
         } finally {
             setIsLoading(false);
@@ -150,9 +155,9 @@ const Parts: React.FC = () => {
 
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', p: 3}}>
-            <h1 className={"font-semibold text-lg text-txt"}>Parts management</h1>
+            <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.maintenance.parts.title')}</h1>
             <div className={"mt-5 flex items-center gap-2 mb-4"}>
-                <p className={"font-open-sans text-txt"}>Here is the list of service providers.</p>
+                <p className={"font-open-sans text-txt"}>{t('pages.vehicle.maintenance.parts.subtitle')}</p>
             </div>
             {error.isError && (
                 <Alert
@@ -177,7 +182,7 @@ const Parts: React.FC = () => {
             <Paper sx={{p: 2, mb: 3}} elevation={2}>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2}}>
                     <TextField
-                        placeholder="Search parts..."
+                        placeholder={t('pages.vehicle.maintenance.parts.search')}
                         variant="outlined"
                         size="small"
                         value={searchQuery}
@@ -199,13 +204,13 @@ const Parts: React.FC = () => {
                         startIcon={<AddIcon/>}
                         onClick={handleAddPart}
                     >
-                        Add Part
+                        {t('pages.vehicle.maintenance.parts.addButton')}
                     </Button>
                 </Box>
 
                 {/* Results count */}
                 <Typography variant="body2" color="textSecondary" sx={{mb: 2}}>
-                    {searchQuery ? `${filteredParts.length} results found` : `${generalData.parts.length} total parts`}
+                    {searchQuery ? `${filteredParts.length} ${t('pages.vehicle.maintenance.parts.resultsCount.found')}` : `${generalData.parts.length} ${t('pages.vehicle.maintenance.parts.resultsCount.total')}`}
                 </Typography>
             </Paper>
 
@@ -214,7 +219,7 @@ const Parts: React.FC = () => {
                 {filteredParts.length === 0 ? (
                     <Box sx={{p: 4, textAlign: 'center'}}>
                         <Typography color="textSecondary">
-                            {searchQuery ? 'No parts match your search' : 'No parts available. Add your first part!'}
+                            {searchQuery ? t('pages.vehicle.maintenance.parts.noResults.withSearch') : t('pages.vehicle.maintenance.parts.noResults.empty')}
                         </Typography>
                     </Box>
                 ) : (
@@ -256,7 +261,7 @@ const Parts: React.FC = () => {
                         }}>
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <Typography variant="body2" color="text.secondary" sx={{mr: 2}}>
-                                    Items per page:
+                                    {t('pages.vehicle.maintenance.parts.pagination.itemsPerPage')}:
                                 </Typography>
                                 <Select
                                     value={itemsPerPage}
@@ -272,7 +277,7 @@ const Parts: React.FC = () => {
 
                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                 <Typography variant="body2" color="text.secondary" sx={{mr: 2}}>
-                                    {`${(page - 1) * itemsPerPage + 1}-${Math.min(page * itemsPerPage, filteredParts.length)} of ${filteredParts.length}`}
+                                    {`${(page - 1) * itemsPerPage + 1}-${Math.min(page * itemsPerPage, filteredParts.length)} ${t('pages.vehicle.maintenance.parts.pagination.of')} ${filteredParts.length}`}
                                 </Typography>
                                 <Pagination
                                     count={Math.ceil(filteredParts.length / itemsPerPage)}
@@ -291,7 +296,7 @@ const Parts: React.FC = () => {
             {/* Add/Edit Part Dialog */}
             <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)} maxWidth="sm" fullWidth>
                 <DialogTitle>
-                    {isEditMode ? 'Edit Part' : 'Add New Part'}
+                    {isEditMode ? t('pages.vehicle.maintenance.parts.dialog.edit') : t('pages.vehicle.maintenance.parts.dialog.add')}
                     {isLoading && <CircularProgress color="primary" size={20} thickness={4} className={"ml-2"}/>}
                     <IconButton
                         aria-label="close"
@@ -307,7 +312,7 @@ const Parts: React.FC = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label="Part Name"
+                            label={t('pages.vehicle.maintenance.parts.dialog.name')}
                             name="name"
                             value={newPart.name}
                             onChange={handleFormChange}
@@ -316,7 +321,7 @@ const Parts: React.FC = () => {
                         <TextField
                             margin="normal"
                             fullWidth
-                            label="Description"
+                            label={t('pages.vehicle.maintenance.parts.dialog.description')}
                             name="description"
                             value={newPart.description}
                             onChange={handleFormChange}
@@ -327,7 +332,7 @@ const Parts: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsDialogOpen(false)} color="inherit">
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button
                         sx={{backgroundColor: '#3f51b5', '&:hover': {backgroundColor: '#3847a3'}}}
@@ -335,25 +340,25 @@ const Parts: React.FC = () => {
                         variant="contained"
                         disabled={!newPart.name.trim()}
                     >
-                        {isEditMode ? 'Save Changes' : 'Add Part'}
+                        {isEditMode ? t('pages.vehicle.maintenance.parts.dialog.actions.save') : t('pages.vehicle.maintenance.parts.dialog.actions.add')}
                     </Button>
                 </DialogActions>
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
             <Dialog open={isDeleteConfirmOpen} onClose={() => setIsDeleteConfirmOpen(false)}>
-                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogTitle>{t('pages.vehicle.maintenance.parts.deleteDialog.title')}</DialogTitle>
                 <DialogContent>
                     <Typography>
-                        Are you sure you want to delete the part "{selectedPart?.name}"? This action cannot be undone.
+                        {t('pages.vehicle.maintenance.parts.deleteDialog.subtitle')}
                     </Typography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setIsDeleteConfirmOpen(false)} color="inherit">
-                        Cancel
+                        {t('common.cancel')}
                     </Button>
                     <Button onClick={handleDelete} color="error" variant="contained">
-                        Delete
+                        {t('common.delete')}
                     </Button>
                 </DialogActions>
             </Dialog>
