@@ -28,6 +28,9 @@ jobs:
         run: npm test
 
       - name: Build project
+        env:
+          VITE_APP_FACEBOOK_APP_ID: ${{secrets.FB_APP_ID}}
+
         run: npm run build
 
       - name: Ensure CNAME file exists

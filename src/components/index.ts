@@ -16,3 +16,4 @@ export {default as YearlyComparisonChart} from "./maintenance/YearlyComparisonCh
 export {default as VehicleInformationPanel} from "./maintenance/VehicleInformationPanel"
 export {default as LanguageSwitcher} from "./LanguageSwitcher";
 export {default as ThemeConfig} from "./ThemeConfig";
+export {default as FacebookAuthButton} from "./FacebookAuthButton";

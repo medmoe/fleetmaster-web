@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {useLoginPage} from "@/hooks/auth/useLoginPage";
 import {Alert, CircularProgress} from "@mui/material";
 import {Link} from 'react-router-dom'
-import {LanguageSwitcher} from "@/components";
+import {FacebookAuthButton, LanguageSwitcher} from "@/components";
 import {useTranslation} from "react-i18next";
 
 const LoginPage = () => {
@@ -62,6 +62,7 @@ const LoginPage = () => {
                         {t('auth.login.noAccount')} <Link to={"/register"}
                                                           className="text-secondary-500 hover:underline">{t('auth.login.register')}</Link>
                     </div>
+                    <FacebookAuthButton/>
                 </div>
             }
         </div>
