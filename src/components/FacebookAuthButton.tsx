@@ -70,6 +70,7 @@ const FacebookAuthButton = () => {
       appId={process.env.REACT_APP_FACEBOOK_APP_ID || "677210544919752"} // Use environment variable or replace directly
       onSuccess={handleFacebookLoginSuccess}
       onFail={handleFacebookLoginFail}
+      scope={'public_profile'}
       // Optional: Custom rendering for the button
       // render={({ onClick, logout }) => (
       //   <button onClick={onClick}>Login with Facebook</button>
