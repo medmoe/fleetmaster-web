@@ -4,11 +4,7 @@ import {API} from "@/constants/endpoints.ts";
 import {useNavigate} from "react-router-dom";
 import useAuthStore from '@/store/useAuthStore';
 
-// Define your backend endpoint URL
-// This usually comes from dj-rest-auth or a similar library integrating with allauth
-// Common patterns are /rest-auth/facebook/ or /api/auth/facebook/
-// CHECK YOUR project's urls.py to confirm the exact path!
-const BACKEND_FACEBOOK_LOGIN_URL = `${API}accounts/dj-rest-auth/facebook/`; // <-- VERIFY THIS URL
+const BACKEND_FACEBOOK_LOGIN_URL = `${API}accounts/dj-rest-auth/facebook/`;
 const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
 
 const FacebookAuthButton = () => {
@@ -46,9 +42,6 @@ const FacebookAuthButton = () => {
             const data = await apiResponse.json();
             console.log('Backend Login Response:', data);
 
-            // 2. Update Auth State: Use your state management (Context API, Redux, Zustand, etc.)
-            //    to set the user as logged in and store user details (data.user)
-            //    Example: authContext.login(data.user, data.access_token);
             setAuthResponse(data)
             navigate('/dashboard');
         } catch (error) {
@@ -64,10 +57,10 @@ const FacebookAuthButton = () => {
 
     return (
         <FacebookLogin
-            appId={facebookAppId} // Use environment variable or replace directly
+            appId={facebookAppId}
             onSuccess={handleFacebookLoginSuccess}
             onFail={handleFacebookLoginFail}
-            scope={'public_profile'}
+            scope={'public_profile,email'}
             // Optional: Custom rendering for the button
             // render={({ onClick, logout }) => (
             //   <button onClick={onClick}>Login with Facebook</button>
