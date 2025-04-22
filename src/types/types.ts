@@ -64,6 +64,8 @@ export interface AuthResponseDataType {
     zip_code?: string
     drivers?: DriverType[]
     vehicles?: VehicleType[]
+    access?: string
+    refresh?: string
 }
 
 export interface PickerItemType {

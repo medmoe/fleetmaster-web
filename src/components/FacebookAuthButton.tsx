@@ -1,6 +1,8 @@
 import React from 'react';
 import FacebookLogin, {SuccessResponse} from '@greatsumini/react-facebook-login';
 import {API} from "@/constants/endpoints.ts";
+import {useNavigate} from "react-router-dom";
+import useAuthStore from '@/store/useAuthStore';
 
 // Define your backend endpoint URL
 // This usually comes from dj-rest-auth or a similar library integrating with allauth
@@ -10,7 +12,8 @@ const BACKEND_FACEBOOK_LOGIN_URL = `${API}accounts/dj-rest-auth/facebook/`; // <
 const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
 
 const FacebookAuthButton = () => {
-
+    const navigate = useNavigate();
+    const {setAuthResponse} = useAuthStore()
     const handleFacebookLoginSuccess = async (response: SuccessResponse) => {
         console.log('Facebook Login Success:', response);
         // The key piece of information is the accessToken
@@ -43,19 +46,11 @@ const FacebookAuthButton = () => {
             const data = await apiResponse.json();
             console.log('Backend Login Response:', data);
 
-            // --- Handle Successful Backend Login ---
-            // 1. Store Tokens: Securely store the access and refresh tokens
-            //    (e.g., in localStorage, sessionStorage, or manage via HttpOnly cookies if backend sets them)
-            localStorage.setItem('access_token', data.access_token); // Or data.access if using simplejwt directly
-            localStorage.setItem('refresh_token', data.refresh_token); // Or data.refresh
-
             // 2. Update Auth State: Use your state management (Context API, Redux, Zustand, etc.)
             //    to set the user as logged in and store user details (data.user)
             //    Example: authContext.login(data.user, data.access_token);
-
-            // 3. Redirect (Optional): Navigate the user to their dashboard or home page
-            //    Example: navigate('/dashboard');
-
+            setAuthResponse(data)
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error sending Facebook token to backend:', error);
             // Handle error display to user
