@@ -1,11 +1,12 @@
 import React from 'react';
 import FacebookLogin, {SuccessResponse } from '@greatsumini/react-facebook-login';
+import {API} from "@/constants/endpoints.ts";
 
 // Define your backend endpoint URL
 // This usually comes from dj-rest-auth or a similar library integrating with allauth
 // Common patterns are /rest-auth/facebook/ or /api/auth/facebook/
 // CHECK YOUR project's urls.py to confirm the exact path!
-const BACKEND_FACEBOOK_LOGIN_URL = 'https://api.fleetmasters.net/auth/facebook/'; // <-- VERIFY THIS URL
+const BACKEND_FACEBOOK_LOGIN_URL = `${API}basic/auth/facebook/login/`; // <-- VERIFY THIS URL
 const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
 
 const FacebookAuthButton = () => {
