@@ -60,7 +60,7 @@ const FacebookAuthButton = () => {
             appId={facebookAppId}
             onSuccess={handleFacebookLoginSuccess}
             onFail={handleFacebookLoginFail}
-            scope={'public_profile,email'}
+            scope={'public_profile'}
             // Optional: Custom rendering for the button
             // render={({ onClick, logout }) => (
             //   <button onClick={onClick}>Login with Facebook</button>
