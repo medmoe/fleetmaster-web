@@ -3,6 +3,7 @@ import FacebookLogin, {SuccessResponse} from '@greatsumini/react-facebook-login'
 import {API} from "@/constants/endpoints.ts";
 import {useNavigate} from "react-router-dom";
 import useAuthStore from '@/store/useAuthStore';
+import axios from 'axios';
 
 const BACKEND_FACEBOOK_LOGIN_URL = `${API}accounts/dj-rest-auth/facebook/`;
 const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
@@ -23,30 +24,26 @@ const FacebookAuthButton = () => {
 
         // Send the accessToken to your Django backend
         try {
-            const apiResponse = await fetch(BACKEND_FACEBOOK_LOGIN_URL, {
-                method: 'POST',
+            const apiResponse = await axios.post(BACKEND_FACEBOOK_LOGIN_URL, {access_token: accessToken}, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                // dj-rest-auth typically expects the token like this
-                body: JSON.stringify({access_token: accessToken}),
-            });
+                    'Accept': 'application/json'
+                }, withCredentials: true
+            })
 
-            if (!apiResponse.ok) {
-                const errorData = await apiResponse.json();
-                console.error('Backend login failed:', errorData);
-                // Handle error display to user (e.g., "Login failed, please try again.")
-                throw new Error(`Backend login failed with status: ${apiResponse.status}`);
-            }
 
-            const data = await apiResponse.json();
-            console.log('Backend Login Response:', data);
-
-            setAuthResponse(data)
+            setAuthResponse(apiResponse.data)
             navigate('/dashboard');
         } catch (error) {
-            console.error('Error sending Facebook token to backend:', error);
-            // Handle error display to user
+            if (axios.isAxiosError(error)) {
+                console.error('Backend login failed:', error.response?.data);
+                // Handle error display to user (e.g., "Login failed, please try again.")
+                throw new Error(`Backend login failed with status: ${error.response?.status}`);
+            } else {
+                console.error('Unexpected error:', error);
+                throw error;
+            }
+
         }
     };
 
