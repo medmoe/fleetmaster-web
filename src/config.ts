@@ -3,7 +3,7 @@ const ENV = {
         API: "http://localhost:8000/",
     },
     prod: {
-        API: "https://api.fleetmasters.com/"
+        API: "https://api.fleetmasters.net/"
     }
 };
 
