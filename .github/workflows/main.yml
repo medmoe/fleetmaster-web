@@ -29,7 +29,8 @@ jobs:
 
       - name: Build project
         env:
-          VITE_FACEBOOK_APP_ID: ${{secrets.FB_APP_ID}}
+          VITE_FACEBOOK_APP_ID: ${{ secrets.FB_APP_ID }}
+          VITE_BACKEND_API_URL: ${{ secrets.BACKEND_API_URL }}
 
         run: npm run build
 

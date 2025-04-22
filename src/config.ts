@@ -3,7 +3,7 @@ const ENV = {
         API: "http://localhost:8000/",
     },
     prod: {
-        API: "https://api.fleetmasters.net/"
+        API: import.meta.env.VITE_BACKEND_API_URL
     }
 };
 
