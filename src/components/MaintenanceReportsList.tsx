@@ -249,10 +249,10 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                 open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
             >
-                <DialogTitle>{t('pages.vehicle.maintenance.overview.reports.list.deleteDialog.title')}</DialogTitle>
+                <DialogTitle>{t('pages.vehicle.maintenance.overview.reports.deleteDialog.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        {t('pages.vehicle.maintenance.overview.reports.list.deleteDialog.subtitle')}
+                        {t('pages.vehicle.maintenance.overview.reports.deleteDialog.subtitle')}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
