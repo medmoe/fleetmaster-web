@@ -15,7 +15,7 @@ export const useMaintenanceReport = (
         maintenance_type: "PREVENTIVE",
         start_date: "",
         end_date: "",
-        mileage: maintenanceReports.length > 0 ? maintenanceReports[0].mileage : "Unknown",
+        mileage: vehicle?.mileage || "0",
         description: "",
         part_purchase_events: [],
         service_provider_events: [],
@@ -95,11 +95,13 @@ export const useMaintenanceReport = (
                 setMaintenanceReports(maintenanceReports.map(report => report.id === response.data.id ? response.data : report))
 
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             setOpenSnackBar && setOpenSnackBar(true)
             setOpenFormDialog(false)
             setMaintenanceReportFormData(maintenanceReportFormInitState)
             setPartPurchaseEvent(partPurchaseEventInitState)
             setServiceProviderEvent(serviceProviderEventInitState)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             setShowReportsList && setShowReportsList(false)
         } catch (e: any) {
             console.error(e)
