@@ -91,7 +91,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                         label={driver.employment_status}
                         size="small"
                         color={driver.employment_status === 'ACTIVE' ? 'success' :
-                            driver.employment_status === 'ON_LEAVE' ? 'warning' : 'default'}
+                            driver.employment_status === 'ON_LEAVE' ? 'warning' : 'error'}
                         sx={{mr: 1, mt: 1}}
                     />
                     {licenseStatus && (
@@ -180,7 +180,6 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                                 </Typography>
                             </Box>
                         )}
-
                         {driver.date_of_birth && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
@@ -198,13 +197,21 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                                 </Typography>
                             </Box>
                         )}
+                        {driver.vehicle && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <DriveIcon fontSize={"small"} sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant={"body2"}>
+                                    {t('pages.driver.card.assignedVehicle')}: {driver.vehicle_details?.make} {driver.vehicle_details?.model} {driver.vehicle_details?.year}
+                                </Typography>
+                            </Box>
+                        )}
                     </Box>
                 </Box>
 
                 {/* Emergency Contact Information */}
                 {(driver.emergency_contact_name || driver.emergency_contact_phone) && (
                     <>
-                        <Divider sx={{my: 2}}/>
+                        <Divider sx={{my: 2, bgcolor: "#e3e6f7"}}/>
                         <Box>
                             <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
                                 {t('pages.driver.card.emergencyContact')}
@@ -237,7 +244,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                         <Divider sx={{my: 2, bgcolor: "#e3e6f7"}}/>
                         <Box>
                             <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
-                                {t('pages.driver.notes')}
+                                {t('pages.driver.card.notes')}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {driver.notes}

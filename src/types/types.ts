@@ -22,6 +22,7 @@ export interface DriverType {
     created_at?: string
     updated_at?: string
     profile_picture?: string
+    vehicle_details?: VehicleType
 }
 
 export interface VehicleType {

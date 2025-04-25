@@ -72,71 +72,110 @@
   },
   "pages": {
     "vehicle": {
-      "vehicles": {
-        "title": "Vehicle's list",
-        "subtitle": "Here is the list of vehicles",
-        "addButton": "Add vehicle",
-        "form": {
-          "title": "Vehicle Form",
-          "subtitle": "Fill in vehicle's details below.",
-          "registration": "Registration number",
-          "make": "Make",
-          "model": "Model",
-          "year": "Year",
-          "vin": "Vin",
-          "color": "Color",
-          "mileage": "Mileage",
-          "capacity": "Capacity",
-          "insurancePolicyNum": "Insurance policy number",
-          "notes": "Notes",
-          "purchaseDate": "Purchase Date",
-          "lastServiceDate": "Last Service Date",
-          "nextServiceDue": "Next Service Due",
-          "insuranceExpiryDate": "Insurance Expiry Date",
-          "licenseExpiryDate": "License Expiry Date",
-          "type": {
-            "title": "Vehicle Type",
-            "types": {
-              "CAR": "Car",
-              "MOTORCYCLE": "Motorcycle",
-              "TRUCK": "Truck",
-              "VAN": "Van"
-            }
-          },
-          "status": {
-            "title": "Vehicle Status",
-            "statuses": {
-              "ACTIVE": "Active",
-              "IN_MAINTENANCE": "In maintenance",
-              "OUT_OF_SERVICE": "Out of service"
-            }
-          },
-          "fuel": {
-            "title": "Fuel type",
-            "types": {
-              "GASOLINE": "Gasoline",
-              "DIESEL": "Diesel",
-              "ELECTRIC": "Electric",
-              "HYBRID": "Hybrid"
-            }
+      "title": "Vehicles Management",
+      "subtitle": "View and manage your fleet",
+      "addButton": "Add Vehicle",
+      "filter": {
+        "status": "Filter by Status",
+        "all": "All",
+        "active": "Active",
+        "onLeave": "On leave",
+        "outOfService": "Out of service"
+      },
+      "search": "Search vehicles...",
+      "resultsCount": {
+        "single": "Vehicle Found",
+        "plural": "Vehicles Found"
+      },
+      "noResults": {
+        "withSearch": "No vehicles match your search criteria",
+        "empty": "No vehicle available in your fleet",
+        "tryDifferent": "Try a different search or clear filters",
+        "addFirst": "Add your first vehicle using the button above"
+      },
+      "card": {
+        "generalInfo": "General Information",
+        "name": "Vehicle Name",
+        "purchaseDate": "Purchase Date",
+        "capacity": "Capacity",
+        "mileage": "Mileage",
+        "maintenanceInfo": "Maintenance Information",
+        "nextServiceDue": "Next Service Due",
+        "lastServiceDate": "Last Service Date",
+        "documentation": "Documentation",
+        "licenseExpiry": "License Expiry",
+        "insuranceExpiry": "Insurance Expiry",
+        "status": "Status",
+        "maintenance": "Maintenance",
+        "notes": "Notes"
+      },
+      "dialog": {
+        "add": "Add New Vehicle",
+        "edit": "Edit Vehicle",
+        "registration": "Registration number",
+        "vin": "Vin",
+        "type": {
+          "title": "Vehicle Type",
+          "types": {
+            "CAR": "Car",
+            "MOTORCYCLE": "Motorcycle",
+            "TRUCK": "Truck",
+            "VAN": "Van"
           }
         },
-        "card": {
-          "generalInfo": "General Information",
-          "name": "Vehicle Name",
-          "purchaseDate": "Purchase Date",
-          "capacity": "Capacity",
-          "mileage": "Mileage",
-          "maintenanceInfo": "Maintenance Information",
-          "nextServiceDue": "Next Service Due",
-          "lastServiceDate": "Last Service Date",
-          "documentation": "Documentation",
-          "licenseExpiry": "License Expiry",
-          "insuranceExpiry": "Insurance Expiry",
-          "status": "Status",
-          "maintenance": "Maintenance",
-          "notes": "Notes"
+        "status": {
+          "title": "Vehicle Status",
+          "statuses": {
+            "ACTIVE": "Active",
+            "IN_MAINTENANCE": "In maintenance",
+            "OUT_OF_SERVICE": "Out of service"
+          }
+        },
+        "notes": "Notes",
+        "make": "Make",
+        "model": "Model",
+        "year": "Year",
+        "color": "Color",
+        "fuel": {
+          "title": "Fuel type",
+          "types": {
+            "GASOLINE": "Gasoline",
+            "DIESEL": "Diesel",
+            "ELECTRIC": "Electric",
+            "HYBRID": "Hybrid"
+          }
+        },
+        "mileage": "Mileage",
+        "capacity": "Capacity",
+        "purchaseDate": "Purchase Date",
+        "lastServiceDate": "Last Service Date",
+        "nextServiceDue": "Next Service Due",
+        "insurancePolicyNum": "Insurance policy number",
+        "insuranceExpiryDate": "Insurance Expiry Date",
+        "licenseExpiryDate": "License Expiry Date",
+        "addButton": "Add Vehicle",
+        "updateButton": "Update Vehicle",
+        "sections": {
+          "basic": "Identification and Basic Information",
+          "specs": "Vehicle Specifications",
+          "dates": "Dates",
+          "legal": "Legal And Insurance"
         }
+      },
+      "deleteDialog": {
+        "title": "Delete Vehicle",
+        "subtitle": "Are you sure you want to delete this vehicle? This action cannot be undone."
+      },
+      "snackbar": {
+        "added": "Vehicle added successfully",
+        "updated": "Vehicle updated successfully",
+        "deleted": "Vehicle deleted successfully"
+      },
+      "errors": {
+        "createError": "Failed to create vehicle",
+        "updateError": "Failed to update vehicle",
+        "deleteError": "Failed to delete vehicle",
+        "requiredFields": "Please fill in all required fields"
       },
       "maintenance": {
         "overview": {
@@ -524,6 +563,7 @@
         "dob": "Date of Birth",
         "hireDate": "Hire Date",
         "emergencyContact": "Emergency Contact",
+        "assignedVehicle": "Assigned Vehicle",
         "notes": "Notes"
       },
       "dialog": {

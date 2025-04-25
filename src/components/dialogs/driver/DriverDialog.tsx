@@ -243,7 +243,7 @@ const DriverDialog = ({
                                 labelId="assigned-vehicle-label"
                                 value={formData.vehicle || ''}
                                 label={t('pages.driver.dialog.assignedVehicle')}
-                                onChange={(e) => handleFormChange('assigned_vehicle_id', e.target.value)}
+                                onChange={(e) => handleFormChange('vehicle', e.target.value)}
                             >
                                 <MenuItem value="">{t('pages.driver.dialog.noVehicle')}</MenuItem>
                                 {/* This would need to be populated with actual vehicles from an API call or context */}

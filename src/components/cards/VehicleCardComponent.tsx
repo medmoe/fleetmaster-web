@@ -101,7 +101,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                             <DeleteIcon/>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('pages.vehicle.vehicles.card.maintenance')}>
+                    <Tooltip title={t('pages.vehicle.card.maintenance')}>
                         <IconButton onClick={handleMaintenance} color="inherit">
                             <MaintenanceIcon/>
                         </IconButton>
@@ -114,27 +114,27 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                 <Box sx={{display: 'flex', flexDirection: {xs: 'column', sm: 'row'}, mb: 2}}>
                     <Box sx={{flex: 1, mb: {xs: 2, sm: 0}}}>
                         <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
-                            {t('pages.vehicle.vehicles.card.generalInfo')}
+                            {t('pages.vehicle.card.generalInfo')}
                         </Typography>
 
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                             <Typography variant="body2">
-                                {t('pages.vehicle.vehicles.card.purchaseDate')}: {formatDate(vehicle.purchase_date)}
+                                {t('pages.vehicle.card.purchaseDate')}: {formatDate(vehicle.purchase_date)}
                             </Typography>
                         </Box>
 
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <CapacityIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                             <Typography variant="body2">
-                                {t('pages.vehicle.vehicles.card.capacity')}: {vehicle.capacity}
+                                {t('pages.vehicle.card.capacity')}: {vehicle.capacity}
                             </Typography>
                         </Box>
 
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <SpeedIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                             <Typography variant="body2">
-                                {t('pages.vehicle.vehicles.card.mileage')}: {vehicle.mileage}
+                                {t('pages.vehicle.card.mileage')}: {vehicle.mileage}
                             </Typography>
                         </Box>
                     </Box>
@@ -142,14 +142,14 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                     {/* Maintenance Information */}
                     <Box sx={{flex: 1}}>
                         <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
-                            {t('pages.vehicle.vehicles.card.maintenanceInfo')}
+                            {t('pages.vehicle.card.maintenanceInfo')}
                         </Typography>
 
                         {vehicle.next_service_due && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <ServiceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                 <Typography variant="body2">
-                                    {t('pages.vehicle.vehicles.card.nextServiceDue')}: {formatDate(vehicle.next_service_due)}
+                                    {t('pages.vehicle.card.nextServiceDue')}: {formatDate(vehicle.next_service_due)}
                                 </Typography>
                             </Box>
                         )}
@@ -158,7 +158,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <MaintenanceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                 <Typography variant="body2">
-                                    {t('pages.vehicle.vehicles.card.lastServiceDate')}: {formatDate(vehicle.last_service_date)}
+                                    {t('pages.vehicle.card.lastServiceDate')}: {formatDate(vehicle.last_service_date)}
                                 </Typography>
                             </Box>
                         )}
@@ -171,14 +171,14 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                         <Divider sx={{my: 2}}/>
                         <Box>
                             <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
-                                {t('pages.vehicle.vehicles.card.documentation')}
+                                {t('pages.vehicle.card.documentation')}
                             </Typography>
 
                             {vehicle.license_expiry_date && (
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                     <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                     <Typography variant="body2">
-                                        {t('pages.vehicle.vehicles.card.licenseExpiry')}: {formatDate(vehicle.license_expiry_date)}
+                                        {t('pages.vehicle.card.licenseExpiry')}: {formatDate(vehicle.license_expiry_date)}
                                     </Typography>
                                 </Box>
                             )}
@@ -187,7 +187,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                     <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                     <Typography variant="body2">
-                                        {t('pages.vehicle.vehicles.card.insuranceExpiry')}: {formatDate(vehicle.insurance_expiry_date)}
+                                        {t('pages.vehicle.card.insuranceExpiry')}: {formatDate(vehicle.insurance_expiry_date)}
                                     </Typography>
                                 </Box>
                             )}
@@ -201,7 +201,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                         <Divider sx={{my: 2}}/>
                         <Box>
                             <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
-                                {t('pages.vehicle.vehicles.card.notes')}
+                                {t('pages.vehicle.card.notes')}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {vehicle.notes}

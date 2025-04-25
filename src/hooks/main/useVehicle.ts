@@ -2,142 +2,167 @@ import {useState} from "react";
 import {VehicleType} from "@/types/types";
 import {isPositiveInteger} from "@/utils/common";
 import {API} from "@/constants/endpoints";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import useAuthStore from "../../store/useAuthStore";
+import {useTranslation} from "react-i18next";
 
 
 export const useVehicle = () => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [vehicleDates, setvehicleDates] = useState<Record<string, Date | null>>({
-        purchase_date: null,
-        last_service_date: new Date(),
-        next_service_due: new Date(),
-        insurance_expiry_date: new Date(),
-        license_expiry_date: new Date(),
+    const {t} = useTranslation();
+    const {addVehicle, authResponse, editVehicle, removeVehicle} = useAuthStore();
+    const vehicles = authResponse?.vehicles || []
+    const [loading, setLoading] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterStatus, setFilterStatus] = useState("ALL");
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [vehicleToDelete, setVehicleToDelete] = useState<VehicleType | null>(null);
+    const [isEditing, setIsEditing] = useState(true)
+    const [formError, setFormError] = useState({message: "", isError: false,})
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        severity: "success" as "success" | "error"
     })
-    const [vehicleForm, setVehicleForm] = useState<VehicleType>({year: "", type: "", status: "", mileage: "", capacity: ""})
-    const [isPostRequest, setIsPostRequest] = useState(true)
-    const [errorState, setErrorState] = useState({errorMessage: "", isError: false,})
-    const [showVehicleForm, setShowVehicleForm] = useState(false);
-    const {addVehicle, editVehicle, removeVehicle} = useAuthStore();
+    const [formData, setFormData] = useState<VehicleType>({year: "", type: "", status: "", mileage: "", capacity: ""})
+
+    // Filter vehicles based on search query and status
+    const filteredVehicles = vehicles.filter(vehicle => {
+        const matchesSearch = searchQuery === "" ||
+            vehicle.make?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            vehicle.model?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            vehicle.registration_number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            vehicle.year.toString().includes(searchQuery) ||
+            vehicle.status.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesStatus = filterStatus === "ALL" || filterStatus === vehicle.status.toUpperCase()
+        return matchesSearch && matchesStatus
+    })
+
+    // Handle dialog form field changes
+    const handleFormChange = (field: string, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }))
+    }
+
+    // Open add vehicle dialog
+    const handleAddVehicle = () => {
+        setIsEditing(false)
+        setOpenDialog(true)
+    }
+
+    // Open edit vehicle dialog
+    const handleEditVehicle = (vehicle: VehicleType) => {
+        setFormData(vehicle)
+        setIsEditing(true)
+        setOpenDialog(true)
+    }
+
+    // Open delete confirmation dialog
+    const handleDeleteClick = (vehicle: VehicleType) => {
+        setVehicleToDelete(vehicle)
+        setOpenDeleteDialog(true)
+    }
+
+    // Submit vehicle form (create or update vehicle)
+    const handleSubmit = async () => {
+        const [isValid, message] = validateForm()
+        if (!isValid) {
+            setFormError({message, isError: true,})
+            return
+        }
+        setLoading(true)
+        try {
+            const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
+            let response: AxiosResponse;
+            if (isEditing && formData.id) {
+                response = await axios.put(`${API}vehicles/${formData.id}/`, formData, options)
+                editVehicle(formData.id, response.data)
+                setSnackbar({open: true, message: t('pages.vehicle.snackbar.updated'), severity: "success"})
+            } else {
+                response = await axios.post(`${API}vehicles/`, formData, options);
+                addVehicle(response.data)
+                setSnackbar({open: true, message: t('pages.vehicle.snackbar.added'), severity: "success"})
+            }
+            setOpenDialog(false)
+        } catch (error) {
+            console.error("Error saving vehicle: ", error)
+            setFormError({
+                isError: true,
+                message: isEditing
+                    ? t('pages.vehicle.errors.updateError')
+                    : t('pages.vehicle.errors.createError')
+            })
+        } finally {
+            setLoading(false)
+        }
+    }
+
 
     const validateForm = (): [boolean, string] => {
-        if (!isPositiveInteger(vehicleForm.year)) {
+        if (!isPositiveInteger(formData.year)) {
             return [false, "Year must be a positive number!"]
         }
-        if (!isPositiveInteger(vehicleForm.mileage)) {
+        if (!isPositiveInteger(formData.mileage)) {
             return [false, "Mileage must be a positive number!"]
         }
-        if (!isPositiveInteger(vehicleForm.capacity)) {
+        if (!isPositiveInteger(formData.capacity)) {
             return [false, "Capacity must be a positive number!"]
         }
-        if (!vehicleForm.type) {
+        if (!formData.type) {
             return [false, "Vehicle type is required!"]
         }
-        if (!vehicleForm.status) {
+        if (!formData.status) {
             return [false, "Vehicle status is required!"]
         }
-        if (!vehicleForm.purchase_date) {
+        if (!formData.purchase_date) {
             return [false, "Vehicle purchase date is required!"]
         }
         return [true, ""]
     }
 
-    const handleVehicleFormChange = (name: string, value: string) => {
-        setVehicleForm(prevState => ({
-            ...prevState,
-            [name]: value,
-        }))
-    }
-    const handleVehicleFormDateChange = (name: string, value: Date | null) => {
-        setvehicleDates(prevState => ({
-            ...prevState,
-            [name]: value,
-        }))
-    }
-    const handleVehicleEdition = (vehicle: VehicleType) => {
-        setVehicleForm(vehicle)
-        setIsPostRequest(false)
-        setShowVehicleForm(true)
-    }
-    const handleVehicleDeletion = async (vehicle: VehicleType) => {
-        setIsLoading(true)
+    const handleDeleteConfirm = async () => {
+        if (!vehicleToDelete || !vehicleToDelete.id) return
+
+        setLoading(true)
         try {
             const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
-            await axios.delete(`${API}vehicles/${vehicle.id}`, options)
-            removeVehicle(vehicle.id as string)
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response?.status === 401) {
-                setErrorState({isError: true, errorMessage: "Unauthorized, please log in again."})
-            }
-            const errorMessage = axios.isAxiosError(error)
-                ? error.message
-                : error instanceof Error
-                    ? error.message
-                    : 'An unknown error occurred';
-            setErrorState({isError: true, errorMessage})
+            await axios.delete(`${API}vehicles/${vehicleToDelete.id}`, options)
+            removeVehicle(vehicleToDelete.id as string)
+            setOpenDeleteDialog(false)
+            setSnackbar({open: true, message: t('pages.vehicle.snackbar.deleted'), severity: "success"});
+        } catch (error) {
+            console.error("Error deleting vehicle: ", error)
+            setSnackbar({open: true, message: t('pages.vehicle.errors.deleteError'), severity: "error"})
         } finally {
-            setIsLoading(false)
-        }
-    }
-    const submitVehicleForm = async () => {
-        const vehicleDateKeys = ["purchase_date", "last_service_date", "next_service_due", "insurance_expiry_date", "license_expiry_date"]
-        for (const key of vehicleDateKeys) {
-            if (key in vehicleDates && vehicleDates[key] !== null) {
-                vehicleForm[key as keyof VehicleType] = vehicleDates[key]?.toLocaleDateString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit"
-                })
-            }
-        }
-        const [isValid, errorMessage] = validateForm()
-        if (!isValid) {
-            setErrorState({
-                errorMessage,
-                isError: true,
-            })
-            return
-        }
-        setIsLoading(true)
-
-        // format data
-        vehicleForm["type"] = vehicleForm["type"].toUpperCase()
-        vehicleForm["status"] = vehicleForm["status"].replace(/ /g, "_").toUpperCase()
-
-        const url = isPostRequest ? `${API}vehicles/` : `${API}vehicles/${vehicleForm.id}/`;
-        const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
-        try {
-            const response = isPostRequest ? await axios.post(url, vehicleForm, options) : await axios.put(url, vehicleForm, options);
-            if (isPostRequest) {
-                addVehicle(response.data)
-            } else {
-                editVehicle(response.data.id, response.data)
-            }
-            setShowVehicleForm(false)
-            setIsLoading(false)
-        } catch (error: any) {
-            console.error(error)
-            if (error.response?.status === 401) {
-                setErrorState({isError: true, errorMessage: "Unauthorized, please log in again."})
-            }
-        } finally {
-            setIsLoading(false)
+            setLoading(false)
         }
     }
     return {
-        errorState,
-        isLoading,
-        vehicleDates,
-        vehicleForm,
-        showVehicleForm,
-        setErrorState,
-        setShowVehicleForm,
-        handleVehicleFormChange,
-        handleVehicleFormDateChange,
-        handleVehicleEdition,
-        handleVehicleDeletion,
-        submitVehicleForm,
+        openDialog,
+        setOpenDialog,
+        setOpenDeleteDialog,
+        formData,
+        handleFormChange,
+        handleSubmit,
+        handleAddVehicle,
+        handleEditVehicle,
+        handleDeleteClick,
+        handleDeleteConfirm,
+        vehicleToDelete,
+        filterStatus,
+        setFilterStatus,
+        loading,
+        isEditing,
+        formError,
+        setFormError,
+        searchQuery,
+        setSearchQuery,
+        filteredVehicles,
+        openDeleteDialog,
+        snackbar,
+        setSnackbar,
     }
 }
 

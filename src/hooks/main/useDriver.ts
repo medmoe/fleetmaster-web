@@ -92,6 +92,7 @@ export const useDriver = () => {
     // Open edit driver dialog
     const handleEditDriver = (driver: DriverType) => {
         setFormData(driver);
+        console.log(driver);
         setIsEditing(true);
         setOpenDialog(true);
     };
@@ -112,7 +113,6 @@ export const useDriver = () => {
             });
             return;
         }
-
         setLoading(true);
         try {
             const options = {
@@ -134,8 +134,6 @@ export const useDriver = () => {
                 response = await axios.post(`${API}drivers/`, formData, options);
                 // Add new driver to the list
                 addDriver(response.data);
-                // Update global state if needed
-                if (addDriver) addDriver(response.data);
                 setSnackbar({
                     open: true,
                     message: t('pages.driver.snackbar.added'),

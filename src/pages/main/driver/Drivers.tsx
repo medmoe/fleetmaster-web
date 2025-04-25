@@ -1,27 +1,13 @@
-import {
-    Alert,
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    Divider,
-    FormControl,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    Select,
-    Snackbar,
-    TextField,
-    Typography
-} from "@mui/material";
-import {Add as AddIcon, Search as SearchIcon} from "@mui/icons-material";
-import {Delete, DriverCardComponent, DriverDialog} from "@/components";
+import {Alert, Box, Button, Container, Divider, Snackbar, Typography, useTheme,} from "@mui/material";
+import {Add as AddIcon} from "@mui/icons-material";
+import {DeleteDriver, DriverCardComponent, DriverDialog, Filter} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useDriver} from "@/hooks/main/useDriver";
 
 
 const Drivers = () => {
         const {t} = useTranslation();
+        const theme = useTheme()
         const {
             driverToDelete,
             filterStatus,
@@ -48,6 +34,12 @@ const Drivers = () => {
             snackbar
         } = useDriver()
 
+        const menuItems = [
+            {label: "pages.driver.filter.all", value: "ALL"},
+            {label: "pages.driver.filter.active", value: "ACTIVE"},
+            {label: "pages.driver.filter.onLeave", value: "ON_LEAVE"},
+            {label: "pages.driver.filter.inactive", value: "INACTIVE"},
+        ]
 
         return (
             <Container maxWidth="lg" sx={{py: 4}}>
@@ -61,8 +53,8 @@ const Drivers = () => {
                         startIcon={<AddIcon/>}
                         onClick={handleAddDriver}
                         sx={{
-                            backgroundColor: '#3f51b5',
-                            '&:hover': {backgroundColor: '#303f9f'}
+                            backgroundColor: theme.palette.custom.primary[600],
+                            '&:hover': {backgroundColor: theme.palette.custom.primary[700]}
                         }}
                     >
                         {t('pages.driver.addButton')}
@@ -74,39 +66,13 @@ const Drivers = () => {
                 </Typography>
 
                 {/* Filters */}
-                <Box sx={{display: 'flex', gap: 2, mb: 4, flexDirection: {xs: 'column', sm: 'row'}}}>
-                    <TextField
-                        fullWidth
-                        placeholder={t('pages.driver.search')}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        slotProps={{
-                            input: {
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon/>
-                                    </InputAdornment>
-                                )
-                            }
-                        }}
-                        sx={{flexGrow: 1}}
-                    />
-
-                    <FormControl sx={{minWidth: 200}}>
-                        <InputLabel id="status-filter-label">{t('pages.driver.filter.status')}</InputLabel>
-                        <Select
-                            labelId="status-filter-label"
-                            value={filterStatus}
-                            label={t('pages.driver.filter.status')}
-                            onChange={(e) => setFilterStatus(e.target.value)}
-                        >
-                            <MenuItem value="ALL">{t('pages.driver.filter.all')}</MenuItem>
-                            <MenuItem value="ACTIVE">{t('pages.driver.filter.active')}</MenuItem>
-                            <MenuItem value="ON_LEAVE">{t('pages.driver.filter.onLeave')}</MenuItem>
-                            <MenuItem value="INACTIVE">{t('pages.driver.filter.inactive')}</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
+                <Filter searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        inputLabel={'pages.driver.filter.status'}
+                        filterInput={filterStatus}
+                        setFilterInput={setFilterStatus}
+                        items={menuItems}
+                />
 
                 {/* Results count */}
                 <Typography variant="subtitle1" sx={{mb: 2}}>
@@ -118,13 +84,6 @@ const Drivers = () => {
                 </Typography>
 
                 <Divider sx={{mb: 4}}/>
-
-                {/*/!* Loading spinner *!/*/}
-                {/*{loading && !openDialog && !openDeleteDialog && (*/}
-                {/*    <Box sx={{display: 'flex', justifyContent: 'center', my: 8}}>*/}
-                {/*        <CircularProgress size={60}/>*/}
-                {/*    </Box>*/}
-                {/*)}*/}
 
                 {/* No results message */}
                 {!loading && filteredDrivers.length === 0 && (
@@ -145,7 +104,7 @@ const Drivers = () => {
                 )}
 
                 {/* Drivers list */}
-                {!loading && filteredDrivers.map(driver => (
+                {filteredDrivers.map(driver => (
                     <DriverCardComponent
                         key={driver.id}
                         driver={driver}
@@ -167,11 +126,11 @@ const Drivers = () => {
                 />
 
                 {/* Delete Confirmation Dialog */}
-                <Delete openDeleteDialog={openDeleteDialog}
-                        setOpenDeleteDialog={setOpenDeleteDialog}
-                        driverToDelete={driverToDelete}
-                        handleDeleteConfirm={handleDeleteConfirm}
-                        loading={loading}
+                <DeleteDriver openDeleteDialog={openDeleteDialog}
+                              setOpenDeleteDialog={setOpenDeleteDialog}
+                              driverToDelete={driverToDelete}
+                              handleDeleteConfirm={handleDeleteConfirm}
+                              loading={loading}
                 />
 
                 {/* Snackbar for notifications */}
@@ -184,7 +143,7 @@ const Drivers = () => {
                     <Alert
                         onClose={() => setSnackbar({...snackbar, open: false})}
                         severity={snackbar.severity}
-                        sx={{width: '100%'}}
+                        sx={{width: '100%', color: 'white'}}
                         variant="filled"
                     >
                         {snackbar.message}
