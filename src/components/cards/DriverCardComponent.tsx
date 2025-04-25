@@ -1,0 +1,253 @@
+import React from 'react';
+import {Avatar, Box, Card, CardContent, Chip, Divider, IconButton, Tooltip, Typography, useTheme} from '@mui/material';
+import {
+    ContactPhone as EmergencyIcon,
+    DateRange as DateIcon,
+    Delete as DeleteIcon,
+    DriveEta as DriveIcon,
+    Edit as EditIcon,
+    Email as EmailIcon,
+    LocationOn as LocationIcon,
+    Phone as PhoneIcon
+} from '@mui/icons-material';
+import {format} from 'date-fns';
+import {useTranslation} from 'react-i18next';
+import {DriverType} from '@/types/types.ts';
+
+interface DriverCardProps {
+    driver: DriverType;
+    onEdit?: (driver: DriverType) => void;
+    onDelete?: (driver: DriverType) => void;
+}
+
+const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelete}) => {
+    const {t} = useTranslation();
+    const theme = useTheme();
+
+    // Format dates if they exist
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return '';
+        try {
+            return format(new Date(dateString), 'MMM dd, yyyy');
+        } catch (error) {
+            return dateString;
+        }
+    };
+
+    // Calculate license expiry status
+    const getLicenseStatus = () => {
+        if (!driver.license_expiry_date) return null;
+
+        const expiryDate = new Date(driver.license_expiry_date);
+        const today = new Date();
+        const monthsRemaining = Math.floor((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 30));
+
+        if (monthsRemaining < 0) {
+            return {label: t('pages.driver.card.licenseStatus.expired'), color: 'error'};
+        } else if (monthsRemaining < 3) {
+            return {label: t('pages.driver.card.licenseStatus.expiringSoon'), color: 'warning'};
+        } else {
+            return {label: t('pages.driver.card.licenseStatus.valid'), color: 'success'};
+        }
+    };
+
+    const licenseStatus = getLicenseStatus();
+
+    return (
+        <Card
+            sx={{
+                mb: 3,
+                boxShadow: 2,
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                    boxShadow: 4,
+                    transform: 'translateY(-4px)'
+                }
+            }}
+        >
+            {/* Card Header with Avatar and Status */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    p: 2,
+                    background: `linear-gradient(45deg, ${theme.palette.custom.primary[700]} 30%, ${theme.palette.custom.primary[500]} 90%)`,
+                    color: 'white'
+                }}
+            >
+                <Avatar
+                    src={driver.profile_picture}
+                    alt={`${driver.first_name} ${driver.last_name}`}
+                    sx={{width: 64, height: 64, border: `2px solid ${theme.palette.custom.primary[200]}`, bgcolor: theme.palette.custom.primary[800]}}
+                >
+                    {driver.first_name[0]}{driver.last_name[0]}
+                </Avatar>
+
+                <Box sx={{ml: 2, flexGrow: 1}}>
+                    <Typography variant="h5" component="h2" sx={{fontWeight: 'bold'}}>
+                        {driver.first_name} {driver.last_name}
+                    </Typography>
+                    <Chip
+                        label={driver.employment_status}
+                        size="small"
+                        color={driver.employment_status === 'ACTIVE' ? 'success' :
+                            driver.employment_status === 'ON_LEAVE' ? 'warning' : 'default'}
+                        sx={{mr: 1, mt: 1}}
+                    />
+                    {licenseStatus && (
+                        <Chip
+                            label={licenseStatus.label}
+                            size="small"
+                            color={licenseStatus.color as any}
+                            sx={{mt: 1}}
+                        />
+                    )}
+                </Box>
+
+                {/* Action Buttons */}
+                <Box>
+                    {onEdit && (
+                        <Tooltip title={t('common.edit')}>
+                            <IconButton onClick={() => onEdit(driver)} color="inherit">
+                                <EditIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {onDelete && (
+                        <Tooltip title={t('common.delete')}>
+                            <IconButton onClick={() => onDelete(driver)} color="inherit">
+                                <DeleteIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                </Box>
+            </Box>
+
+            <CardContent>
+                {/* Contact Information */}
+                <Box sx={{display: 'flex', flexDirection: {xs: 'column', sm: 'row'}, mb: 2}}>
+                    <Box sx={{flex: 1, mb: {xs: 2, sm: 0}}}>
+                        <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                            {t('pages.driver.card.contactInfo')}
+                        </Typography>
+
+                        <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                            <PhoneIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                            <Typography variant="body2">{driver.phone_number}</Typography>
+                        </Box>
+
+                        {driver.email && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <EmailIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant="body2">{driver.email}</Typography>
+                            </Box>
+                        )}
+
+                        {driver.address && (
+                            <Box sx={{display: 'flex', alignItems: 'flex-start', mb: 1}}>
+                                <LocationIcon fontSize="small" sx={{mr: 1, mt: 0.5, color: '#3847a3'}}/>
+                                <Typography variant="body2">
+                                    {driver.address}
+                                    {driver.city && `, ${driver.city}`}
+                                    {driver.state && `, ${driver.state}`}
+                                    {driver.zip_code && ` ${driver.zip_code}`}
+                                    {driver.country && `, ${driver.country}`}
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
+
+                    {/* Driver Details */}
+                    <Box sx={{flex: 1}}>
+                        <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                            {t('pages.driver.card.drivingInfo')}
+                        </Typography>
+
+                        {driver.license_number && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <DriveIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.driver.card.license')}: {driver.license_number}
+                                </Typography>
+                            </Box>
+                        )}
+
+                        {driver.license_expiry_date && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.driver.card.licenseExpiry')}: {formatDate(driver.license_expiry_date)}
+                                </Typography>
+                            </Box>
+                        )}
+
+                        {driver.date_of_birth && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.driver.card.dob')}: {formatDate(driver.date_of_birth)}
+                                </Typography>
+                            </Box>
+                        )}
+
+                        {driver.hire_date && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.driver.card.hireDate')}: {formatDate(driver.hire_date)}
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
+                </Box>
+
+                {/* Emergency Contact Information */}
+                {(driver.emergency_contact_name || driver.emergency_contact_phone) && (
+                    <>
+                        <Divider sx={{my: 2}}/>
+                        <Box>
+                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
+                                {t('pages.driver.card.emergencyContact')}
+                            </Typography>
+
+                            {driver.emergency_contact_name && (
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                    <EmergencyIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                    <Typography variant="body2">
+                                        {driver.emergency_contact_name}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            {driver.emergency_contact_phone && (
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                    <PhoneIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                    <Typography variant="body2">
+                                        {driver.emergency_contact_phone}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </>
+                )}
+
+                {/* Notes Section */}
+                {driver.notes && (
+                    <>
+                        <Divider sx={{my: 2, bgcolor: "#e3e6f7"}}/>
+                        <Box>
+                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
+                                {t('pages.driver.notes')}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {driver.notes}
+                            </Typography>
+                        </Box>
+                    </>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
+
+export default DriverCardComponent;

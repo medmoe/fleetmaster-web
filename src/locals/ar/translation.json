@@ -122,13 +122,20 @@
           }
         },
         "card": {
+          "generalInfo": "معلومات عامة",
           "name": "اسم المركبة",
           "purchaseDate": "تاريخ الشراء",
           "capacity": "السعة",
           "mileage": "المسافة المقطوعة",
+          "maintenanceInfo": "معلومات الصيانة",
           "nextServiceDue": "موعد الصيانة القادمة",
+          "lastServiceDate": "تاريخ آخر صيانة",
+          "documentation": "الوثائق",
+          "licenseExpiry": "تاريخ انتهاء الرخصة",
+          "insuranceExpiry": "تاريخ انتهاء التأمين",
           "status": "الحالة",
-          "maintenance": "الصيانة"
+          "maintenance": "الصيانة",
+          "notes": "ملاحظات"
         }
       },
       "maintenance": {
@@ -476,6 +483,101 @@
             "delete": "تم حذف التقرير بنجاح!"
           }
         }
+      }
+    },
+    "driver": {
+      "title": "إدارة السائقين",
+      "subtitle": "عرض وإدارة سائقي أسطولك",
+      "addButton": "إضافة سائق",
+      "search": "البحث عن سائقين...",
+      "filter": {
+        "status": "تصفية حسب الحالة",
+        "all": "جميع الحالات",
+        "active": "نشط",
+        "onLeave": "في إجازة",
+        "inactive": "غير نشط"
+      },
+      "resultsCount": {
+        "single": "سائق واحد",
+        "plural": "سائقين"
+      },
+      "noResults": {
+        "withSearch": "لا يوجد سائقين مطابقين لمعايير البحث",
+        "empty": "لا يوجد سائقين متاحين في أسطولك",
+        "tryDifferent": "جرب بحثًا مختلفًا أو قم بمسح عوامل التصفية",
+        "addFirst": "أضف أول سائق باستخدام الزر أعلاه"
+      },
+      "card": {
+        "licenseStatus": {
+          "expired": "منتهية الصلاحية",
+          "expiringSoon": "تنتهي قريباً",
+          "valid": "سارية المفعول"
+        },
+        "common": {
+          "edit": "تعديل",
+          "delete": "حذف"
+        },
+        "contactInfo": "معلومات الاتصال",
+        "drivingInfo": "معلومات القيادة",
+        "license": "رخصة القيادة",
+        "licenseExpiry": "تاريخ انتهاء الرخصة",
+        "dob": "تاريخ الميلاد",
+        "hireDate": "تاريخ التوظيف",
+        "emergencyContact": "جهة اتصال في حالات الطوارئ",
+        "notes": "ملاحظات"
+      },
+      "dialog": {
+        "add": "إضافة سائق جديد",
+        "edit": "تعديل بيانات السائق",
+        "assignedVehicle": "المركبة المخصصة",
+        "noVehicle": "لا توجد مركبة مخصصة",
+        "sections": {
+          "personal": "المعلومات الشخصية",
+          "license": "معلومات الرخصة",
+          "address": "معلومات العنوان",
+          "emergency": "جهة اتصال للطوارئ",
+          "vehicle": "تخصيص المركبة"
+        },
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "phone": "رقم الهاتف",
+        "email": "البريد الإلكتروني",
+        "dob": "تاريخ الميلاد",
+        "status": "حالة التوظيف",
+        "statusOptions": {
+          "active": "نشط",
+          "onLeave": "في إجازة",
+          "inactive": "غير نشط"
+        },
+        "hireDate": "تاريخ التوظيف",
+        "licenseNumber": "رقم الرخصة",
+        "licenseExpiry": "تاريخ انتهاء الرخصة",
+        "address": "العنوان",
+        "city": "المدينة",
+        "state": "المحافظة/الولاية",
+        "zipCode": "الرمز البريدي",
+        "country": "البلد",
+        "emergencyName": "اسم جهة اتصال الطوارئ",
+        "emergencyPhone": "هاتف جهة اتصال الطوارئ",
+        "notes": "ملاحظات",
+        "addButton": "إضافة سائق",
+        "updateButton": "تحديث بيانات السائق"
+      },
+      "deleteDialog": {
+        "title": "حذف السائق",
+        "subtitle": "هل أنت متأكد من رغبتك في حذف هذا السائق؟ لا يمكن التراجع عن هذا الإجراء."
+      },
+      "snackbar": {
+        "added": "تمت إضافة السائق بنجاح",
+        "updated": "تم تحديث بيانات السائق بنجاح",
+        "deleted": "تم حذف السائق بنجاح"
+      },
+      "errors": {
+        "fetchError": "فشل في تحميل بيانات السائقين",
+        "createError": "فشل في إنشاء سائق جديد",
+        "updateError": "فشل في تحديث بيانات السائق",
+        "deleteError": "فشل في حذف السائق",
+        "requiredFields": "يرجى ملء جميع الحقول المطلوبة"
       }
     }
   }

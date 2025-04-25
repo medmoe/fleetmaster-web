@@ -122,13 +122,20 @@
           }
         },
         "card": {
-          "name": "Vehicle name",
-          "purchaseDate": "Purchase date",
+          "generalInfo": "General Information",
+          "name": "Vehicle Name",
+          "purchaseDate": "Purchase Date",
           "capacity": "Capacity",
           "mileage": "Mileage",
-          "nextServiceDue": "Next service due",
-          "status": "status",
-          "maintenance": "Maintenance"
+          "maintenanceInfo": "Maintenance Information",
+          "nextServiceDue": "Next Service Due",
+          "lastServiceDate": "Last Service Date",
+          "documentation": "Documentation",
+          "licenseExpiry": "License Expiry",
+          "insuranceExpiry": "Insurance Expiry",
+          "status": "Status",
+          "maintenance": "Maintenance",
+          "notes": "Notes"
         }
       },
       "maintenance": {
@@ -476,6 +483,101 @@
             "delete": "Report deleted successfully!"
           }
         }
+      }
+    },
+    "driver": {
+      "title": "Drivers Management",
+      "subtitle": "View and manage your fleet's drivers",
+      "addButton": "Add Driver",
+      "search": "Search drivers...",
+      "filter": {
+        "status": "Filter by Status",
+        "all": "All Statuses",
+        "active": "Active",
+        "onLeave": "On Leave",
+        "inactive": "Inactive"
+      },
+      "resultsCount": {
+        "single": "Driver Found",
+        "plural": "Drivers Found"
+      },
+      "noResults": {
+        "withSearch": "No drivers match your search criteria",
+        "empty": "No drivers available in your fleet",
+        "tryDifferent": "Try a different search or clear filters",
+        "addFirst": "Add your first driver using the button above"
+      },
+      "card": {
+        "licenseStatus": {
+          "expired": "Expired",
+          "expiringSoon": "Expiring Soon",
+          "valid": "Valid"
+        },
+        "common": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "contactInfo": "Contact Information",
+        "drivingInfo": "Driving Information",
+        "license": "License",
+        "licenseExpiry": "License Expiry",
+        "dob": "Date of Birth",
+        "hireDate": "Hire Date",
+        "emergencyContact": "Emergency Contact",
+        "notes": "Notes"
+      },
+      "dialog": {
+        "add": "Add New Driver",
+        "edit": "Edit Driver",
+        "assignedVehicle": "Assigned Vehicle",
+        "noVehicle": "No Vehicle Assigned",
+        "sections": {
+          "personal": "Personal Information",
+          "license": "License Information",
+          "address": "Address Information",
+          "emergency": "Emergency Contact",
+          "vehicle": "Vehicle Assignment"
+        },
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "dob": "Date of Birth",
+        "status": "Employment Status",
+        "statusOptions": {
+          "active": "Active",
+          "onLeave": "On Leave",
+          "inactive": "Inactive"
+        },
+        "hireDate": "Hire Date",
+        "licenseNumber": "License Number",
+        "licenseExpiry": "License Expiry Date",
+        "address": "Street Address",
+        "city": "City",
+        "state": "State/Province",
+        "zipCode": "ZIP/Postal Code",
+        "country": "Country",
+        "emergencyName": "Emergency Contact Name",
+        "emergencyPhone": "Emergency Contact Phone",
+        "notes": "Notes",
+        "addButton": "Add Driver",
+        "updateButton": "Update Driver"
+      },
+      "deleteDialog": {
+        "title": "Delete Driver",
+        "subtitle": "Are you sure you want to delete this driver? This action cannot be undone."
+      },
+      "snackbar": {
+        "added": "Driver added successfully",
+        "updated": "Driver updated successfully",
+        "deleted": "Driver deleted successfully"
+      },
+      "errors": {
+        "fetchError": "Failed to load drivers",
+        "createError": "Failed to create driver",
+        "updateError": "Failed to update driver",
+        "deleteError": "Failed to delete driver",
+        "requiredFields": "Please fill in all required fields"
       }
     }
   }
