@@ -4,7 +4,7 @@ import axios from 'axios';
 import {GeneralDataType, MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {API} from "@/constants/endpoints";
 import {VehicleType} from "@/types/types";
-
+import i18n from "i18next";
 
 type requestType = 'delete' | 'add' | 'edit' | 'idle';
 
@@ -34,6 +34,8 @@ const generalDataInitialState: GeneralDataType = {
     service_providers: [],
 }
 
+
+
 const useGeneralDataStore = create<GeneralDataStore>()(
     devtools(
         persist(
@@ -57,7 +59,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         set({generalData: response.data, isLoading: false});
                     } catch (error: any) {
                         if (error.response?.status === 401) {
-                            set({error: 'Unauthorized. Please log in again.'});
+                            set({error: i18n.t('common.errorMessages.unauthorized')});
                         } else {
                             console.error('Error fetching general data:', error);
                             set({error: error.message});
@@ -79,7 +81,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         set({maintenanceReports: response.data, isLoading: false});
                     } catch (error: any) {
                         if (error.response?.status === 401) {
-                            set({error: 'Unauthorized. Please log in again.'});
+                            set({error: i18n.t('common.errorMessages.unauthorized')});
                         } else {
                             console.error('Error fetching maintenance reports:', error);
                             set({error: error.message});

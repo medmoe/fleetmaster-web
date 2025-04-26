@@ -49,7 +49,10 @@
     "success": "Success",
     "save": "Save",
     "close": "Close",
-    "notAvailable": "N/A"
+    "notAvailable": "N/A",
+    "errorMessages": {
+      "unauthorized": "Unauthorized. Please log in again."
+    }
   },
   "layout": {
     "dashboard": {

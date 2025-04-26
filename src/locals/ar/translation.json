@@ -9,7 +9,10 @@
     "success": "نجاح",
     "save": "حفظ",
     "close": "إغلاق",
-    "notAvailable": "غير متوفر"
+    "notAvailable": "غير متوفر",
+    "errorMessages": {
+      "unauthorized": "ليس لديك صلاحية. الرجاء إعادة تسجيل الدخول"
+    }
   },
   "auth": {
     "login": {
