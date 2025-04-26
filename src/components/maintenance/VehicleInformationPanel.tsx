@@ -8,7 +8,7 @@ interface VehicleInformationPanelProps {
 
 const VehicleInformationPanel = ({vehicle}: VehicleInformationPanelProps) => {
     const {t} = useTranslation();
-    const vehicleType = vehicle ? t(`pages.vehicle.vehicles.form.type.types.${vehicle.type}`) : "N/A"
+    const vehicleType = vehicle ? t(`pages.vehicle.dialog.type.types.${vehicle.type}`) : "N/A"
     return (
         <Paper elevation={0} variant="outlined" className="p-4 mb-6">
             <Grid container spacing={2}>

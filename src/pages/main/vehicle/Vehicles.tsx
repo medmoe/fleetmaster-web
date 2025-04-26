@@ -1,111 +1,157 @@
-import {Alert, Button, CircularProgress, Container} from "@mui/material";
+import {Alert, Box, Button, Container, Divider, Snackbar, Typography, useTheme} from "@mui/material";
 import {Add} from "@mui/icons-material";
-import {VehicleCardComponent, VehicleForm} from "../../../components";
-import useAuthStore from "../../../store/useAuthStore";
+import {DeleteVehicle, VehicleCardComponent} from "../../../components";
 import {useVehicle} from "@/hooks/main/useVehicle";
 import {useNavigate} from "react-router-dom";
 import useGeneralDataStore from "../../../store/useGeneralDataStore";
 import {VehicleType} from "@/types/types";
 import {useTranslation} from "react-i18next";
+import {Filter, VehicleDialog} from "@/components";
 
 const Vehicles = () => {
-    const {authResponse} = useAuthStore()
     const {t} = useTranslation();
     const {
-        isLoading,
-        showVehicleForm,
-        vehicleDates,
-        vehicleForm,
-        errorState,
-        setErrorState,
-        setShowVehicleForm,
-        handleVehicleFormChange,
-        handleVehicleFormDateChange,
-        handleVehicleEdition,
-        handleVehicleDeletion,
-        submitVehicleForm
+        filterStatus,
+        filteredVehicles,
+        formData,
+        formError,
+        handleDeleteClick,
+        handleDeleteConfirm,
+        handleEditVehicle,
+        handleFormChange,
+        handleSubmit,
+        isEditing,
+        loading,
+        openDeleteDialog,
+        openDialog,
+        searchQuery,
+        setFilterStatus,
+        setFormError,
+        setIsEditing,
+        setOpenDeleteDialog,
+        setOpenDialog,
+        setSearchQuery,
+        setSnackbar,
+        snackbar,
+        vehicleToDelete,
     } = useVehicle()
-    const typedVehicleDates = vehicleDates as {
-        purchase_date: Date | null;
-        last_service_date: Date | null;
-        next_service_due: Date | null;
-        insurance_expiry_date: Date | null;
-        license_expiry_date: Date | null;
-    }
+
     const navigate = useNavigate()
+    const theme = useTheme()
     const {setVehicle} = useGeneralDataStore()
+    const menuItems = [
+        {label: "pages.vehicle.filter.all", value: "ALL"},
+        {label: "pages.vehicle.filter.active", value: "ACTIVE"},
+        {label: "pages.vehicle.filter.onLeave", value: "ON_LEAVE"},
+        {label: "pages.vehicle.filter.outOfService", value: "OUT_OF_SERVICE"},
+    ]
     const handleVehicleMaintenance = (vehicle: VehicleType) => {
         setVehicle(vehicle)
         navigate(`/maintenance-overview`)
     }
     return (
-        <div className={"min-h-screen bg-gray-100 py-8"}>
-            {isLoading && (
-                <div className={"w-full h-screen flex items-center justify-center"}>
-                    <CircularProgress color="primary" size={200} thickness={5}/>
-                </div>
-            )}
-            {errorState.isError && (
-                <Alert severity="error"
-                       sx={{
-                           mb: 2,
-                           position: 'fixed',
-                           bottom: 16,
-                           left: '50%',
-                           transform: 'translateX(-50%)',
-                           zIndex: 9999,
-                           maxWidth: 'calc(100% - 32px'
-                       }}
-                       onClose={() => setErrorState({isError: false, errorMessage: ""})}>
-                    {errorState.errorMessage}
-                </Alert>
-            )}
-            {showVehicleForm ?
-                <div>
-                    <VehicleForm vehicleData={vehicleForm}
-                                 submitForm={submitVehicleForm}
-                                 cancelSubmission={() => setShowVehicleForm(false)}
-                                 handleChange={handleVehicleFormChange}
-                                 handleDateChange={handleVehicleFormDateChange}
-                                 dates={typedVehicleDates}
-                    /></div> :
-                <div className={"w-full flex justify-center"}>
-                    <div className={"w-full max-w-3xl bg-white rounded-lg shadow p-5"}>
-                        <div>
-                            <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.vehicles.title')}</h1>
-                        </div>
-                        <div className={"mt-5"}>
-                            <p className={"font-open-sans text-txt"}>{t('pages.vehicle.vehicles.subtitle')}</p>
-                        </div>
-                        <div className={"mt-4 space-y-4"}>
-                            {authResponse?.vehicles?.map((vehicle) => {
-                                return <VehicleCardComponent key={vehicle.id} vehicle={vehicle}
-                                                             handleVehicleEdition={() => handleVehicleEdition(vehicle)}
-                                                             handleVehicleDeletion={() => handleVehicleDeletion(vehicle)}
-                                                             handleMaintenance={() => handleVehicleMaintenance(vehicle)}/>;
-                            })}
-                            <Container maxWidth={"md"}>
-                                <Button variant="contained"
-                                        sx={{
-                                            backgroundColor: "#3f51b5",
-                                            '&:hover': {
-                                                backgroundColor: "#3847a3"
-                                            }
-                                        }}
-                                        startIcon={<Add/>}
-                                        size={"large"}
-                                        onClick={() => setShowVehicleForm(true)}>
-                                    {t('pages.vehicle.vehicles.addButton')}
-                                </Button>
-                            </Container>
-                        </div>
+        <Container maxWidth={'lg'} sx={{py: 4}}>
+            <Box sx={{mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Typography variant={"h4"} component={"h1"} sx={{fontWeight: 'bold'}}>
+                    {t('pages.vehicle.title')}
+                </Typography>
+                <Button variant="contained"
+                        sx={{
+                            backgroundColor: theme.palette.custom.primary[600],
+                            '&:hover': {
+                                backgroundColor: theme.palette.custom.primary[700]
+                            }
+                        }}
+                        startIcon={<Add/>}
+                        size={"large"}
+                        onClick={() => {
+                            setOpenDialog(true)
+                            setIsEditing(false)
+                        }}>
+                    {t('pages.vehicle.addButton')}
+                </Button>
+            </Box>
+            <Typography variant={"body1"} sx={{mb: 4}}>
+                {t('pages.vehicle.subtitle')}
+            </Typography>
 
+            <Filter searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    inputLabel={'pages.vehicle.filter.status'}
+                    filterInput={filterStatus}
+                    setFilterInput={setFilterStatus}
+                    items={menuItems}
+            />
 
-                    </div>
-                </div>
+            <Typography variant={'subtitle1'} sx={{mb: 2}}>
+                {filteredVehicles.length} {filteredVehicles.length === 1 ?
+                t('pages.vehicle.resultsCount.single') :
+                t('pages.vehicle.resultsCount.plural')
+            }
+            </Typography>
+
+            <Divider sx={{mb: 4}}/>
+            {filteredVehicles.length === 0 && (
+                <Box sx={{textAlign: 'center', py: 8}}>
+                    <Typography variant={"h6"} color="text.secondary" gutterBottom>
+                        {searchQuery
+                            ? t('pages.vehicle.noResults.withSearch')
+                            : t('pages.vehicle.noResults.empty')
+                        }
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                        {searchQuery
+                            ? t('pages.vehicle.noResults.tryDifferent')
+                            : t('pages.vehicle.noResults.addFirst')
+                        }
+                    </Typography>
+                </Box>
+            )}
+
+            {filteredVehicles.map(vehicle => <VehicleCardComponent
+                key={vehicle.id}
+                vehicle={vehicle}
+                handleVehicleEdition={() => handleEditVehicle(vehicle)}
+                handleVehicleDeletion={() => handleDeleteClick(vehicle)}
+                handleMaintenance={() => handleVehicleMaintenance(vehicle)}/>)
             }
 
-        </div>
+            <VehicleDialog openDialog={openDialog}
+                           setOpenDialog={setOpenDialog}
+                           formData={formData}
+                           handleFormChange={handleFormChange}
+                           loading={loading}
+                           handleSubmit={handleSubmit}
+                           isEditing={isEditing}
+                           formError={formError}
+                           setFormError={setFormError}
+            />
+
+            <DeleteVehicle openDeleteDialog={openDeleteDialog}
+                           setOpenDeleteDialog={setOpenDeleteDialog}
+                           vehicleToDelete={vehicleToDelete}
+                           handleDeleteConfirm={handleDeleteConfirm}
+                           loading={loading}
+            />
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={() => setSnackbar({...snackbar, open: false})}
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+            >
+                <Alert
+                    onClose={() => setSnackbar({...snackbar, open: false})}
+                    severity={snackbar.severity}
+                    sx={{width: '100%', color: 'white'}}
+                    variant="filled"
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
+        </Container>
+
     )
 }
 

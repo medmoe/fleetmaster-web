@@ -72,64 +72,110 @@
   },
   "pages": {
     "vehicle": {
-      "vehicles": {
-        "title": "قائمة المركبات",
-        "subtitle": "فيما يلي قائمة المركبات",
-        "addButton": "إضافة مركبة",
-        "form": {
-          "title": "نموذج المركبة",
-          "subtitle": "املأ تفاصيل المركبة أدناه.",
-          "registration": "رقم التسجيل",
-          "make": "الصانع",
-          "model": "الطراز",
-          "year": "السنة",
-          "vin": "رقم التعريف",
-          "color": "اللون",
-          "mileage": "المسافة المقطوعة",
-          "capacity": "السعة",
-          "insurancePolicyNum": "رقم بوليصة التأمين",
-          "notes": "ملاحظات",
-          "purchaseDate": "تاريخ الشراء",
-          "lastServiceDate": "تاريخ آخر صيانة",
-          "nextServiceDue": "موعد الصيانة القادمة",
-          "insuranceExpiryDate": "تاريخ انتهاء التأمين",
-          "licenseExpiryDate": "تاريخ انتهاء الترخيص",
-          "type": {
-            "title": "نوع المركبة",
-            "types": {
-              "CAR": "سيارة",
-              "MOTORCYCLE": "دراجة نارية",
-              "TRUCK": "شاحنة",
-              "VAN": "شاحنة صغيرة"
-            }
-          },
-          "status": {
-            "title": "حالة المركبة",
-            "statuses": {
-              "ACTIVE": "نشطة",
-              "IN_MAINTENANCE": "قيد الصيانة",
-              "OUT_OF_SERVICE": "خارج الخدمة"
-            }
-          },
-          "fuel": {
-            "title": "نوع الوقود",
-            "types": {
-              "GASOLINE": "بنزين",
-              "DIESEL": "ديزل",
-              "ELECTRIC": "كهربائي",
-              "HYBRID": "هجين"
-            }
+      "title": "إدارة المركبات",
+      "subtitle": "عرض وإدارة أسطولك",
+      "addButton": "إضافة مركبة",
+      "filter": {
+        "status": "تصفية حسب الحالة",
+        "all": "الكل",
+        "active": "نشط",
+        "onLeave": "في إجازة",
+        "outOfService": "خارج الخدمة"
+      },
+      "search": "ابحث عن مركبات...",
+      "resultsCount": {
+        "single": "مركبة واحدة",
+        "plural": "مركبات"
+      },
+      "noResults": {
+        "withSearch": "لا توجد مركبات تطابق بحثك",
+        "empty": "لا توجد مركبات متاحة في الأسطول",
+        "tryDifferent": "جرب بحثًا مختلفًا أو أزل الفلاتر",
+        "addFirst": "أضف مركبتك الأولى باستخدام الزر بالأعلى"
+      },
+      "card": {
+        "generalInfo": "المعلومات العامة",
+        "name": "اسم المركبة",
+        "purchaseDate": "تاريخ الشراء",
+        "capacity": "السعة",
+        "mileage": "عدد الأميال",
+        "maintenanceInfo": "معلومات الصيانة",
+        "nextServiceDue": "موعد الصيانة القادمة",
+        "lastServiceDate": "تاريخ آخر صيانة",
+        "documentation": "المستندات",
+        "licenseExpiry": "انتهاء الرخصة",
+        "insuranceExpiry": "انتهاء التأمين",
+        "status": "الحالة",
+        "maintenance": "الصيانة",
+        "notes": "ملاحظات"
+      },
+      "dialog": {
+        "add": "إضافة مركبة جديدة",
+        "edit": "تعديل المركبة",
+        "registration": "رقم التسجيل",
+        "vin": "رقم الهيكل (VIN)",
+        "type": {
+          "title": "نوع المركبة",
+          "types": {
+            "CAR": "سيارة",
+            "MOTORCYCLE": "دراجة نارية",
+            "TRUCK": "شاحنة",
+            "VAN": "فان"
           }
         },
-        "card": {
-          "name": "اسم المركبة",
-          "purchaseDate": "تاريخ الشراء",
-          "capacity": "السعة",
-          "mileage": "المسافة المقطوعة",
-          "nextServiceDue": "موعد الصيانة القادمة",
-          "status": "الحالة",
-          "maintenance": "الصيانة"
+        "status": {
+          "title": "حالة المركبة",
+          "statuses": {
+            "ACTIVE": "نشط",
+            "IN_MAINTENANCE": "قيد الصيانة",
+            "OUT_OF_SERVICE": "خارج الخدمة"
+          }
+        },
+        "notes": "ملاحظات",
+        "make": "العلامة التجارية",
+        "model": "الموديل",
+        "year": "السنة",
+        "color": "اللون",
+        "fuel": {
+          "title": "نوع الوقود",
+          "types": {
+            "GASOLINE": "بنزين",
+            "DIESEL": "ديزل",
+            "ELECTRIC": "كهربائي",
+            "HYBRID": "هجين"
+          }
+        },
+        "mileage": "عدد الأميال",
+        "capacity": "السعة",
+        "purchaseDate": "تاريخ الشراء",
+        "lastServiceDate": "تاريخ آخر صيانة",
+        "nextServiceDue": "موعد الصيانة القادمة",
+        "insurancePolicyNum": "رقم بوليصة التأمين",
+        "insuranceExpiryDate": "تاريخ انتهاء التأمين",
+        "licenseExpiryDate": "تاريخ انتهاء الرخصة",
+        "addButton": "إضافة مركبة",
+        "updateButton": "تحديث المركبة",
+        "sections": {
+          "basic": "المعلومات الأساسية",
+          "specs": "مواصفات المركبة",
+          "dates": "التواريخ",
+          "legal": "المعلومات القانونية والتأمين"
         }
+      },
+      "deleteDialog": {
+        "title": "حذف المركبة",
+        "subtitle": "هل أنت متأكد من رغبتك في حذف هذه المركبة؟ لا يمكن التراجع عن هذا الإجراء."
+      },
+      "snackbar": {
+        "added": "تمت إضافة المركبة بنجاح",
+        "updated": "تم تحديث المركبة بنجاح",
+        "deleted": "تم حذف المركبة بنجاح"
+      },
+      "errors": {
+        "createError": "فشل في إنشاء المركبة",
+        "updateError": "فشل في تحديث المركبة",
+        "deleteError": "فشل في حذف المركبة",
+        "requiredFields": "يرجى ملء جميع الحقول المطلوبة"
       },
       "maintenance": {
         "overview": {
@@ -476,6 +522,102 @@
             "delete": "تم حذف التقرير بنجاح!"
           }
         }
+      }
+    },
+    "driver": {
+      "title": "إدارة السائقين",
+      "subtitle": "عرض وإدارة سائقي أسطولك",
+      "addButton": "إضافة سائق",
+      "search": "البحث عن سائقين...",
+      "filter": {
+        "status": "تصفية حسب الحالة",
+        "all": "جميع الحالات",
+        "active": "نشط",
+        "onLeave": "في إجازة",
+        "inactive": "غير نشط"
+      },
+      "resultsCount": {
+        "single": "سائق واحد",
+        "plural": "سائقين"
+      },
+      "noResults": {
+        "withSearch": "لا يوجد سائقين مطابقين لمعايير البحث",
+        "empty": "لا يوجد سائقين متاحين في أسطولك",
+        "tryDifferent": "جرب بحثًا مختلفًا أو قم بمسح عوامل التصفية",
+        "addFirst": "أضف أول سائق باستخدام الزر أعلاه"
+      },
+      "card": {
+        "licenseStatus": {
+          "expired": "منتهية الصلاحية",
+          "expiringSoon": "تنتهي قريباً",
+          "valid": "سارية المفعول"
+        },
+        "common": {
+          "edit": "تعديل",
+          "delete": "حذف"
+        },
+        "contactInfo": "معلومات الاتصال",
+        "drivingInfo": "معلومات القيادة",
+        "license": "رخصة القيادة",
+        "licenseExpiry": "تاريخ انتهاء الرخصة",
+        "dob": "تاريخ الميلاد",
+        "hireDate": "تاريخ التوظيف",
+        "emergencyContact": "جهة اتصال في حالات الطوارئ",
+        "assignedVehicle": "المركبة المخصصة",
+        "notes": "ملاحظات"
+      },
+      "dialog": {
+        "add": "إضافة سائق جديد",
+        "edit": "تعديل بيانات السائق",
+        "assignedVehicle": "المركبة المخصصة",
+        "noVehicle": "لا توجد مركبة مخصصة",
+        "sections": {
+          "personal": "المعلومات الشخصية",
+          "license": "معلومات الرخصة",
+          "address": "معلومات العنوان",
+          "emergency": "جهة اتصال للطوارئ",
+          "vehicle": "تخصيص المركبة"
+        },
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "phone": "رقم الهاتف",
+        "email": "البريد الإلكتروني",
+        "dob": "تاريخ الميلاد",
+        "status": "حالة التوظيف",
+        "statusOptions": {
+          "active": "نشط",
+          "onLeave": "في إجازة",
+          "inactive": "غير نشط"
+        },
+        "hireDate": "تاريخ التوظيف",
+        "licenseNumber": "رقم الرخصة",
+        "licenseExpiry": "تاريخ انتهاء الرخصة",
+        "address": "العنوان",
+        "city": "المدينة",
+        "state": "المحافظة/الولاية",
+        "zipCode": "الرمز البريدي",
+        "country": "البلد",
+        "emergencyName": "اسم جهة اتصال الطوارئ",
+        "emergencyPhone": "هاتف جهة اتصال الطوارئ",
+        "notes": "ملاحظات",
+        "addButton": "إضافة سائق",
+        "updateButton": "تحديث بيانات السائق"
+      },
+      "deleteDialog": {
+        "title": "حذف السائق",
+        "subtitle": "هل أنت متأكد من رغبتك في حذف هذا السائق؟ لا يمكن التراجع عن هذا الإجراء."
+      },
+      "snackbar": {
+        "added": "تمت إضافة السائق بنجاح",
+        "updated": "تم تحديث بيانات السائق بنجاح",
+        "deleted": "تم حذف السائق بنجاح"
+      },
+      "errors": {
+        "fetchError": "فشل في تحميل بيانات السائقين",
+        "createError": "فشل في إنشاء سائق جديد",
+        "updateError": "فشل في تحديث بيانات السائق",
+        "deleteError": "فشل في حذف السائق",
+        "requiredFields": "يرجى ملء جميع الحقول المطلوبة"
       }
     }
   }

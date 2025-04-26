@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import enTranslation from "../public/locals/en/translation"
-import arTranslation from "../public/locals/ar/translation"
+import enTranslation from "./locals/en/translation"
+import arTranslation from "./locals/ar/translation"
 
 const env = import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || 'development';
 

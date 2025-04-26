@@ -1,92 +1,204 @@
+import React from 'react';
+import {Avatar, Box, Card, CardContent, Chip, Divider, IconButton, Tooltip, Typography} from '@mui/material';
+import {
+    AirlineSeatReclineNormal as CapacityIcon,
+    CalendarMonth as CalendarIcon,
+    Delete as DeleteIcon,
+    DriveEta as VehicleIcon,
+    Edit as EditIcon,
+    EventAvailable as ServiceIcon,
+    Handyman as MaintenanceIcon,
+    Speed as SpeedIcon
+} from '@mui/icons-material';
+import {useTranslation} from 'react-i18next';
 import {VehicleType} from "@/types/types";
-import {ListItemDetail} from "../index";
-import {vehicleStatusMapping} from "@/constants/forms/vehicle";
-import {Button, Container} from "@mui/material";
-import {Delete, Edit, Handyman} from "@mui/icons-material";
-import {useTranslation} from "react-i18next";
 
-interface VehicleProps {
-    vehicle: VehicleType
-    handleMaintenance: () => void
-    handleVehicleEdition: () => void
-    handleVehicleDeletion: () => void
+interface VehicleCardProps {
+    vehicle: VehicleType;
+    handleMaintenance: () => void;
+    handleVehicleEdition: () => void;
+    handleVehicleDeletion: () => void;
 }
 
-
-const VehicleCardComponent = ({vehicle, handleMaintenance, handleVehicleDeletion, handleVehicleEdition}: VehicleProps) => {
-    const [style, label] = vehicleStatusMapping[vehicle.status] || ["text-gray-500", "Unknown"];
+const VehicleCardComponent: React.FC<VehicleCardProps> = ({
+                                                              vehicle,
+                                                              handleMaintenance,
+                                                              handleVehicleEdition,
+                                                              handleVehicleDeletion
+                                                          }) => {
     const {t} = useTranslation();
-    return (
-        <Container maxWidth="md">
-            <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 p-4">
-                <div className="flex flex-col md:flex-row gap-6">
-                    {/* Vehicle Details Section */}
-                    <div className="flex-1 space-y-2">
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.name')}
-                            value={`${vehicle.make} ${vehicle.model} ${vehicle.year}`}
-                            textStyle="text-txt font-medium"
-                        />
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.purchaseDate')}
-                            value={vehicle.purchase_date}
-                            textStyle="text-txt"
-                        />
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.capacity')}
-                            value={vehicle.capacity}
-                            textStyle="text-txt"
-                        />
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.mileage')}
-                            value={vehicle.mileage}
-                            textStyle="text-txt"
-                        />
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.nextServiceDue')}
-                            value={vehicle.next_service_due}
-                            textStyle="text-txt"
-                        />
-                        <ListItemDetail
-                            label={t('pages.vehicle.vehicles.card.status')}
-                            value={label}
-                            textStyle={`${style} font-medium`}
-                        />
-                    </div>
 
-                    {/* Actions Section */}
-                    <div className="flex flex-col space-y-3 md:self-start gap-2">
-                        <Button
-                            variant="outlined"
-                            startIcon={<Edit/>}
-                            size="medium"
-                            onClick={handleVehicleEdition}
-                        >
-                            {t('common.edit')}
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            startIcon={<Delete/>}
-                            color="error"
-                            size="medium"
-                            onClick={handleVehicleDeletion}
-                        >
-                            {t("common.delete")}
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            startIcon={<Handyman/>}
-                            color="success"
-                            size="medium"
-                            onClick={handleMaintenance}
-                        >
-                            {t('pages.vehicle.vehicles.card.maintenance')}
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </Container>
-    )
-}
+    // Map status to MUI color
+    const getStatusColor = () => {
+        if (vehicle.status === 'ACTIVE') return 'success';
+        if (vehicle.status === 'MAINTENANCE') return 'warning';
+        if (vehicle.status === 'OUT_OF_SERVICE') return 'error';
+        return 'default';
+    };
+
+    return (
+        <Card
+            sx={{
+                mb: 3,
+                boxShadow: 2,
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                    boxShadow: 4,
+                    transform: 'translateY(-4px)'
+                }
+            }}
+        >
+            {/* Card Header with Vehicle Icon and Status */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    p: 2,
+                    background: 'linear-gradient(45deg, #3f51b5 30%, #5c6bc0 90%)',
+                    color: 'white'
+                }}
+            >
+                <Avatar
+                    sx={{width: 64, height: 64, border: '2px solid white', bgcolor: 'primary.dark'}}
+                >
+                    <VehicleIcon sx={{fontSize: 32}}/>
+                </Avatar>
+
+                <Box sx={{ml: 2, flexGrow: 1}}>
+                    <Typography variant="h5" component="h2" sx={{fontWeight: 'bold'}}>
+                        {`${vehicle.make} ${vehicle.model} ${vehicle.year}`}
+                    </Typography>
+                    <Chip
+                        label={vehicle.status.toLowerCase().replace('_', ' ')}
+                        size="small"
+                        color={getStatusColor()}
+                        sx={{mt: 1}}
+                    />
+                </Box>
+
+                {/* Action Buttons */}
+                <Box>
+                    <Tooltip title={t('common.edit')}>
+                        <IconButton onClick={handleVehicleEdition} color="inherit" data-testid={"edit-vehicle-button"}>
+                            <EditIcon/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t('common.delete')}>
+                        <IconButton onClick={handleVehicleDeletion} color="inherit" data-testid={"delete-vehicle-button"}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title={t('pages.vehicle.card.maintenance')}>
+                        <IconButton onClick={handleMaintenance} color="inherit" data-testid={"maintenance-vehicle-button"}>
+                            <MaintenanceIcon/>
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            </Box>
+
+            <CardContent>
+                {/* Vehicle Information */}
+                <Box sx={{display: 'flex', flexDirection: {xs: 'column', sm: 'row'}, mb: 2}}>
+                    <Box sx={{flex: 1, mb: {xs: 2, sm: 0}}}>
+                        <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                            {t('pages.vehicle.card.generalInfo')}
+                        </Typography>
+
+                        <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                            <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                            <Typography variant="body2">
+                                {t('pages.vehicle.card.purchaseDate')}: {vehicle.purchase_date}
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                            <CapacityIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                            <Typography variant="body2">
+                                {t('pages.vehicle.card.capacity')}: {vehicle.capacity}
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                            <SpeedIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                            <Typography variant="body2">
+                                {t('pages.vehicle.card.mileage')}: {vehicle.mileage}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    {/* Maintenance Information */}
+                    <Box sx={{flex: 1}}>
+                        <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                            {t('pages.vehicle.card.maintenanceInfo')}
+                        </Typography>
+
+                        {vehicle.next_service_due && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <ServiceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.vehicle.card.nextServiceDue')}: {vehicle.next_service_due}
+                                </Typography>
+                            </Box>
+                        )}
+
+                        {vehicle.last_service_date && (
+                            <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                <MaintenanceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                <Typography variant="body2">
+                                    {t('pages.vehicle.card.lastServiceDate')}: {vehicle.last_service_date}
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
+                </Box>
+
+                {/* Documentation Information */}
+                {(vehicle.license_expiry_date || vehicle.insurance_expiry_date) && (
+                    <>
+                        <Divider sx={{my: 2}}/>
+                        <Box>
+                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                                {t('pages.vehicle.card.documentation')}
+                            </Typography>
+
+                            {vehicle.license_expiry_date && (
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                    <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                    <Typography variant="body2">
+                                        {t('pages.vehicle.card.licenseExpiry')}: {vehicle.license_expiry_date}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            {vehicle.insurance_expiry_date && (
+                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                    <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                    <Typography variant="body2">
+                                        {t('pages.vehicle.card.insuranceExpiry')}: {vehicle.insurance_expiry_date}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </>
+                )}
+
+                {/* Notes Section */}
+                {vehicle.notes && (
+                    <>
+                        <Divider sx={{my: 2}}/>
+                        <Box>
+                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1}}>
+                                {t('pages.vehicle.card.notes')}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {vehicle.notes}
+                            </Typography>
+                        </Box>
+                    </>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
 
 export default VehicleCardComponent;
