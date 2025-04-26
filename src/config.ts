@@ -3,7 +3,7 @@ const ENV = {
         API: "http://localhost:8000/",
     },
     prod: {
-        API: import.meta.env.VITE_BACKEND_API_URL
+        API: import.meta.env.BACKEND_API_URL
     }
 };
 
