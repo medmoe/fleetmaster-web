@@ -3,6 +3,7 @@ import {fireEvent, render, screen} from '../../__test__/test-utils.tsx';
 import {VehicleType} from "@/types/types";
 import {expect, test, vi} from 'vitest';
 import '@testing-library/jest-dom'
+import userEvent from "@testing-library/user-event";
 
 describe("VehicleCardComponent", () => {
     // Mock vehicle data
@@ -31,18 +32,30 @@ describe("VehicleCardComponent", () => {
                                   handleVehicleDeletion={mockHandleDelete}
             />
         );
-
-        expect(screen.getByText('Toyota Corolla 2021')).toBeInTheDocument();
-        expect(screen.getByText('2021-01-02')).toBeInTheDocument();
-        expect(screen.getByText('100000')).toBeInTheDocument();
-        expect(screen.getByText('5')).toBeInTheDocument();
-        expect(screen.getByText('2021-01-01')).toBeInTheDocument();
-        expect(screen.getByText('Active')).toBeInTheDocument();
-        expect(screen.getByText('Edit')).toBeInTheDocument();
-        expect(screen.getByText('Delete')).toBeInTheDocument();
-        expect(screen.getByText('Maintenance')).toBeInTheDocument();
+        expect(screen.getByText(`${mockVehicle.make} ${mockVehicle.model} ${mockVehicle.year}`)).toBeInTheDocument();
+        expect(screen.getByText(`Purchase date: ${mockVehicle.purchase_date}`)).toBeInTheDocument();
+        expect(screen.getByText(`Mileage: ${mockVehicle.mileage}`)).toBeInTheDocument();
+        expect(screen.getByText(`Capacity: ${mockVehicle.capacity}`)).toBeInTheDocument();
+        expect(screen.getByText(`Next service due: ${mockVehicle.next_service_due}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockVehicle.status.toLowerCase()}`)).toBeInTheDocument();
 
     })
+
+    test('tooltips are visible when hovered over', async () => {
+        render(
+            <VehicleCardComponent vehicle={mockVehicle}
+                                  handleMaintenance={mockHandleMaintenance}
+                                  handleVehicleEdition={mockHandleEdit}
+                                  handleVehicleDeletion={mockHandleDelete}
+            />
+        );
+        // test action buttons
+        for (const [id, text] of [['edit-vehicle-button', 'Edit'], ['delete-vehicle-button', 'Delete'], ['maintenance-vehicle-button', 'Maintenance']]) {
+            await userEvent.hover(screen.getByTestId(id));
+            expect(await screen.findByText(text)).toBeVisible();
+        }
+    })
+
     test('call handlers when (edit, delete, maintenance) buttons are clicked', () => {
         render(
             <VehicleCardComponent vehicle={mockVehicle}
@@ -51,12 +64,10 @@ describe("VehicleCardComponent", () => {
                                   handleVehicleDeletion={mockHandleDelete}
             />
         );
-        fireEvent.click(screen.getByText('Maintenance'));
-        expect(mockHandleMaintenance).toHaveBeenCalledTimes(1);
-        fireEvent.click(screen.getByText('Edit'));
-        expect(mockHandleEdit).toHaveBeenCalledTimes(1);
-        fireEvent.click(screen.getByText('Delete'));
-        expect(mockHandleDelete).toHaveBeenCalledTimes(1);
+        [["edit-vehicle-button", mockHandleEdit], ["delete-vehicle-button", mockHandleDelete], ["maintenance-vehicle-button", mockHandleMaintenance]].forEach(([id, handler]) => {
+            fireEvent.click(screen.getByTestId(id));
+            expect(handler).toHaveBeenCalledTimes(1)
+        })
     })
 
 })

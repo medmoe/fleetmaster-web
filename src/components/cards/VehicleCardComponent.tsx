@@ -10,10 +10,8 @@ import {
     Handyman as MaintenanceIcon,
     Speed as SpeedIcon
 } from '@mui/icons-material';
-import {format} from 'date-fns';
 import {useTranslation} from 'react-i18next';
 import {VehicleType} from "@/types/types";
-import {vehicleStatusMapping} from "@/constants/forms/vehicle";
 
 interface VehicleCardProps {
     vehicle: VehicleType;
@@ -28,18 +26,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                                                               handleVehicleEdition,
                                                               handleVehicleDeletion
                                                           }) => {
-    const [style, label] = vehicleStatusMapping[vehicle.status] || ["text-gray-500", "Unknown"];
     const {t} = useTranslation();
-
-    // Format dates if they exist
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return '';
-        try {
-            return format(new Date(dateString), 'MMM dd, yyyy');
-        } catch (error) {
-            return dateString;
-        }
-    };
 
     // Map status to MUI color
     const getStatusColor = () => {
@@ -82,7 +69,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                         {`${vehicle.make} ${vehicle.model} ${vehicle.year}`}
                     </Typography>
                     <Chip
-                        label={label}
+                        label={vehicle.status.toLowerCase().replace('_', ' ')}
                         size="small"
                         color={getStatusColor()}
                         sx={{mt: 1}}
@@ -92,17 +79,17 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                 {/* Action Buttons */}
                 <Box>
                     <Tooltip title={t('common.edit')}>
-                        <IconButton onClick={handleVehicleEdition} color="inherit">
+                        <IconButton onClick={handleVehicleEdition} color="inherit" data-testid={"edit-vehicle-button"}>
                             <EditIcon/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={t('common.delete')}>
-                        <IconButton onClick={handleVehicleDeletion} color="inherit">
+                        <IconButton onClick={handleVehicleDeletion} color="inherit" data-testid={"delete-vehicle-button"}>
                             <DeleteIcon/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title={t('pages.vehicle.card.maintenance')}>
-                        <IconButton onClick={handleMaintenance} color="inherit">
+                        <IconButton onClick={handleMaintenance} color="inherit" data-testid={"maintenance-vehicle-button"}>
                             <MaintenanceIcon/>
                         </IconButton>
                     </Tooltip>
@@ -120,7 +107,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                             <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                             <Typography variant="body2">
-                                {t('pages.vehicle.card.purchaseDate')}: {formatDate(vehicle.purchase_date)}
+                                {t('pages.vehicle.card.purchaseDate')}: {vehicle.purchase_date}
                             </Typography>
                         </Box>
 
@@ -149,7 +136,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <ServiceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                 <Typography variant="body2">
-                                    {t('pages.vehicle.card.nextServiceDue')}: {formatDate(vehicle.next_service_due)}
+                                    {t('pages.vehicle.card.nextServiceDue')}: {vehicle.next_service_due}
                                 </Typography>
                             </Box>
                         )}
@@ -158,7 +145,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                 <MaintenanceIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                 <Typography variant="body2">
-                                    {t('pages.vehicle.card.lastServiceDate')}: {formatDate(vehicle.last_service_date)}
+                                    {t('pages.vehicle.card.lastServiceDate')}: {vehicle.last_service_date}
                                 </Typography>
                             </Box>
                         )}
@@ -178,7 +165,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                     <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                     <Typography variant="body2">
-                                        {t('pages.vehicle.card.licenseExpiry')}: {formatDate(vehicle.license_expiry_date)}
+                                        {t('pages.vehicle.card.licenseExpiry')}: {vehicle.license_expiry_date}
                                     </Typography>
                                 </Box>
                             )}
@@ -187,7 +174,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                     <CalendarIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
                                     <Typography variant="body2">
-                                        {t('pages.vehicle.card.insuranceExpiry')}: {formatDate(vehicle.insurance_expiry_date)}
+                                        {t('pages.vehicle.card.insuranceExpiry')}: {vehicle.insurance_expiry_date}
                                     </Typography>
                                 </Box>
                             )}

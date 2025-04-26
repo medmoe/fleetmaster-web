@@ -17,14 +17,33 @@ export const useVehicle = () => {
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [vehicleToDelete, setVehicleToDelete] = useState<VehicleType | null>(null);
-    const [isEditing, setIsEditing] = useState(true)
+    const [isEditing, setIsEditing] = useState(false)
     const [formError, setFormError] = useState({message: "", isError: false,})
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: "",
         severity: "success" as "success" | "error"
     })
-    const [formData, setFormData] = useState<VehicleType>({year: "", type: "", status: "", mileage: "", capacity: ""})
+    const [formData, setFormData] = useState<VehicleType>({
+        year: "",
+        type: "TRUCK",
+        status: "ACTIVE",
+        mileage: "",
+        capacity: "",
+        fuel_type: "DIESEL",
+        purchase_date: "",
+        registration_number: "",
+        make: "",
+        model: "",
+        color: "",
+        vin: "",
+        insurance_expiry_date: "",
+        notes: "",
+        last_service_date: "",
+        next_service_due: "",
+        license_expiry_date: "",
+        insurance_policy_number: "",
+    })
 
     // Filter vehicles based on search query and status
     const filteredVehicles = vehicles.filter(vehicle => {
@@ -140,29 +159,30 @@ export const useVehicle = () => {
         }
     }
     return {
-        openDialog,
-        setOpenDialog,
-        setOpenDeleteDialog,
+        filterStatus,
+        filteredVehicles,
         formData,
-        handleFormChange,
-        handleSubmit,
+        formError,
         handleAddVehicle,
-        handleEditVehicle,
         handleDeleteClick,
         handleDeleteConfirm,
-        vehicleToDelete,
-        filterStatus,
-        setFilterStatus,
-        loading,
+        handleEditVehicle,
+        handleFormChange,
+        handleSubmit,
         isEditing,
-        formError,
-        setFormError,
-        searchQuery,
-        setSearchQuery,
-        filteredVehicles,
+        loading,
         openDeleteDialog,
-        snackbar,
+        openDialog,
+        searchQuery,
+        setFilterStatus,
+        setFormError,
+        setIsEditing,
+        setOpenDeleteDialog,
+        setOpenDialog,
+        setSearchQuery,
         setSnackbar,
+        snackbar,
+        vehicleToDelete,
     }
 }
 

@@ -11,28 +11,29 @@ import {Filter, VehicleDialog} from "@/components";
 const Vehicles = () => {
     const {t} = useTranslation();
     const {
-        openDialog,
-        setOpenDialog,
+        filterStatus,
+        filteredVehicles,
         formData,
+        formError,
+        handleDeleteClick,
+        handleDeleteConfirm,
+        handleEditVehicle,
         handleFormChange,
         handleSubmit,
-        loading,
         isEditing,
-        formError,
-        setFormError,
-        searchQuery,
-        setSearchQuery,
-        filterStatus,
-        setFilterStatus,
-        filteredVehicles,
-        vehicleToDelete,
-        handleEditVehicle,
-        handleDeleteConfirm,
-        handleDeleteClick,
+        loading,
         openDeleteDialog,
+        openDialog,
+        searchQuery,
+        setFilterStatus,
+        setFormError,
+        setIsEditing,
         setOpenDeleteDialog,
+        setOpenDialog,
+        setSearchQuery,
         setSnackbar,
-        snackbar
+        snackbar,
+        vehicleToDelete,
     } = useVehicle()
 
     const navigate = useNavigate()
@@ -63,7 +64,10 @@ const Vehicles = () => {
                         }}
                         startIcon={<Add/>}
                         size={"large"}
-                        onClick={() => setOpenDialog(true)}>
+                        onClick={() => {
+                            setOpenDialog(true)
+                            setIsEditing(false)
+                        }}>
                     {t('pages.vehicle.addButton')}
                 </Button>
             </Box>

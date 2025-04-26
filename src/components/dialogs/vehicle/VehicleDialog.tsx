@@ -102,7 +102,7 @@ const VehicleDialog = ({
                             <InputLabel id={"vehicle-status-label"}>{t('pages.vehicle.dialog.status.title')}</InputLabel>
                             <Select
                                 labelId={"vehicle-status-label"}
-                                value={formData.type}
+                                value={formData.status}
                                 label={"pages.vehicle.dialog.status.title"}
                                 onChange={(e) => handleFormChange('status', e.target.value)}
                             >
