@@ -1,6 +1,6 @@
 // MaintenanceReportCard.test.tsx
 import React from 'react';
-import {fireEvent, render, screen, waitFor} from '../../__test__/test-utils.tsx';
+import {fireEvent, render, screen, waitFor} from '../../__test__/test-utils';
 import MaintenanceReportCard from './MaintenanceReportCard';
 import {MaintenanceReportWithStringsType} from '@/types/maintenance';
 import {expect, test, vi} from 'vitest';

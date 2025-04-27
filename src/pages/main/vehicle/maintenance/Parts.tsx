@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
-    Alert,
     Box,
     Button,
     CircularProgress,
+    Container,
     Dialog,
     DialogActions,
     DialogContent,
@@ -28,6 +28,7 @@ import {PartType} from "@/types/maintenance";
 import {API} from '@/constants/endpoints';
 import axios from 'axios';
 import {useTranslation} from "react-i18next";
+import {FileUpload, NotificationBar} from "@/components";
 
 const Parts: React.FC = () => {
     // Get data from store
@@ -42,12 +43,9 @@ const Parts: React.FC = () => {
     const [newPart, setNewPart] = useState<PartType>({name: '', description: ''});
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState({
-        isError: false,
-        message: ""
-    })
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [snackbar, setSnackbar] = useState({open: false, message: "", severity: "success" as "success" | "error"})
     const options = {headers: {"Content-Type": "application/json"}, withCredentials: true};
     const url = `${API}maintenance/parts/`
     const {t} = useTranslation();
@@ -125,10 +123,16 @@ const Parts: React.FC = () => {
                 ...generalData,
                 parts: isEditMode ? [...generalData.parts.filter(part => part.id !== newPart?.id), response.data] : [...generalData.parts, response.data]
             });
+            setSnackbar({
+                open: true,
+                message: isEditMode ? t("pages.vehicle.maintenance.parts.snackbar.submit.update") : t('pages.vehicle.maintenance.parts.snackbar.submit.add'),
+                severity: "success"
+            })
         } catch (error) {
-            setError({
-                isError: true,
-                message: isEditMode ? t('pages.vehicle.maintenance.parts.errors.updateError') : t('pages.vehicle.maintenance.parts.errors.createError')
+            setSnackbar({
+                open: true,
+                message: isEditMode ? t('pages.vehicle.maintenance.parts.errors.updateError') : t('pages.vehicle.maintenance.parts.errors.createError'),
+                severity: "error"
             })
             console.error(error);
         } finally {
@@ -143,9 +147,18 @@ const Parts: React.FC = () => {
         try {
             await axios.delete(`${url}${selectedPart?.id}/`, options);
             setGeneralData({...generalData, parts: generalData.parts.filter(part => part.id !== selectedPart?.id)});
+            setSnackbar({
+                open: true,
+                message: t('pages.vehicle.maintenance.parts.snackbar.delete.success'),
+                severity: "success"
+            })
         } catch (error) {
             console.error(error);
-            setError({isError: true, message: "Error while deleting part"})
+            setSnackbar({
+                open: true,
+                message: t('pages.vehicle.maintenance.parts.snackbar.delete.error'),
+                severity: "error"
+            })
         } finally {
             setIsLoading(false);
             setIsDeleteConfirmOpen(false);
@@ -153,32 +166,32 @@ const Parts: React.FC = () => {
         }
     };
 
+    const handleUpload = async (file: File) => {
+        setIsLoading(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await axios.post(`${API}maintenance/parts/upload-parts/`, formData, {
+                headers: {'Content-Type': 'multipart/form-data'},
+                withCredentials: true
+            });
+            setGeneralData({...generalData, parts: [...generalData.parts, ...response.data]});
+            setSnackbar({open: true, message: t('pages.vehicle.maintenance.parts.snackbar.success'), severity: "success"});
+        } catch (error) {
+            console.error("Failed to upload parts", error);
+            setSnackbar({open: true, message: t('pages.vehicle.maintenance.reports.parts.snackbar.error'), severity: "error"});
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
-        <Box sx={{maxWidth: 800, mx: 'auto', p: 3}}>
+        <Container maxWidth={"lg"}>
             <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.maintenance.parts.title')}</h1>
             <div className={"mt-5 flex items-center gap-2 mb-4"}>
                 <p className={"font-open-sans text-txt"}>{t('pages.vehicle.maintenance.parts.subtitle')}</p>
             </div>
-            {error.isError && (
-                <Alert
-                    severity="error"
-                    sx={{mb: 2}}
-                    action={
-                        <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
-                            onClick={() => setError({isError: false, message: ""})}
-                        >
-                            <CloseIcon fontSize="inherit"/>
-                        </IconButton>
-                    }
-                >
-                    {error.message}
-                </Alert>
-
-            )}
-
+            <FileUpload onUpload={handleUpload} accept={".csv, text/csv"}/>
             <Paper sx={{p: 2, mb: 3}} elevation={2}>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2}}>
                     <TextField
@@ -291,6 +304,7 @@ const Parts: React.FC = () => {
                         </Box>
                     </>
                 )}
+                <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
             </Paper>
 
             {/* Add/Edit Part Dialog */}
@@ -362,7 +376,7 @@ const Parts: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Box>
+        </Container>
     );
 };
 

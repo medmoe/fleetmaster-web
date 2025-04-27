@@ -50,8 +50,20 @@
     "save": "Save",
     "close": "Close",
     "notAvailable": "N/A",
+    "uploading": "Uploading...",
+    "upload": "Upload",
     "errorMessages": {
       "unauthorized": "Unauthorized. Please log in again."
+    },
+    "uploadFile": {
+      "title": "Import CSV File",
+      "subtitle": "click to select a file",
+      "caption": "Only CSV Files accepted",
+      "error": "Upload failed",
+      "button": {
+        "loading": "Uploading...",
+        "notLoading": "Upload"
+      }
     }
   },
   "layout": {
@@ -411,6 +423,18 @@
           "subtitle": "Here is the list of parts.",
           "search": "Search parts...",
           "addButton": "Add Part",
+          "snackbar": {
+            "success": "Parts uploaded successfully",
+            "error": "Failed to upload parts",
+            "delete": {
+              "success": "Part deleted successfully",
+              "error": "Failed to delete part"
+            },
+            "submit": {
+              "add": "Part added successfully",
+              "update": "Part updated successfully"
+            }
+          },
           "resultsCount": {
             "found": "results found",
             "total": "total parts"

@@ -3,7 +3,7 @@ import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {DateCalendar} from "@mui/x-date-pickers/DateCalendar";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {Alert, Badge, Box, Button, Paper, Snackbar, Typography} from "@mui/material";
+import {Alert, Badge, Box, Button, Container, Snackbar, Typography} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
 import {format, isSameDay, parseISO} from "date-fns";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
@@ -140,7 +140,7 @@ const Reports = () => {
                                                        setShowReportsList={setShowReportsList}
                                                        showBackButton={true}
                 /> :
-                <Paper sx={{p: 3, borderRadius: 2, boxShadow: 3}}>
+                <Container sx={{p: 3, borderRadius: 2, boxShadow: 3}} maxWidth={"lg"}>
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3}}>
                         <Typography variant="h5" sx={{mb: 3}}>{t('pages.vehicle.maintenance.reports.title')}</Typography>
                         <Button variant={"contained"}
@@ -198,7 +198,7 @@ const Reports = () => {
                     <Typography variant="body2" sx={{mt: 2, color: 'text.secondary'}}>
                         {t('pages.vehicle.maintenance.reports.count')}: {maintenanceReports?.length || 0}
                     </Typography>
-                </Paper>
+                </Container>
             }
             <NewMaintenanceReportDialog open={openFormDialog}
                                         onClose={() => {
