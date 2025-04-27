@@ -133,7 +133,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
         setMaintenanceReportFormData(report)
     }
     return (
-        <Box>
+        <Box maxWidth={'lg'}>
             {/* Filters and Search */}
             <Grid container spacing={2} sx={{mb: 3}}>
                 <Grid sx={{width: {xs: '100%', sm: '50%'}}}>

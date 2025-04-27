@@ -1,7 +1,8 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {Alert, Box, Button, IconButton, LinearProgress, Paper, Stack, Typography,} from '@mui/material'
 
 import {Close, Upload as UploadIcon} from '@mui/icons-material';
+import {useTranslation} from "react-i18next";
 
 interface FileUploadProps {
     onUpload: (file: File) => Promise<void>;
@@ -12,7 +13,8 @@ const FileUpload = ({onUpload, accept = '.csv'}: FileUploadProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null)
-
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const {t} = useTranslation();
     const handleDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
             setFile(acceptedFiles[0]);
@@ -27,16 +29,22 @@ const FileUpload = ({onUpload, accept = '.csv'}: FileUploadProps) => {
             await onUpload(file);
             setFile(null);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Upload failed");
+            setError(err instanceof Error ? err.message : t('common.uploadFile.error'));
         } finally {
             setLoading(false);
         }
     }
+    const handleCancel = () => {
+        setFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    }
     return (
-        <Paper variant={"outlined"} sx={{p: 3, width: '100%', maxWidth: 800, mb: 3}}>
+        <Paper variant={"outlined"} sx={{p: 3, width: '100%', maxWidth: 1200, mb: 3}}>
             <Stack spacing={3}>
                 <Typography variant={"h6"} component={"div"}>
-                    Import CSV File
+                    {t('common.uploadFile.title')}
                 </Typography>
                 {error && (
                     <Alert severity={"error"}
@@ -59,16 +67,18 @@ const FileUpload = ({onUpload, accept = '.csv'}: FileUploadProps) => {
                     '&:hover': {borderColor: 'primary.main'}
                 }} onClick={() => document.getElementById('csv-upload')?.click()}>
                     <input id={'csv-upload'}
+                           ref={fileInputRef}
                            type="file"
                            accept={accept}
                            hidden
+                           data-testid={"csv-upload-input"}
                            onChange={(e) => e.target.files && handleDrop([e.target.files[0]])}/>
                     <UploadIcon color={'action'} sx={{fontSize: 48, mb: 1}}/>
                     <Typography>
-                        {file ? file.name : 'Drag & drop or click to select'}
+                        {file ? file.name : t('common.uploadFile.subtitle')}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        Only CSV files accepted
+                        {t('common.uploadFile.caption')}
                     </Typography>
                 </Box>
                 {file && (
@@ -76,19 +86,21 @@ const FileUpload = ({onUpload, accept = '.csv'}: FileUploadProps) => {
                         {loading && <LinearProgress/>}
                         <Stack direction="row" spacing={2} justifyContent="flex-end">
                             <Button
+                                data-testid={"cancel-upload-button"}
                                 variant="outlined"
-                                onClick={() => setFile(null)}
+                                onClick={handleCancel}
                                 disabled={loading}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </Button>
                             <Button
+                                data-testid={"upload-button"}
                                 variant="contained"
                                 onClick={handleUpload}
                                 disabled={loading}
                                 startIcon={<UploadIcon/>}
                             >
-                                {loading ? 'Uploading...' : 'Upload'}
+                                {loading ? t('common.uploadFile.button.loading') : t('common.uploadFile.button.notLoading')}
                             </Button>
                         </Stack>
                     </>

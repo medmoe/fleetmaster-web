@@ -53,6 +53,9 @@ const resources = {
             'common.notAvailable': 'N/A',
             'common.mileage': 'Mileage:',
             'common.totalCost': 'Total Cost:',
+            'common.uploadFile.title': 'Import CSV File',
+            'common.uploadFile.subtitle': 'Drag & drop or click to select',
+            'common.uploadFile.caption': 'Only CSV Files accepted',
 
             // Layout
             'layout.dashboard.dashboard': 'Dashboard',

@@ -1,6 +1,6 @@
-import {Alert, Box, Button, Container, Divider, Snackbar, Typography, useTheme,} from "@mui/material";
+import {Box, Button, Container, Divider, Typography, useTheme,} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
-import {DeleteDriver, DriverCardComponent, DriverDialog, Filter} from "@/components";
+import {DeleteDriver, DriverCardComponent, DriverDialog, Filter, NotificationBar} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useDriver} from "@/hooks/main/useDriver";
 
@@ -134,21 +134,7 @@ const Drivers = () => {
                 />
 
                 {/* Snackbar for notifications */}
-                <Snackbar
-                    open={snackbar.open}
-                    autoHideDuration={6000}
-                    onClose={() => setSnackbar({...snackbar, open: false})}
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                >
-                    <Alert
-                        onClose={() => setSnackbar({...snackbar, open: false})}
-                        severity={snackbar.severity}
-                        sx={{width: '100%', color: 'white'}}
-                        variant="filled"
-                    >
-                        {snackbar.message}
-                    </Alert>
-                </Snackbar>
+                <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
             </Container>
         );
     }
