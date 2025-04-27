@@ -28,6 +28,7 @@ import {PartType} from "@/types/maintenance";
 import {API} from '@/constants/endpoints';
 import axios from 'axios';
 import {useTranslation} from "react-i18next";
+import {FileUpload} from "@/components";
 
 const Parts: React.FC = () => {
     // Get data from store
@@ -153,6 +154,24 @@ const Parts: React.FC = () => {
         }
     };
 
+    const handleUpload = async (file: File) => {
+        setIsLoading(true);
+        try {
+
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await axios.post(`${API}maintenance/parts/upload-parts/`, formData, {
+                headers: {'Content-Type': 'multipart/form-data'},
+                withCredentials: true
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error("Failed to upload parts", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
         <Box sx={{maxWidth: 800, mx: 'auto', p: 3}}>
             <h1 className={"font-semibold text-lg text-txt"}>{t('pages.vehicle.maintenance.parts.title')}</h1>
@@ -178,7 +197,7 @@ const Parts: React.FC = () => {
                 </Alert>
 
             )}
-
+            <FileUpload onUpload={handleUpload} accept={".csv, text/csv"}/>
             <Paper sx={{p: 2, mb: 3}} elevation={2}>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2}}>
                     <TextField
