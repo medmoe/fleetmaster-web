@@ -174,26 +174,28 @@ export const ThemeConfig: React.FC<ThemeConfigProps> = ({children}) => {
             fontFamily: [
                 'Roboto',
                 'Open Sans',
-                'Merriweather',
+                'Montserrat',
+                'Poppins',
+                'Inter',
                 'sans-serif',
             ].join(','),
             h1: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             h2: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             h3: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             h4: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             h5: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             h6: {
-                fontFamily: 'Merriweather, serif',
+                fontFamily: 'Inter, serif',
             },
             body1: {
                 fontFamily: 'Open Sans, sans-serif',
