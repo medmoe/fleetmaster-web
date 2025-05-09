@@ -107,9 +107,9 @@ export type CoreMetricsResponse = {
 };
 
 // Time period change keys based on grouping strategy
-type YearlyChange = { yoy_change: number; vehicle_avg: number };
-type QuarterlyChange = { qoq_change: number; vehicle_avg: number };
-type MonthlyChange = { mom_change: number; vehicle_avg: number };
+export type YearlyChange = { yoy_change: number; vehicle_avg: number };
+export type QuarterlyChange = { qoq_change: number; vehicle_avg: number };
+export type MonthlyChange = { mom_change: number; vehicle_avg: number };
 
 // Grouped metrics response structure (when grouping is requested)
 export type GroupedMetricsResponse = {

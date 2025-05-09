@@ -1,17 +1,12 @@
-import {
-    Box, Button, Card, CardContent, CircularProgress, Container, FormControl,
-    Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Tab, Tabs,
-    Typography, useTheme
-} from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers";
+import {Box, Button, CircularProgress, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Tab, Tabs, Typography, useTheme} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {API} from "@/constants/endpoints.ts";
 import axios from "axios";
 import {CoreMetricsResponse, GroupedMetricsResponse, VehicleHealthMetrics} from "@/types/maintenance.ts";
 import {initialFleetWideOverview, initialGroupedMetrics} from "./initialStates.ts"
+import {DonutChartSegment} from "@/components/charts/DonutChart.tsx";
+import {DateRangePicker, DonutChart, GroupedMetricsChart, MetricSummaryCard} from "@/components";
 
 // Component to display the maintenance library dashboard
 const MaintenanceLibrary = () => {
@@ -20,10 +15,13 @@ const MaintenanceLibrary = () => {
 
     // State for filters
     const [vehicleType, setVehicleType] = useState<string>("ALL");
-    const [dateRange, setDateRange] = useState<Date | null>(null);
-    const [groupBy, setGroupBy] = useState<string>("MONTHLY");
+    const [groupBy, setGroupBy] = useState<'monthly' | 'quarterly' | 'yearly' | 'none'>('monthly');
     const [serviceTab, setServiceTab] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+
 
     // State for metrics data
     const [standardMetrics, setStandardMetrics] = useState<CoreMetricsResponse>(initialFleetWideOverview);
@@ -64,7 +62,7 @@ const MaintenanceLibrary = () => {
     // Fetch grouped metrics when filters change
     useEffect(() => {
         // Skip the initial render
-        if (vehicleType === "ALL" && !dateRange && groupBy === "MONTHLY") {
+        if (vehicleType === "ALL" && !startDate && !endDate && groupBy === "none") {
             setIsFiltered(false);
             return;
         }
@@ -79,13 +77,16 @@ const MaintenanceLibrary = () => {
                 if (vehicleType !== "ALL") {
                     params.append("vehicle_type", vehicleType);
                 }
-                if (dateRange) {
-                    params.append("date", dateRange.toISOString().split('T')[0]);
+                if (startDate) {
+                    params.append("start_date", startDate.toISOString().split('T')[0]);
                 }
-                params.append("group_by", groupBy.toLowerCase());
+                if (endDate) {
+                    params.append("end_date", endDate.toISOString().split('T')[0]);
+                }
+                params.append("group_by", groupBy);
 
                 // Make API request with params
-                const response = await axios.get(`${API}/maintenance/grouped-metrics/`, {
+                const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {
                     params,
                     withCredentials: true
                 });
@@ -97,9 +98,8 @@ const MaintenanceLibrary = () => {
                 setLoading(false);
             }
         };
-
         fetchFilteredData();
-    }, [vehicleType, dateRange, groupBy]);
+    }, [vehicleType, startDate, endDate, groupBy]);
 
     // Handler functions
     const handleVehicleTypeChange = (event: SelectChangeEvent<string>) => {
@@ -107,7 +107,7 @@ const MaintenanceLibrary = () => {
     };
 
     const handleGroupByChange = (event: SelectChangeEvent<string>) => {
-        setGroupBy(event.target.value);
+        setGroupBy(event.target.value as 'monthly' | 'quarterly' | 'yearly' | 'none');
     };
 
     const handleServiceTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -116,8 +116,9 @@ const MaintenanceLibrary = () => {
 
     const handleResetFilters = () => {
         setVehicleType("ALL");
-        setDateRange(null);
-        setGroupBy("MONTHLY");
+        setStartDate(null);
+        setEndDate(null);
+        setGroupBy("none");
         setIsFiltered(false);
     };
 
@@ -143,36 +144,6 @@ const MaintenanceLibrary = () => {
             : standardMetrics.vehicle_health_metrics;
     };
 
-    // Get data for summary cards based on current view
-    const getSummaryData = () => {
-        if (isFiltered) {
-            // Process grouped metrics data for cards
-            const periods = Object.keys(groupedMetrics.grouped_metrics);
-            const totalSpend = periods.length > 0
-                ? formatCurrency(Object.values(groupedMetrics.grouped_metrics)
-                    .reduce((sum, item: any) => sum + (item.total || 0), 0))
-                : '$0';
-
-            return {
-                totalSpend,
-                yoyChange: "N/A", // Grouped view may not have YoY comparison
-                avgCostPerVehicle: periods.length > 0
-                    ? formatCurrency(Object.values(groupedMetrics.grouped_metrics)
-                        .reduce((sum, item: any) => sum + (item.vehicle_avg || 0), 0) / periods.length)
-                    : '$0',
-                overdueCount: serviceAlerts.overdue.length // Mock data for now
-            };
-        } else {
-            // Use standard metrics
-            return {
-                totalSpend: formatCurrency(standardMetrics.total_maintenance_cost.year.total),
-                yoyChange: formatPercentage(standardMetrics.yoy),
-                avgCostPerVehicle: formatCurrency(standardMetrics.total_maintenance_cost.year.vehicle_avg),
-                overdueCount: serviceAlerts.overdue.length // Mock data for now
-            };
-        }
-    };
-
     // Get recurring issues based on current view
     const getRecurringIssues = () => {
         if (isFiltered) {
@@ -191,64 +162,47 @@ const MaintenanceLibrary = () => {
         }
     };
 
-    // Get chart data for cost trends
-    const getChartData = () => {
-        if (isFiltered) {
-            // Process grouped metrics for chart
-            const periods = Object.keys(groupedMetrics.grouped_metrics).sort();
-            const values = periods.map(period => {
-                const data = groupedMetrics.grouped_metrics[period];
-                return data || 0;
-            });
-
-            // Normalize values for display (as percentages)
-            const maxValue = Math.max(...values, 1);
-            const normalizedValues = values.map(val => (val / maxValue) * 100);
-
-            return {
-                labels: periods,
-                values: normalizedValues
-            };
-        } else {
-            // Mock data for standard view
-            if (groupBy === "MONTHLY") {
-                return {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    values: [65, 80, 55, 70, 90, 75]
-                };
-            } else {
-                return {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                    values: [70, 80, 65, 85]
-                };
-            }
-        }
-    };
-
-    // Get health status data
-    const getHealthStatusData = () => {
+    const getDonutChartData = () => {
         const healthMetrics = getHealthMetrics();
+
+        const overallHealthSegments: DonutChartSegment[] = [
+            {label: 'Good', value: healthMetrics.vehicle_avg_health.good, color: theme.palette.success.main},
+            {label: 'Warning', value: healthMetrics.vehicle_avg_health.warning, color: theme.palette.warning.main},
+            {label: 'Critical', value: healthMetrics.vehicle_avg_health.critical, color: theme.palette.error.main}
+        ];
+
+        const insuranceHealthSegments: DonutChartSegment[] = [
+            {label: 'Good', value: healthMetrics.vehicle_insurance_health.good, color: theme.palette.success.main},
+            {label: 'Warning', value: healthMetrics.vehicle_insurance_health.warning, color: theme.palette.warning.main},
+            {label: 'Critical', value: healthMetrics.vehicle_insurance_health.critical, color: theme.palette.error.main}
+        ];
+
+        const licenseHealthSegments: DonutChartSegment[] = [
+            {label: 'Good', value: healthMetrics.vehicle_license_health.good, color: theme.palette.success.main},
+            {label: 'Warning', value: healthMetrics.vehicle_license_health.warning, color: theme.palette.warning.main},
+            {label: 'Critical', value: healthMetrics.vehicle_license_health.critical, color: theme.palette.error.main}
+        ];
+
         return {
-            good: healthMetrics.vehicle_avg_health.good,
-            warning: healthMetrics.vehicle_avg_health.warning,
-            critical: healthMetrics.vehicle_avg_health.critical
+            overallHealthSegments,
+            insuranceHealthSegments,
+            licenseHealthSegments
         };
     };
 
+
     // Variables for UI rendering
-    const summaryData = getSummaryData();
     const recurringIssues = getRecurringIssues();
-    const chartData = getChartData();
-    const healthStatus = getHealthStatusData();
 
     return (
         <Container maxWidth="lg" sx={{py: 4}}>
             {/* 1. Header Section */}
-            <Box sx={{mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Box sx={{mb: 4}}>
                 <Typography variant="h4" component="h1" sx={{fontWeight: 'bold'}}>
                     {isFiltered ? 'Filtered Maintenance Overview' : 'Fleet Maintenance Overview'}
                 </Typography>
-
+            </Box>
+            <Box sx={{mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Box sx={{display: 'flex', gap: 2}}>
                     {/* Vehicle Type Filter */}
                     <FormControl variant="outlined" size="medium" sx={{minWidth: 150}}>
@@ -265,18 +219,6 @@ const MaintenanceLibrary = () => {
                         </Select>
                     </FormControl>
 
-                    {/* Date Range Picker */}
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                            label="Date Range"
-                            value={dateRange}
-                            onChange={(newValue) => setDateRange(newValue)}
-                            slotProps={{
-                                openPickerIcon: {sx: {color: theme.palette.custom.accent[500]}}
-                            }}
-                        />
-                    </LocalizationProvider>
-
                     {/* Group By Selector */}
                     <FormControl variant="outlined" size="medium" sx={{minWidth: 120}}>
                         <InputLabel>Group By</InputLabel>
@@ -285,10 +227,23 @@ const MaintenanceLibrary = () => {
                             onChange={handleGroupByChange}
                             label="Group By"
                         >
-                            <MenuItem value="MONTHLY">Monthly</MenuItem>
-                            <MenuItem value="QUARTERLY">Quarterly</MenuItem>
+                            <MenuItem value="none">None</MenuItem>
+                            <MenuItem value="monthly">Monthly</MenuItem>
+                            <MenuItem value="quarterly">Quarterly</MenuItem>
+                            <MenuItem value="yearly">Yearly</MenuItem>
                         </Select>
                     </FormControl>
+
+                    {/* Date Range Picker */}
+                    <DateRangePicker
+                        startDate={startDate}
+                        endDate={endDate}
+                        onStartDateChange={setStartDate}
+                        onEndDateChange={setEndDate}
+                        startLabel="Start Date"
+                        endLabel="End Date"
+                        size="medium"
+                    />
 
                     {/* Reset filters button - only show when filtered */}
                     {isFiltered && (
@@ -308,10 +263,17 @@ const MaintenanceLibrary = () => {
                 <Box sx={{mb: 2, p: 1, bgcolor: theme.palette.custom.primary[100], borderRadius: 1}}>
                     <Typography variant="body2">
                         Showing filtered view: {vehicleType !== "ALL" ? vehicleType.toLowerCase() : "all"} vehicles
-                        {dateRange ? `, period: ${dateRange.toLocaleDateString()}` : ''}
-                        {`, grouped ${groupBy.toLowerCase()}`}
+                        {startDate && endDate ?
+                            `, period: ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` :
+                            startDate ?
+                                `, from: ${startDate.toLocaleDateString()}` :
+                                endDate ?
+                                    `, until: ${endDate.toLocaleDateString()}` :
+                                    ''}
+                        {`, grouped ${groupBy}`}
                     </Typography>
                 </Box>
+
             )}
 
             {loading ? (
@@ -319,73 +281,64 @@ const MaintenanceLibrary = () => {
                     <CircularProgress color="primary" size={40} thickness={5}/>
                 </Box>
             ) : (
-                <>
+                <Box>
                     {/* 2. Core Metrics (Summary Cards) */}
                     <Grid container spacing={3} sx={{mb: 4}}>
-                        <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                            <Card elevation={2}>
-                                <CardContent>
-                                    <Typography variant="subtitle2" color="text.secondary">
-                                        Total Spend
-                                    </Typography>
-                                    <Typography variant="h4" component="div" sx={{mt: 1}}>
-                                        {summaryData.totalSpend}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
+                        {/* First row: Key spending metrics */}
+                        <Grid container spacing={3}>
+                            <Grid sx={{width: {xs: "100%"}}}>
+                                <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
+                                    Fleet-wide Spending
+                                </Typography>
+                            </Grid>
+                            <MetricSummaryCard
+                                title="Annual Spending"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.year.total)}
+                                valueStyling={{mt: 1}}
+                            />
+                            <MetricSummaryCard
+                                title="Quarterly Spending"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.total)}
+                                valueStyling={{mt: 1}}
+                            />
+                            <MetricSummaryCard
+                                title="Monthly Spending"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.month.total)}
+                                valueStyling={{mt: 1}}
+                            />
+                            <MetricSummaryCard
+                                title="YoY Change"
+                                value={formatPercentage(standardMetrics.yoy)}
+                                valueStyling={{
+                                    mt: 1,
+                                    color: standardMetrics.yoy < 0 ? theme.palette.success.main : theme.palette.error.main
+                                }}
+                                subtitle="Lower is better"
+                            />
                         </Grid>
 
-                        <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                            <Card elevation={2}>
-                                <CardContent>
-                                    <Typography variant="subtitle2" color="text.secondary">
-                                        YoY Cost Change
-                                    </Typography>
-                                    <Typography
-                                        variant="h4"
-                                        component="div"
-                                        sx={{
-                                            mt: 1,
-                                            color: summaryData.yoyChange.includes('+') ? theme.palette.error.main : theme.palette.success.main
-                                        }}
-                                    >
-                                        {summaryData.yoyChange}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-
-                        <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                            <Card elevation={2}>
-                                <CardContent>
-                                    <Typography variant="subtitle2" color="text.secondary">
-                                        Avg Cost/Vehicle
-                                    </Typography>
-                                    <Typography variant="h4" component="div" sx={{mt: 1}}>
-                                        {summaryData.avgCostPerVehicle}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-
-                        <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                            <Card elevation={2}>
-                                <CardContent>
-                                    <Typography variant="subtitle2" color="text.secondary">
-                                        Overdue Services
-                                    </Typography>
-                                    <Typography
-                                        variant="h4"
-                                        component="div"
-                                        sx={{
-                                            mt: 1,
-                                            color: summaryData.overdueCount > 0 ? theme.palette.error.main : theme.palette.success.main
-                                        }}
-                                    >
-                                        {summaryData.overdueCount}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
+                        {/* Second row: Per-vehicle metrics */}
+                        <Grid container spacing={3} sx={{mt: 2}}>
+                            <Grid sx={{width: {xs: "100%"}}}>
+                                <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
+                                    Per-vehicle Averages
+                                </Typography>
+                            </Grid>
+                            <MetricSummaryCard
+                                title="Annual Average"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.year.vehicle_avg)}
+                                valueStyling={{mt: 1}}
+                            />
+                            <MetricSummaryCard
+                                title="Quarterly Average"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.vehicle_avg)}
+                                valueStyling={{mt: 1}}
+                            />
+                            <MetricSummaryCard
+                                title="Monthly Average"
+                                value={formatCurrency(standardMetrics.total_maintenance_cost.month.vehicle_avg)}
+                                valueStyling={{mt: 1}}
+                            />
                         </Grid>
                     </Grid>
 
@@ -394,52 +347,44 @@ const MaintenanceLibrary = () => {
                         <Typography variant="h6" gutterBottom>
                             Vehicle Health Overview
                         </Typography>
-                        <Grid container spacing={4}>
+
+                        {/* First row: Three donut charts */}
+                        <Grid container spacing={3} sx={{mb: 4}}>
                             <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                                {/* Donut Chart for Health Status */}
-                                <Box sx={{height: 250, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                    <Box sx={{textAlign: 'center'}}>
-                                        <Typography variant="body2" color="text.secondary">
-                                            Health Status Distribution
-                                        </Typography>
-                                        {/* Donut chart visualization */}
-                                        <Box sx={{
-                                            width: 200,
-                                            height: 200,
-                                            borderRadius: '50%',
-                                            background: `conic-gradient(
-                        ${theme.palette.success.main} 0% ${healthStatus.good}%,
-                        ${theme.palette.warning.main} ${healthStatus.good}% ${healthStatus.good + healthStatus.warning}%,
-                        ${theme.palette.error.main} ${healthStatus.good + healthStatus.warning}% 100%
-                      )`,
-                                            margin: '0 auto',
-                                            mt: 2
-                                        }}/>
-                                        <Box sx={{display: 'flex', justifyContent: 'space-around', mt: 2}}>
-                                            <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                                <Box sx={{width: 12, height: 12, borderRadius: '50%', bgcolor: 'success.main', mr: 1}}/>
-                                                <Typography variant="body2">Good: {healthStatus.good}%</Typography>
-                                            </Box>
-                                            <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                                <Box sx={{width: 12, height: 12, borderRadius: '50%', bgcolor: 'warning.main', mr: 1}}/>
-                                                <Typography variant="body2">Warning: {healthStatus.warning}%</Typography>
-                                            </Box>
-                                            <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                                <Box sx={{width: 12, height: 12, borderRadius: '50%', bgcolor: 'error.main', mr: 1}}/>
-                                                <Typography variant="body2">Critical: {healthStatus.critical}%</Typography>
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                </Box>
+                                <DonutChart
+                                    title="Overall Vehicle Health"
+                                    segments={getDonutChartData().overallHealthSegments}
+                                    customLabels={{'Good': 'Good', 'Warning': 'Warning', 'Critical': 'Critical'}}
+                                />
                             </Grid>
 
                             <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Top Recurring Issues
-                                </Typography>
-                                {/* Horizontal bar chart for top issues */}
+                                <DonutChart
+                                    title="Insurance Status"
+                                    segments={getDonutChartData().insuranceHealthSegments}
+                                    customLabels={{'Good': 'Valid', 'Warning': 'Expiring', 'Critical': 'Expired'}}
+                                />
+                            </Grid>
+
+                            <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
+                                <DonutChart
+                                    title="License Status"
+                                    segments={getDonutChartData().licenseHealthSegments}
+                                    customLabels={{'Good': 'Valid', 'Warning': 'Expiring', 'Critical': 'Expired'}}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Paper>
+
+                    {/* Second row: Top recurring issues */}
+                    {recurringIssues.length > 0 && (
+                        <Paper elevation={3} sx={{p: 3, mb: 4}}>
+                            <Typography variant="subtitle1" gutterBottom>
+                                Top Recurring Issues
+                            </Typography>
+                            <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 2}}>
                                 {recurringIssues.map((issue, index) => (
-                                    <Box key={index} sx={{mb: 2}}>
+                                    <Box key={index} sx={{width: {xs: '100%', sm: '48%', md: '31%'}}}>
                                         <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 0.5}}>
                                             <Typography variant="body2">{issue.issue}</Typography>
                                             <Typography variant="body2" fontWeight="bold">{issue.count}</Typography>
@@ -456,15 +401,17 @@ const MaintenanceLibrary = () => {
                                                 sx={{
                                                     height: '100%',
                                                     width: `${(issue.count / 15) * 100}%`,
-                                                    bgcolor: theme.palette.primary.main
+                                                    bgcolor: theme.palette.custom.primary[500],
+                                                    borderRadius: 1,
                                                 }}
                                             />
                                         </Box>
                                     </Box>
                                 ))}
-                            </Grid>
-                        </Grid>
-                    </Paper>
+                            </Box>
+                        </Paper>
+                    )}
+
 
                     {/* 4. Service Alerts */}
                     <Paper elevation={3} sx={{p: 3, mb: 4}}>
@@ -549,70 +496,12 @@ const MaintenanceLibrary = () => {
                     </Paper>
 
                     {/* 5. Trend Analytics Panel */}
-                    <Paper elevation={3} sx={{p: 3}}>
-                        <Typography variant="h6" gutterBottom>
-                            Maintenance Cost Trends
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{mb: 3}}>
-                            {isFiltered
-                                ? `Filtered ${groupBy.toLowerCase()} breakdown of maintenance costs`
-                                : `${groupBy === 'MONTHLY' ? 'Monthly' : 'Quarterly'} breakdown of fleet maintenance costs`}
-                        </Typography>
-
-                        {/* Line/bar chart for cost over time */}
-                        <Box sx={{height: 300, width: '100%'}}>
-                            <Box
-                                sx={{
-                                    height: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    border: 1,
-                                    borderColor: 'divider',
-                                    borderRadius: 1,
-                                    p: 2
-                                }}
-                            >
-                                {/* Chart visualization */}
-                                <Box sx={{width: '100%', height: '100%', position: 'relative'}}>
-                                    {/* X-axis labels */}
-                                    <Box sx={{position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between'}}>
-                                        {chartData.labels.map((label) => (
-                                            <Typography key={label} variant="caption" sx={{px: 1}}>{label}</Typography>
-                                        ))}
-                                    </Box>
-
-                                    {/* Chart bars */}
-                                    <Box sx={{
-                                        position: 'absolute',
-                                        bottom: 20,
-                                        left: 0,
-                                        right: 0,
-                                        height: 'calc(100% - 40px)',
-                                        display: 'flex',
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'space-around'
-                                    }}>
-                                        {chartData.values.map((value, index) => (
-                                            <Box
-                                                key={index}
-                                                sx={{
-                                                    width: `${100 / Math.max(chartData.values.length * 2, 1)}%`,
-                                                    height: `${value}%`,
-                                                    bgcolor: isFiltered ? theme.palette.custom.secondary[600] : theme.palette.primary.main,
-                                                    borderRadius: '4px 4px 0 0'
-                                                }}
-                                            />
-                                        ))}
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Paper>
-                </>
+                    {isFiltered && Object.keys(groupedMetrics.grouped_metrics).length > 0 && (
+                        <GroupedMetricsChart data={groupedMetrics.grouped_metrics} groupBy={groupBy} title={"Filtered Maintenance Cost Analysis"}/>
+                    )}
+                </Box>
             )}
         </Container>
     );
-};
-
+}
 export default MaintenanceLibrary;
