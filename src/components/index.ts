@@ -29,3 +29,4 @@ export {default as DonutChart} from "./charts/DonutChart";
 export {default as DateRangePicker} from "./DateRangePicker";
 export {default as MetricSummaryCard} from "./cards/MetricSummaryCard";
 export {default as GroupedMetricsChart} from "./charts/GroupedMetricsChart";
+export {default as CoreMetricsCards} from "./maintenance/CoreMetricsCards";

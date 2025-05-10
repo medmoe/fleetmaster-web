@@ -75,8 +75,20 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                                                      title = 'Maintenance Cost Analysis'
                                                                  }) => {
     const theme = useTheme();
-    // Process data for visualization
+
+
+    /**
+     * Processes and calculates chart metrics from the input data.
+     * Returns an object containing:
+     * - periods: sorted array of time periods
+     * - maxValue: maximum value for chart scaling
+     * - avgChange: average change across all periods
+     * - isIncreasing: boolean indicating if the overall trend is increasing
+     * - formattedPeriods: periods formatted for display
+     * - changeLabel: appropriate label for change type (YoY/QoQ/MoM)
+     */
     const metrics = useMemo(() => {
+        
         // Extract and sort periods
         const periods = Object.keys(data).sort((a, b) => {
             // Special sorting for different period formats
@@ -165,7 +177,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         ? <TrendingUpIcon fontSize="small" sx={{mr: 0.5}}/>
                         : <TrendingDownIcon fontSize="small" sx={{mr: 0.5}}/>
                     }
-                    <Typography variant="body2" fontWeight="medium">
+                    <Typography variant="body2" fontWeight="medium" color={theme.palette.text.primary}>
                         {formatPercentage(metrics.avgChange)} {!metrics.isIncreasing && "savings"}
                     </Typography>
                 </Box>
@@ -332,7 +344,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                         p: 2,
                                         border: `1px solid ${theme.palette.divider}`,
                                         borderLeft: `4px solid ${changeValue >= 0
-                                            ? theme.palette.primary.main
+                                            ? theme.palette.error.main
                                             : theme.palette.success.main}`,
                                     }}
                                 >

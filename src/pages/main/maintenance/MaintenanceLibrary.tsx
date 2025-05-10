@@ -6,7 +6,7 @@ import axios from "axios";
 import {CoreMetricsResponse, GroupedMetricsResponse, VehicleHealthMetrics} from "@/types/maintenance.ts";
 import {initialFleetWideOverview, initialGroupedMetrics} from "./initialStates.ts"
 import {DonutChartSegment} from "@/components/charts/DonutChart.tsx";
-import {DateRangePicker, DonutChart, GroupedMetricsChart, MetricSummaryCard} from "@/components";
+import {CoreMetricsCards, DateRangePicker, DonutChart, GroupedMetricsChart} from "@/components";
 
 // Component to display the maintenance library dashboard
 const MaintenanceLibrary = () => {
@@ -15,7 +15,7 @@ const MaintenanceLibrary = () => {
 
     // State for filters
     const [vehicleType, setVehicleType] = useState<string>("ALL");
-    const [groupBy, setGroupBy] = useState<'monthly' | 'quarterly' | 'yearly' | 'none'>('monthly');
+    const [groupBy, setGroupBy] = useState<'monthly' | 'quarterly' | 'yearly' | 'none'>('none');
     const [serviceTab, setServiceTab] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -122,20 +122,6 @@ const MaintenanceLibrary = () => {
         setIsFiltered(false);
     };
 
-    // Helper function to format currency
-    const formatCurrency = (value: number): string => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(value);
-    };
-
-    // Helper to format percentage
-    const formatPercentage = (value: number): string => {
-        const sign = value > 0 ? "+" : "";
-        return `${sign}${value.toFixed(1)}%`;
-    };
 
     // Get relevant health metrics based on current view
     const getHealthMetrics = (): VehicleHealthMetrics => {
@@ -282,65 +268,16 @@ const MaintenanceLibrary = () => {
                 </Box>
             ) : (
                 <Box>
-                    {/* 2. Core Metrics (Summary Cards) */}
-                    <Grid container spacing={3} sx={{mb: 4}}>
-                        {/* First row: Key spending metrics */}
-                        <Grid container spacing={3}>
-                            <Grid sx={{width: {xs: "100%"}}}>
-                                <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
-                                    Fleet-wide Spending
-                                </Typography>
-                            </Grid>
-                            <MetricSummaryCard
-                                title="Annual Spending"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.year.total)}
-                                valueStyling={{mt: 1}}
-                            />
-                            <MetricSummaryCard
-                                title="Quarterly Spending"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.total)}
-                                valueStyling={{mt: 1}}
-                            />
-                            <MetricSummaryCard
-                                title="Monthly Spending"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.month.total)}
-                                valueStyling={{mt: 1}}
-                            />
-                            <MetricSummaryCard
-                                title="YoY Change"
-                                value={formatPercentage(standardMetrics.yoy)}
-                                valueStyling={{
-                                    mt: 1,
-                                    color: standardMetrics.yoy < 0 ? theme.palette.success.main : theme.palette.error.main
-                                }}
-                                subtitle="Lower is better"
-                            />
-                        </Grid>
+                    {!isFiltered ? (
+                        <CoreMetricsCards standardMetrics={standardMetrics}/>
+                    ) : Object.keys(groupedMetrics.grouped_metrics).length > 0 ? (
+                        <GroupedMetricsChart data={groupedMetrics.grouped_metrics}
+                                             groupBy={groupBy}
+                                             title={"Filtered Maintenance Cost Analysis"}/>
+                    ) : (
+                        <CoreMetricsCards standardMetrics={standardMetrics}/>
+                    )}
 
-                        {/* Second row: Per-vehicle metrics */}
-                        <Grid container spacing={3} sx={{mt: 2}}>
-                            <Grid sx={{width: {xs: "100%"}}}>
-                                <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
-                                    Per-vehicle Averages
-                                </Typography>
-                            </Grid>
-                            <MetricSummaryCard
-                                title="Annual Average"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.year.vehicle_avg)}
-                                valueStyling={{mt: 1}}
-                            />
-                            <MetricSummaryCard
-                                title="Quarterly Average"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.vehicle_avg)}
-                                valueStyling={{mt: 1}}
-                            />
-                            <MetricSummaryCard
-                                title="Monthly Average"
-                                value={formatCurrency(standardMetrics.total_maintenance_cost.month.vehicle_avg)}
-                                valueStyling={{mt: 1}}
-                            />
-                        </Grid>
-                    </Grid>
 
                     {/* 3. Vehicle Health Overview */}
                     <Paper elevation={3} sx={{p: 3, mb: 4}}>
@@ -468,7 +405,6 @@ const MaintenanceLibrary = () => {
                                 ))}
                             </Box>
                         )}
-
                         {serviceTab === 1 && (
                             <Box>
                                 {serviceAlerts.upcoming.map((alert) => (
@@ -494,11 +430,6 @@ const MaintenanceLibrary = () => {
                             </Box>
                         )}
                     </Paper>
-
-                    {/* 5. Trend Analytics Panel */}
-                    {isFiltered && Object.keys(groupedMetrics.grouped_metrics).length > 0 && (
-                        <GroupedMetricsChart data={groupedMetrics.grouped_metrics} groupBy={groupBy} title={"Filtered Maintenance Cost Analysis"}/>
-                    )}
                 </Box>
             )}
         </Container>

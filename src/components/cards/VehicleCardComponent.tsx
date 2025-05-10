@@ -31,7 +31,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
     // Map status to MUI color
     const getStatusColor = () => {
         if (vehicle.status === 'ACTIVE') return 'success';
-        if (vehicle.status === 'MAINTENANCE') return 'warning';
+        if (vehicle.status === 'IN_MAINTENANCE') return 'warning';
         if (vehicle.status === 'OUT_OF_SERVICE') return 'error';
         return 'default';
     };
