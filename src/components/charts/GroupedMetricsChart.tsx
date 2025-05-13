@@ -1,8 +1,9 @@
 import React, {useMemo} from 'react';
-import {Box, Paper, Typography, Grid, Tooltip, useTheme} from '@mui/material';
+import {Box, Grid, Paper, Tooltip, Typography, useTheme} from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import {format} from 'date-fns';
+import {useTranslation} from "react-i18next";
 
 // Define the types for different period changes
 type YearlyChange = { yoy_change: number; vehicle_avg: number };
@@ -36,11 +37,11 @@ const getChangeValue = (
 };
 
 // Helper function to get change label based on groupBy
-const getChangeLabel = (groupBy: 'monthly' | 'quarterly' | 'yearly' | 'none'): string => {
-    if (groupBy === 'yearly') return 'YoY';
-    if (groupBy === 'quarterly') return 'QoQ';
-    if (groupBy === 'monthly') return 'MoM';
-    return 'Change';
+const getChangeLabel = (groupBy: 'monthly' | 'quarterly' | 'yearly' | 'none', t: (key: string) => string): string => {
+    if (groupBy === 'yearly') return t('pages.maintenance.charts.groupedMetrics.changeTypes.yoy');
+    if (groupBy === 'quarterly') return t('pages.maintenance.charts.groupedMetrics.changeTypes.qoq');
+    if (groupBy === 'monthly') return t('pages.maintenance.charts.groupedMetrics.changeTypes.mom');
+    return t('pages.maintenance.charts.groupedMetrics.changeTypes.generic');
 };
 
 // Helper function to format the period label
@@ -75,7 +76,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                                                      title = 'Maintenance Cost Analysis'
                                                                  }) => {
     const theme = useTheme();
-
+    const {t} = useTranslation();
 
     /**
      * Processes and calculates chart metrics from the input data.
@@ -88,7 +89,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
      * - changeLabel: appropriate label for change type (YoY/QoQ/MoM)
      */
     const metrics = useMemo(() => {
-        
+
         // Extract and sort periods
         const periods = Object.keys(data).sort((a, b) => {
             // Special sorting for different period formats
@@ -135,7 +136,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
             avgChange,
             isIncreasing,
             formattedPeriods: periods.map(period => formatPeriodLabel(period, groupBy)),
-            changeLabel: getChangeLabel(groupBy)
+            changeLabel: getChangeLabel(groupBy, t)
         };
     }, [data, groupBy]);
 
@@ -178,7 +179,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         : <TrendingDownIcon fontSize="small" sx={{mr: 0.5}}/>
                     }
                     <Typography variant="body2" fontWeight="medium" color={theme.palette.text.primary}>
-                        {formatPercentage(metrics.avgChange)} {!metrics.isIncreasing && "savings"}
+                        {formatPercentage(metrics.avgChange)} {!metrics.isIncreasing && t('pages.maintenance.charts.groupedMetrics.savings')}
                     </Typography>
                 </Box>
             </Box>
@@ -186,11 +187,11 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
             {/* Period subtitle */}
             <Typography variant="body2" color="text.secondary" sx={{mb: 3}}>
                 {groupBy === 'yearly'
-                    ? 'Yearly comparison'
+                    ? t('pages.maintenance.charts.groupedMetrics.comparisonTypes.yearly')
                     : groupBy === 'quarterly'
-                        ? 'Quarterly comparison'
-                        : 'Monthly comparison'}
-                {" of average maintenance costs per vehicle"}
+                        ? t('pages.maintenance.charts.groupedMetrics.comparisonTypes.quarterly')
+                        : t('pages.maintenance.charts.groupedMetrics.comparisonTypes.monthly')}
+                {t('pages.maintenance.charts.groupedMetrics.ofAverageCosts')}
             </Typography>
 
             {/* Bar chart visualization */}
@@ -245,11 +246,11 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                                 {metrics.formattedPeriods[index]}
                                             </Typography>
                                             <Typography variant="body2">
-                                                Average: {formatCurrency(currentData?.vehicle_avg || 0)}
+                                                {t('pages.maintenance.charts.groupedMetrics.tooltip.average')}: {formatCurrency(currentData?.vehicle_avg || 0)}
                                             </Typography>
                                             <Typography variant="body2"
                                                         color={changeValue >= 0 ? theme.palette.error.main : theme.palette.success.main}>
-                                                {metrics.changeLabel} Change: {formatPercentage(changeValue)}
+                                                {metrics.changeLabel} {t('pages.maintenance.charts.groupedMetrics.tooltip.change')}: {formatPercentage(changeValue)}
                                             </Typography>
                                         </Box>
                                     }
@@ -324,7 +325,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
             ) : (
                 <Box sx={{height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Typography variant="body2" color="text.secondary">
-                        No data available for the selected filters
+                        {t('pages.maintenance.charts.groupedMetrics.noData')}
                     </Typography>
                 </Box>
             )}
@@ -337,7 +338,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         const changeValue = getChangeValue(currentData, groupBy);
 
                         return (
-                            <Grid sx={{width: {xs: "100%", sm:"50%", md:"25%"}}} key={period}>
+                            <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}} key={period}>
                                 <Paper
                                     elevation={1}
                                     sx={{

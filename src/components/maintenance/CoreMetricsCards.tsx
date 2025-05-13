@@ -2,6 +2,7 @@ import {Grid, Typography, useTheme} from "@mui/material";
 import {MetricSummaryCard} from "@/components";
 import React from "react";
 import {CoreMetricsResponse} from "@/types/maintenance.ts";
+import {useTranslation} from "react-i18next";
 
 interface CoreMetricsProps {
     standardMetrics: CoreMetricsResponse;
@@ -24,38 +25,39 @@ const formatPercentage = (value: number): string => {
 
 const CoreMetricsCards = ({standardMetrics}: CoreMetricsProps) => {
     const theme = useTheme();
+    const {t} = useTranslation();
     return (
         <Grid container spacing={3} sx={{mb: 4}}>
             {/* First row: Key spending metrics */}
             <Grid container spacing={3}>
                 <Grid sx={{width: {xs: "100%"}}}>
                     <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
-                        Fleet-wide Spending
+                        {t('pages.maintenance.coreMetrics.fleetWideSpending')}
                     </Typography>
                 </Grid>
                 <MetricSummaryCard
-                    title="Annual Spending"
+                    title={t('pages.maintenance.coreMetrics.annualSpending')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.year.total)}
                     valueStyling={{mt: 1}}
                 />
                 <MetricSummaryCard
-                    title="Quarterly Spending"
+                    title={t('pages.maintenance.coreMetrics.quarterlySpending')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.total)}
                     valueStyling={{mt: 1}}
                 />
                 <MetricSummaryCard
-                    title="Monthly Spending"
+                    title={t('pages.maintenance.coreMetrics.monthlySpending')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.month.total)}
                     valueStyling={{mt: 1}}
                 />
                 <MetricSummaryCard
-                    title="YoY Change"
+                    title={t('pages.maintenance.coreMetrics.yoyChange')}
                     value={formatPercentage(standardMetrics.yoy)}
                     valueStyling={{
                         mt: 1,
                         color: standardMetrics.yoy < 0 ? theme.palette.success.main : theme.palette.error.main
                     }}
-                    subtitle="Lower is better"
+                    subtitle={t('pages.maintenance.coreMetrics.lowerIsBetter')}
                 />
             </Grid>
 
@@ -63,21 +65,21 @@ const CoreMetricsCards = ({standardMetrics}: CoreMetricsProps) => {
             <Grid container spacing={3} sx={{mt: 2}}>
                 <Grid sx={{width: {xs: "100%"}}}>
                     <Typography variant="subtitle1" sx={{mb: 1, fontWeight: 500}}>
-                        Per-vehicle Averages
+                        {t('pages.maintenance.coreMetrics.perVehicleAverages')}
                     </Typography>
                 </Grid>
                 <MetricSummaryCard
-                    title="Annual Average"
+                    title={t('pages.maintenance.coreMetrics.annualAverage')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.year.vehicle_avg)}
                     valueStyling={{mt: 1}}
                 />
                 <MetricSummaryCard
-                    title="Quarterly Average"
+                    title={t('pages.maintenance.coreMetrics.quarterlyAverage')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.quarter.vehicle_avg)}
                     valueStyling={{mt: 1}}
                 />
                 <MetricSummaryCard
-                    title="Monthly Average"
+                    title={t('pages.maintenance.coreMetrics.monthlyAverage')}
                     value={formatCurrency(standardMetrics.total_maintenance_cost.month.vehicle_avg)}
                     valueStyling={{mt: 1}}
                 />

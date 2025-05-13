@@ -6,7 +6,7 @@ import axios from "axios";
 import {CoreMetricsResponse, GroupedMetricsResponse, VehicleHealthMetrics} from "@/types/maintenance.ts";
 import {initialFleetWideOverview, initialGroupedMetrics} from "./initialStates.ts"
 import {DonutChartSegment} from "@/components/charts/DonutChart.tsx";
-import {CoreMetricsCards, DateRangePicker, DonutChart, GroupedMetricsChart} from "@/components";
+import {CoreMetricsCards, DateRangePicker, DonutChart, GroupedMetricsChart, NotificationBar} from "@/components";
 
 // Component to display the maintenance library dashboard
 const MaintenanceLibrary = () => {
@@ -21,6 +21,8 @@ const MaintenanceLibrary = () => {
 
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
+    const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
+    const [snackbar, setSnackbar] = useState({open: false, message: "", severity: "success" as "success" | "error"})
 
 
     // State for metrics data
@@ -50,6 +52,11 @@ const MaintenanceLibrary = () => {
                 const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {withCredentials: true});
                 setStandardMetrics(response.data);
             } catch (error) {
+                if (error.response.status === 401) {
+                    setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
+                } else {
+                    setSnackbar({open: true, message: t('pages.maintenance.library.errors.standardMetrics'), severity: "error"});
+                }
                 console.error("Error fetching standard metrics:", error);
             } finally {
                 setLoading(false);
@@ -59,10 +66,17 @@ const MaintenanceLibrary = () => {
         fetchStandardMetrics();
     }, []);
 
+    // Update range state when state/end range are updated
+    useEffect(() => {
+        if (startDate && endDate && startDate < endDate) {
+            setRange([startDate, endDate]);
+        }
+    }, [startDate, endDate]);
+
     // Fetch grouped metrics when filters change
     useEffect(() => {
         // Skip the initial render
-        if (vehicleType === "ALL" && !startDate && !endDate && groupBy === "none") {
+        if (vehicleType === "ALL" && (range[0] === null || range[1] == null) && groupBy === "none") {
             setIsFiltered(false);
             return;
         }
@@ -77,13 +91,13 @@ const MaintenanceLibrary = () => {
                 if (vehicleType !== "ALL") {
                     params.append("vehicle_type", vehicleType);
                 }
-                if (startDate) {
-                    params.append("start_date", startDate.toISOString().split('T')[0]);
+                if (range[0] && range[1]) {
+                    params.append("start_date", range[0].toISOString().split('T')[0]);
+                    params.append("end_date", range[1].toISOString().split('T')[0]);
                 }
-                if (endDate) {
-                    params.append("end_date", endDate.toISOString().split('T')[0]);
+                if (groupBy !== "none") {
+                    params.append("group_by", groupBy);
                 }
-                params.append("group_by", groupBy);
 
                 // Make API request with params
                 const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {
@@ -93,13 +107,18 @@ const MaintenanceLibrary = () => {
 
                 setGroupedMetrics(response.data);
             } catch (error) {
+                if (error.response.status === 401) {
+                    setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
+                } else {
+                    setSnackbar({open: true, message: t('pages.maintenance.library.errors.groupedMetrics'), severity: "error"});
+                }
                 console.error("Error fetching grouped metrics:", error);
             } finally {
                 setLoading(false);
             }
         };
         fetchFilteredData();
-    }, [vehicleType, startDate, endDate, groupBy]);
+    }, [vehicleType, range, groupBy]);
 
     // Handler functions
     const handleVehicleTypeChange = (event: SelectChangeEvent<string>) => {
@@ -118,6 +137,7 @@ const MaintenanceLibrary = () => {
         setVehicleType("ALL");
         setStartDate(null);
         setEndDate(null);
+        setRange([null, null]);
         setGroupBy("none");
         setIsFiltered(false);
     };
@@ -185,38 +205,38 @@ const MaintenanceLibrary = () => {
             {/* 1. Header Section */}
             <Box sx={{mb: 4}}>
                 <Typography variant="h4" component="h1" sx={{fontWeight: 'bold'}}>
-                    {isFiltered ? 'Filtered Maintenance Overview' : 'Fleet Maintenance Overview'}
+                    {isFiltered ? t('pages.maintenance.library.filteredOverview') : t('pages.maintenance.library.fleetOverview')}
                 </Typography>
             </Box>
             <Box sx={{mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Box sx={{display: 'flex', gap: 2}}>
                     {/* Vehicle Type Filter */}
                     <FormControl variant="outlined" size="medium" sx={{minWidth: 150}}>
-                        <InputLabel>Vehicle Type</InputLabel>
+                        <InputLabel>{t('pages.maintenance.library.filters.vehicleType')}</InputLabel>
                         <Select
                             value={vehicleType}
                             onChange={handleVehicleTypeChange}
-                            label="Vehicle Type"
+                            label={t('pages.maintenance.library.filters.vehicleType')}
                         >
-                            <MenuItem value="ALL">All Vehicles</MenuItem>
-                            <MenuItem value="TRUCK">Trucks</MenuItem>
-                            <MenuItem value="VAN">Vans</MenuItem>
-                            <MenuItem value="CAR">Cars</MenuItem>
+                            <MenuItem value="ALL">{t('pages.maintenance.library.filters.allVehicles')}</MenuItem>
+                            <MenuItem value="TRUCK">{t('pages.maintenance.library.filters.trucks')}</MenuItem>
+                            <MenuItem value="VAN">{t('pages.maintenance.library.filters.vans')}</MenuItem>
+                            <MenuItem value="CAR">{t('pages.maintenance.library.filters.cars')}</MenuItem>
                         </Select>
                     </FormControl>
 
                     {/* Group By Selector */}
                     <FormControl variant="outlined" size="medium" sx={{minWidth: 120}}>
-                        <InputLabel>Group By</InputLabel>
+                        <InputLabel>{t('pages.maintenance.library.filters.groupBy')}</InputLabel>
                         <Select
                             value={groupBy}
                             onChange={handleGroupByChange}
-                            label="Group By"
+                            label={t('pages.maintenance.library.filters.groupBy')}
                         >
-                            <MenuItem value="none">None</MenuItem>
-                            <MenuItem value="monthly">Monthly</MenuItem>
-                            <MenuItem value="quarterly">Quarterly</MenuItem>
-                            <MenuItem value="yearly">Yearly</MenuItem>
+                            <MenuItem value="none">{t('pages.maintenance.library.filters.none')}</MenuItem>
+                            <MenuItem value="monthly">{t('pages.maintenance.library.filters.monthly')}</MenuItem>
+                            <MenuItem value="quarterly">{t('pages.maintenance.library.filters.quarterly')}</MenuItem>
+                            <MenuItem value="yearly">{t('pages.maintenance.library.filters.yearly')}</MenuItem>
                         </Select>
                     </FormControl>
 
@@ -226,8 +246,8 @@ const MaintenanceLibrary = () => {
                         endDate={endDate}
                         onStartDateChange={setStartDate}
                         onEndDateChange={setEndDate}
-                        startLabel="Start Date"
-                        endLabel="End Date"
+                        startLabel={t('pages.maintenance.library.filters.startDate')}
+                        endLabel={t('pages.maintenance.library.filters.endDate')}
                         size="medium"
                     />
 
@@ -238,7 +258,7 @@ const MaintenanceLibrary = () => {
                             onClick={handleResetFilters}
                             sx={{minWidth: 120}}
                         >
-                            Reset Filters
+                            {t('pages.maintenance.library.filters.resetFilters')}
                         </Button>
                     )}
                 </Box>
@@ -248,15 +268,15 @@ const MaintenanceLibrary = () => {
             {isFiltered && (
                 <Box sx={{mb: 2, p: 1, bgcolor: theme.palette.custom.primary[100], borderRadius: 1}}>
                     <Typography variant="body2">
-                        Showing filtered view: {vehicleType !== "ALL" ? vehicleType.toLowerCase() : "all"} vehicles
+                        {t('pages.maintenance.library.filteredView.showing')} {vehicleType !== "ALL" ? vehicleType.toLowerCase() : t('pages.maintenance.library.filteredView.allVehicles')}
                         {startDate && endDate ?
-                            `, period: ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` :
+                            `, ${t('pages.maintenance.library.filteredView.period')} ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` :
                             startDate ?
-                                `, from: ${startDate.toLocaleDateString()}` :
+                                `, ${t('pages.maintenance.library.filteredView.from')} ${startDate.toLocaleDateString()}` :
                                 endDate ?
-                                    `, until: ${endDate.toLocaleDateString()}` :
+                                    `, ${t('pages.maintenance.library.filteredView.until')} ${endDate.toLocaleDateString()}` :
                                     ''}
-                        {`, grouped ${groupBy}`}
+                        {`, ${t('pages.maintenance.library.filteredView.grouped')} ${groupBy}`}
                     </Typography>
                 </Box>
 
@@ -273,7 +293,7 @@ const MaintenanceLibrary = () => {
                     ) : Object.keys(groupedMetrics.grouped_metrics).length > 0 ? (
                         <GroupedMetricsChart data={groupedMetrics.grouped_metrics}
                                              groupBy={groupBy}
-                                             title={"Filtered Maintenance Cost Analysis"}/>
+                                             title={t('pages.maintenance.charts.groupedMetrics.title')}/>
                     ) : (
                         <CoreMetricsCards standardMetrics={standardMetrics}/>
                     )}
@@ -282,32 +302,50 @@ const MaintenanceLibrary = () => {
                     {/* 3. Vehicle Health Overview */}
                     <Paper elevation={3} sx={{p: 3, mb: 4}}>
                         <Typography variant="h6" gutterBottom>
-                            Vehicle Health Overview
+                            {t('pages.maintenance.library.vehicleHealth.title')}
                         </Typography>
 
                         {/* First row: Three donut charts */}
                         <Grid container spacing={3} sx={{mb: 4}}>
                             <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
                                 <DonutChart
-                                    title="Overall Vehicle Health"
+                                    title={t('pages.maintenance.library.vehicleHealth.overall')}
                                     segments={getDonutChartData().overallHealthSegments}
-                                    customLabels={{'Good': 'Good', 'Warning': 'Warning', 'Critical': 'Critical'}}
+                                    customLabels={
+                                        {
+                                            'Good': t('pages.maintenance.library.vehicleHealth.status.good'),
+                                            'Warning': t('pages.maintenance.library.vehicleHealth.status.warning'),
+                                            'Critical': t('pages.maintenance.library.vehicleHealth.status.critical')
+                                        }
+                                    }
                                 />
                             </Grid>
 
                             <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
                                 <DonutChart
-                                    title="Insurance Status"
+                                    title={t('pages.maintenance.library.vehicleHealth.insurance')}
                                     segments={getDonutChartData().insuranceHealthSegments}
-                                    customLabels={{'Good': 'Valid', 'Warning': 'Expiring', 'Critical': 'Expired'}}
+                                    customLabels={
+                                        {
+                                            'Good': t('pages.maintenance.library.vehicleHealth.status.valid'),
+                                            'Warning': t('pages.maintenance.library.vehicleHealth.status.expiring'),
+                                            'Critical': t('pages.maintenance.library.vehicleHealth.status.expired')
+                                        }
+                                    }
                                 />
                             </Grid>
 
                             <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}}>
                                 <DonutChart
-                                    title="License Status"
+                                    title={t('pages.maintenance.library.vehicleHealth.license')}
                                     segments={getDonutChartData().licenseHealthSegments}
-                                    customLabels={{'Good': 'Valid', 'Warning': 'Expiring', 'Critical': 'Expired'}}
+                                    customLabels={
+                                        {
+                                            'Good': t('pages.maintenance.library.vehicleHealth.status.valid'),
+                                            'Warning': t('pages.maintenance.library.vehicleHealth.status.expiring'),
+                                            'Critical': t('pages.maintenance.library.vehicleHealth.status.expired')
+                                        }
+                                    }
                                 />
                             </Grid>
                         </Grid>
@@ -317,7 +355,7 @@ const MaintenanceLibrary = () => {
                     {recurringIssues.length > 0 && (
                         <Paper elevation={3} sx={{p: 3, mb: 4}}>
                             <Typography variant="subtitle1" gutterBottom>
-                                Top Recurring Issues
+                                {t('pages.maintenance.library.recurringIssues.title')}
                             </Typography>
                             <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 2}}>
                                 {recurringIssues.map((issue, index) => (
@@ -353,15 +391,15 @@ const MaintenanceLibrary = () => {
                     {/* 4. Service Alerts */}
                     <Paper elevation={3} sx={{p: 3, mb: 4}}>
                         <Typography variant="h6" gutterBottom>
-                            Service Alerts
+                            {t('pages.maintenance.library.serviceAlerts.title')}
                         </Typography>
                         <Tabs
                             value={serviceTab}
                             onChange={handleServiceTabChange}
                             sx={{mb: 2, borderBottom: 1, borderColor: 'divider'}}
                         >
-                            <Tab label={`Overdue (${serviceAlerts.overdue.length})`}/>
-                            <Tab label={`Upcoming (${serviceAlerts.upcoming.length})`}/>
+                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.overdue')} (${serviceAlerts.overdue.length})`}/>
+                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.upcoming')} (${serviceAlerts.upcoming.length})`}/>
                         </Tabs>
 
                         {serviceTab === 0 && (
@@ -399,7 +437,7 @@ const MaintenanceLibrary = () => {
                                                 mt: 1
                                             }}
                                         >
-                                            {alert.urgency} PRIORITY
+                                            {alert.urgency} {t('pages.maintenance.library.serviceAlerts.priority')}
                                         </Box>
                                     </Box>
                                 ))}
@@ -423,7 +461,7 @@ const MaintenanceLibrary = () => {
                                             {alert.vehicle} - {alert.service}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Due in {alert.dueIn} days
+                                            {t('pages.maintenance.library.serviceAlerts.dueIn')} {alert.dueIn} {t('pages.maintenance.library.serviceAlerts.days')}
                                         </Typography>
                                     </Box>
                                 ))}
@@ -432,6 +470,7 @@ const MaintenanceLibrary = () => {
                     </Paper>
                 </Box>
             )}
+            <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
         </Container>
     );
 }

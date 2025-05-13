@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Box, Card, CardContent, Chip, Divider, IconButton, Tooltip, Typography} from '@mui/material';
+import {Avatar, Box, Card, CardContent, Chip, Divider, IconButton, Tooltip, Typography, useTheme} from '@mui/material';
 import {
     AirlineSeatReclineNormal as CapacityIcon,
     CalendarMonth as CalendarIcon,
@@ -27,12 +27,13 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                                                               handleVehicleDeletion
                                                           }) => {
     const {t} = useTranslation();
+    const theme = useTheme();
 
     // Map status to MUI color
     const getStatusColor = () => {
-        if (vehicle.status === 'ACTIVE') return 'success';
-        if (vehicle.status === 'IN_MAINTENANCE') return 'warning';
-        if (vehicle.status === 'OUT_OF_SERVICE') return 'error';
+        if (vehicle.status === 'ACTIVE') return theme.palette.success.main;
+        if (vehicle.status === 'IN_MAINTENANCE') return theme.palette.warning.dark;
+        if (vehicle.status === 'OUT_OF_SERVICE') return theme.palette.error.dark;
         return 'default';
     };
 
@@ -71,8 +72,7 @@ const VehicleCardComponent: React.FC<VehicleCardProps> = ({
                     <Chip
                         label={vehicle.status.toLowerCase().replace('_', ' ')}
                         size="small"
-                        color={getStatusColor()}
-                        sx={{mt: 1}}
+                        sx={{mt: 1, bgcolor: getStatusColor(), color: theme.palette.background.paper}}
                     />
                 </Box>
 
