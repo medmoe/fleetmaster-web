@@ -1,5 +1,5 @@
 import VehicleCardComponent from "./VehicleCardComponent";
-import {fireEvent, render, screen} from '../../__test__/test-utils.tsx';
+import {fireEvent, render, screen} from '../../__test__/test-utils';
 import {VehicleType} from "@/types/types";
 import {expect, test, vi} from 'vitest';
 import '@testing-library/jest-dom'

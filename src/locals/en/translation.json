@@ -675,8 +675,8 @@
           "grouped": "grouped"
         },
         "vehicleHealth": {
-          "title": "Vehicle Health Overview",
-          "overall": "Overall Vehicle Health",
+          "title": "Vehicles Health Overview",
+          "overall": "Overall Vehicles Health",
           "insurance": "Insurance Status",
           "license": "License Status",
           "status": {

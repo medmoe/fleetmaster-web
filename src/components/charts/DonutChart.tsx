@@ -29,20 +29,32 @@ const DonutChart: React.FC<DonutChartProps> = ({
     const theme = useTheme();
 
     // Calculate total value
-    const total = segments.reduce((sum, segment) => sum + (segment.value ?? 0), 0) || 1;
+    const totalValue = segments.reduce((sum, segment) => sum + (segment.value ?? 0), 0) || 1;
 
     // Create conic gradient string
     let gradientString = '';
-    let currentPercent = 0;
+    let startPercentage = 0;
 
-    segments.forEach((segment) => {
-        const percent = segment.value ?? 0;
-        gradientString += `${segment.color} ${currentPercent}% ${currentPercent + percent}%, `;
-        currentPercent += percent;
+    segments.forEach(segment => {
+        // Calculate the percentage of this segment (0 to 1)
+        const percentage = (segment.value ?? 0) / totalValue;
+
+        // Calculate end percentage
+        const endPercentage = startPercentage + percentage;
+
+        // Convert to degrees (0 to 360)
+        const startDegrees = startPercentage * 360;
+        const endDegrees = endPercentage * 360;
+
+        // Add to gradient string in proper conic-gradient format
+        gradientString += `${segment.color} ${startDegrees}deg, ${segment.color} ${endDegrees}deg, `;
+
+        // Update start for next segment
+        startPercentage = endPercentage;
     });
 
-    // Remove trailing comma and space
-    gradientString = gradientString.slice(0, -2);
+    // const background = `conic-gradient(${gradientString})`;
+    const background = `conic-gradient(${gradientString.slice(0, -2)})`;
 
     return (
         <Box sx={{textAlign: 'center', height: size + (showLabels && labelPosition === 'below' ? 70 : 0)}}>
@@ -55,7 +67,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
                 width: size,
                 height: size,
                 borderRadius: '50%',
-                background: `conic-gradient(${gradientString})`,
+                background: background,
                 margin: '0 auto',
                 position: 'relative',
                 '&::after': {

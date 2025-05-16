@@ -49,10 +49,17 @@ const MaintenanceLibrary = () => {
         const fetchStandardMetrics = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {withCredentials: true});
+                const params = new URLSearchParams();
+                if (vehicleType !== "ALL") {
+                    params.append("vehicle_type", vehicleType);
+                }
+                const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {
+                    params,
+                    withCredentials: true
+                });
                 setStandardMetrics(response.data);
-            } catch (error) {
-                if (error.response.status === 401) {
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error) && error.response?.status === 401) {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
                 } else {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.standardMetrics'), severity: "error"});
@@ -64,7 +71,7 @@ const MaintenanceLibrary = () => {
         };
 
         fetchStandardMetrics();
-    }, []);
+    }, [vehicleType]);
 
     // Update range state when state/end range are updated
     useEffect(() => {
@@ -76,7 +83,7 @@ const MaintenanceLibrary = () => {
     // Fetch grouped metrics when filters change
     useEffect(() => {
         // Skip the initial render
-        if (vehicleType === "ALL" && (range[0] === null || range[1] == null) && groupBy === "none") {
+        if ((range[0] === null || range[1] == null) && groupBy === "none") {
             setIsFiltered(false);
             return;
         }
@@ -106,8 +113,8 @@ const MaintenanceLibrary = () => {
                 });
 
                 setGroupedMetrics(response.data);
-            } catch (error) {
-                if (error.response.status === 401) {
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error) && error.response?.status === 401) {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
                 } else {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.groupedMetrics'), severity: "error"});
@@ -172,21 +179,21 @@ const MaintenanceLibrary = () => {
         const healthMetrics = getHealthMetrics();
 
         const overallHealthSegments: DonutChartSegment[] = [
-            {label: 'Good', value: healthMetrics.vehicle_avg_health.good, color: theme.palette.success.main},
-            {label: 'Warning', value: healthMetrics.vehicle_avg_health.warning, color: theme.palette.warning.main},
-            {label: 'Critical', value: healthMetrics.vehicle_avg_health.critical, color: theme.palette.error.main}
+            {label: t('pages.maintenance.library.vehicleHealth.status.good'), value: healthMetrics.vehicle_avg_health.good, color: theme.palette.success.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.warning'), value: healthMetrics.vehicle_avg_health.warning, color: theme.palette.warning.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.critical'), value: healthMetrics.vehicle_avg_health.critical, color: theme.palette.error.main}
         ];
 
         const insuranceHealthSegments: DonutChartSegment[] = [
-            {label: 'Good', value: healthMetrics.vehicle_insurance_health.good, color: theme.palette.success.main},
-            {label: 'Warning', value: healthMetrics.vehicle_insurance_health.warning, color: theme.palette.warning.main},
-            {label: 'Critical', value: healthMetrics.vehicle_insurance_health.critical, color: theme.palette.error.main}
+            {label: t('pages.maintenance.library.vehicleHealth.status.good'), value: healthMetrics.vehicle_insurance_health.good, color: theme.palette.success.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.warning'), value: healthMetrics.vehicle_insurance_health.warning, color: theme.palette.warning.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.critical'), value: healthMetrics.vehicle_insurance_health.critical, color: theme.palette.error.main}
         ];
 
         const licenseHealthSegments: DonutChartSegment[] = [
-            {label: 'Good', value: healthMetrics.vehicle_license_health.good, color: theme.palette.success.main},
-            {label: 'Warning', value: healthMetrics.vehicle_license_health.warning, color: theme.palette.warning.main},
-            {label: 'Critical', value: healthMetrics.vehicle_license_health.critical, color: theme.palette.error.main}
+            {label: t('pages.maintenance.library.vehicleHealth.status.good'), value: healthMetrics.vehicle_license_health.good, color: theme.palette.success.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.warning'), value: healthMetrics.vehicle_license_health.warning, color: theme.palette.warning.main},
+            {label: t('pages.maintenance.library.vehicleHealth.status.critical'), value: healthMetrics.vehicle_license_health.critical, color: theme.palette.error.main}
         ];
 
         return {

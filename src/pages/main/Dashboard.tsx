@@ -1,10 +1,11 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import useGeneralDataStore from "../../store/useGeneralDataStore";
 import {Alert, CircularProgress} from "@mui/material";
+import {NotificationBar} from "@/components";
 
 
 const Dashboard = () => {
-    const {fetchGeneralData, isLoading, error, setError} = useGeneralDataStore();
+    const {fetchGeneralData, isLoading, snackbar, setSnackbar} = useGeneralDataStore();
     useEffect(() => {
         fetchGeneralData();
     }, [])
@@ -20,22 +21,7 @@ const Dashboard = () => {
     return (
         <div>
             <p className={"font-open-sans"}>Dashboard</p>
-            {error && (
-                <Alert severity="error"
-                       sx={{
-                           position: 'fixed',
-                           bottom: 16,
-                           left: '50%',
-                           transform: 'translateX(-50%)',
-                           zIndex: 9999,
-                           maxWidth: 'calc(100% - 32px'
-                       }}
-                       onClose={() => setError(null)}
-                >
-                    {error}
-                </Alert>
-            )}
-
+            <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
         </div>
     )
 };

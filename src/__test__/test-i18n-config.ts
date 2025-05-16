@@ -368,7 +368,21 @@ const resources = {
             'pages.vehicle.maintenance.reports.count': 'Total maintenance record',
             'pages.vehicle.maintenance.reports.snack.add': 'Report added successfully!',
             'pages.vehicle.maintenance.reports.snack.edit': 'Report edited successfully!',
-            'pages.vehicle.maintenance.reports.snack.delete': 'Report deleted successfully!'
+            'pages.vehicle.maintenance.reports.snack.delete': 'Report deleted successfully!',
+
+            // Grouped Metrics Chart
+            'pages.maintenance.charts.groupedMetrics.changeTypes.yoy': 'Year-over-Year',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.qoq': 'Quarter-over-Quarter',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.mom': 'Month-over-Month',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.generic': 'Change',
+            'pages.maintenance.charts.groupedMetrics.savings': 'savings',
+            'pages.maintenance.charts.groupedMetrics.comparisonTypes.yearly': 'Yearly comparison',
+            'pages.maintenance.charts.groupedMetrics.comparisonTypes.quarterly': 'Quarterly comparison',
+            'pages.maintenance.charts.groupedMetrics.comparisonTypes.monthly': 'Monthly comparison',
+            'pages.maintenance.charts.groupedMetrics.ofAverageCosts': ' of average maintenance costs per vehicle',
+            'pages.maintenance.charts.groupedMetrics.noData': 'No data available for the selected filters',
+            'pages.maintenance.charts.groupedMetrics.tooltip.average': 'Average',
+            'pages.maintenance.charts.groupedMetrics.tooltip.change': 'Change'
         }
     }
 };

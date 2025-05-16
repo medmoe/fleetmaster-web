@@ -178,14 +178,14 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         ? <TrendingUpIcon fontSize="small" sx={{mr: 0.5}}/>
                         : <TrendingDownIcon fontSize="small" sx={{mr: 0.5}}/>
                     }
-                    <Typography variant="body2" fontWeight="medium" color={theme.palette.text.primary}>
+                    <Typography variant="body2" fontWeight="medium" color={theme.palette.text.primary} data-testid={"overall-trend-indicator"}>
                         {formatPercentage(metrics.avgChange)} {!metrics.isIncreasing && t('pages.maintenance.charts.groupedMetrics.savings')}
                     </Typography>
                 </Box>
             </Box>
 
             {/* Period subtitle */}
-            <Typography variant="body2" color="text.secondary" sx={{mb: 3}}>
+            <Typography variant="body2" color="text.secondary" sx={{mb: 3}} data-testid="period-subtitle">
                 {groupBy === 'yearly'
                     ? t('pages.maintenance.charts.groupedMetrics.comparisonTypes.yearly')
                     : groupBy === 'quarterly'
@@ -210,13 +210,13 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         borderRight: `1px dashed ${theme.palette.divider}`,
                         pr: 1
                     }}>
-                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}}>
+                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}} data-testid={'Y-max-value'}>
                             {formatCurrency(metrics.maxValue)}
                         </Typography>
-                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}}>
+                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}} data-testid={'Y-half-max-value'}>
                             {formatCurrency(metrics.maxValue / 2)}
                         </Typography>
-                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}}>
+                        <Typography variant="caption" sx={{textAlign: 'right', width: '100%'}} data-testid={'Y-min-value'}>
                             $0
                         </Typography>
                     </Box>
@@ -239,6 +239,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
 
                             return (
                                 <Tooltip
+                                    data-testid={`tooltip-${index}`}
                                     key={period}
                                     title={
                                         <Box sx={{p: 1}}>
@@ -316,7 +317,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                 width: '100%',
                                 textAlign: 'center',
                                 pt: 0.5
-                            }}>
+                            }} data-testid={`period-${index}`}>
                                 {label}
                             </Typography>
                         ))}
