@@ -371,9 +371,9 @@ const resources = {
             'pages.vehicle.maintenance.reports.snack.delete': 'Report deleted successfully!',
 
             // Grouped Metrics Chart
-            'pages.maintenance.charts.groupedMetrics.changeTypes.yoy': 'Year-over-Year',
-            'pages.maintenance.charts.groupedMetrics.changeTypes.qoq': 'Quarter-over-Quarter',
-            'pages.maintenance.charts.groupedMetrics.changeTypes.mom': 'Month-over-Month',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.yoy': 'YoY',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.qoq': 'QoQ',
+            'pages.maintenance.charts.groupedMetrics.changeTypes.mom': 'MoM',
             'pages.maintenance.charts.groupedMetrics.changeTypes.generic': 'Change',
             'pages.maintenance.charts.groupedMetrics.savings': 'savings',
             'pages.maintenance.charts.groupedMetrics.comparisonTypes.yearly': 'Yearly comparison',

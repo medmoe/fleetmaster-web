@@ -3,6 +3,63 @@ import {format} from 'date-fns';
 import {render, screen} from '../../__test__/test-utils';
 import {describe, expect, test, vi} from 'vitest';
 
+// Mock MUI components
+vi.mock('@mui/material', () => {
+    const actual = vi.importActual('@mui/material');
+    return {
+        ...actual,
+        // Mock commonly used MUI components
+        Box: vi.fn(({children, ...props}) => (
+            <div data-testid="mui-box" {...props}>
+                {children}
+            </div>
+        )),
+        Paper: vi.fn(({children, ...props}) => (
+            <div data-testid="mui-paper" {...props}>
+                {children}
+            </div>
+        )),
+        Typography: vi.fn(({children, variant, ...props}) => (
+            <div data-testid={`mui-typography-${variant || 'default'}`} {...props}>
+                {children}
+            </div>
+        )),
+        Grid: vi.fn(({children, ...props}) => (
+            <div data-testid="mui-grid" {...props}>
+                {children}
+            </div>
+        )),
+        Card: vi.fn(({children, ...props}) => (
+            <div data-testid="mui-card" {...props}>
+                {children}
+            </div>
+        )),
+        CardContent: vi.fn(({children, ...props}) => (
+            <div data-testid="mui-card-content" {...props}>
+                {children}
+            </div>
+        )),
+        Tooltip: vi.fn(({children, title, ...props}) => (
+            <div data-testid={props['data-testid'] || 'mui-tooltip'} {...props}>
+                <div data-testid="tooltip-title">{title}</div>
+                <div data-testid="tooltip-children">{children}</div>
+            </div>
+        )),
+        useTheme: vi.fn(() => ({
+            palette: {
+                primary: {main: '#1976d2', light: '#42a5f5'},
+                success: {main: '#2e7d32'},
+                error: {main: '#d32f2f'},
+                warning: {main: '#ed6c02'},
+                text: {
+                    primary: '#000000',
+                }
+            },
+            spacing: (factor: number) => `${8 * factor}px`
+        }))
+    };
+});
+
 // Sample test data
 const yearlyData = {
     '2020': {yoy_change: -5.2, vehicle_avg: 5000},
@@ -24,6 +81,14 @@ const monthlyData = {
 };
 
 const emptyData = {};
+
+const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    }).format(value);
+}
 
 describe("GroupedMetricsChart", () => {
     beforeEach(() => {
@@ -88,7 +153,6 @@ describe("GroupedMetricsChart", () => {
                 const date = new Date(parseInt(year), monthNum - 1, 1);
                 expect(screen.getByTestId(`period-${index}`)).toHaveTextContent(format(date, 'MMM yyyy'));
             }
-
         });
 
         expect(screen.getByTestId("overall-trend-indicator")).toHaveTextContent("+0.5%");
@@ -101,5 +165,39 @@ describe("GroupedMetricsChart", () => {
         expect(screen.getByText("No data available for the selected filters")).toBeInTheDocument();
     });
 
+    test('metric cards renders correctly', () => {
+        render(<GroupedMetricsChart data={yearlyData} groupBy="yearly" title={"Yearly Metrics"}/>);
 
-})
+        Object.entries(yearlyData).forEach(([key, value], index) => {
+            expect(screen.getByTestId(`period-label-${index}`)).toHaveTextContent(key);
+            expect(screen.getByTestId(`period-value-${index}`)).toHaveTextContent(formatCurrency(value.vehicle_avg));
+            expect(screen.getByTestId(`period-change-${index}`)).toHaveTextContent(
+                value.yoy_change >= 0 ? `YoY: +${value.yoy_change}%` : `YoY: ${value.yoy_change}%`);
+        });
+    });
+
+    test('tooltip renders correctly', () => {
+        render(<GroupedMetricsChart data={yearlyData} groupBy="yearly" title={"Yearly Metrics"}/>);
+        // Test each tooltip's content
+        Object.entries(yearlyData).forEach(([year, data], index) => {
+            // Find the specific tooltip by its index
+            const tooltipContainer = screen.getByTestId(`tooltip-${index}`);
+            expect(tooltipContainer).toBeInTheDocument();
+
+            // Check the tooltip title content
+            const tooltipTitle = tooltipContainer.querySelector('[data-testid="tooltip-title"]');
+            expect(tooltipTitle).toBeInTheDocument();
+
+            // Check for the period label
+            expect(tooltipTitle).toHaveTextContent(year);
+
+            // Check for the average value formatting
+            expect(tooltipTitle).toHaveTextContent(`Average: ${formatCurrency(data.vehicle_avg)}`);
+
+            // Check for the change value
+            const changeValue = data.yoy_change;
+            const formattedChange = changeValue >= 0 ? `+${changeValue.toFixed(1)}%` : `${changeValue.toFixed(1)}%`;
+            expect(tooltipTitle).toHaveTextContent(`YoY Change: ${formattedChange}`);
+        });
+    })
+});

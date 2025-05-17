@@ -339,7 +339,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                         const changeValue = getChangeValue(currentData, groupBy);
 
                         return (
-                            <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}} key={period}>
+                            <Grid sx={{width: {xs: "100%", sm: "50%", md: "25%"}}} key={period} data-testid={`card-${index}`}>
                                 <Paper
                                     elevation={1}
                                     sx={{
@@ -350,10 +350,10 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                             : theme.palette.success.main}`,
                                     }}
                                 >
-                                    <Typography variant="subtitle2">
+                                    <Typography variant="subtitle2" data-testid={`period-label-${index}`}>
                                         {metrics.formattedPeriods[index]}
                                     </Typography>
-                                    <Typography variant="h6" sx={{mt: 1}}>
+                                    <Typography variant="h6" sx={{mt: 1}} data-testid={`period-value-${index}`}>
                                         {formatCurrency(currentData?.vehicle_avg || 0)}
                                     </Typography>
                                     <Box sx={{
@@ -366,7 +366,7 @@ const GroupedMetricsChart: React.FC<GroupedMetricsChartProps> = ({
                                             ? <TrendingUpIcon fontSize="small" sx={{mr: 0.5}}/>
                                             : <TrendingDownIcon fontSize="small" sx={{mr: 0.5}}/>
                                         }
-                                        <Typography variant="body2">
+                                        <Typography variant="body2" data-testid={`period-change-${index}`}>
                                             {metrics.changeLabel}: {formatPercentage(changeValue)}
                                         </Typography>
                                     </Box>
