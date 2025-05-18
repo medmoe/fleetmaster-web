@@ -692,11 +692,17 @@
           "title": "أهم المشكلات المتكررة"
         },
         "serviceAlerts": {
-          "title": "تنبيهات الخدمة",
+          "title": "تنبيهات الصيانة",
           "overdue": "متأخرة",
           "upcoming": "قادمة",
-          "priority": "الأولوية",
-          "dueIn": "مستحق خلال",
+          "noAlerts": "لا توجد تنبيهات في الوقت الحالي",
+          "issueType": "نوع المشكلة",
+          "scheduledMaintenance": "صيانة مجدولة",
+          "refresh": "تحديث",
+          "schedule": "جدولة صيانة",
+          "priority": "أولوية",
+          "daysOverdue": "أيام متأخرة",
+          "dueIn": "تستحق في",
           "days": "أيام"
         },
         "errors": {
@@ -714,7 +720,7 @@
             "quarterly": "مقارنة ربع سنوية",
             "monthly": "مقارنة شهرية"
           },
-          "ofAverageCosts": "لمتوسط تكاليف الصيانة لكل مركبة",
+          "ofAverageCosts": " لمتوسط تكاليف الصيانة لكل مركبة",
           "noData": "لا توجد بيانات متاحة للمرشحات المحددة",
           "tooltip": {
             "average": "المتوسط",

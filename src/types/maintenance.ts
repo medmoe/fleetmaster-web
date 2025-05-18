@@ -68,12 +68,17 @@ export interface GeneralDataType {
     service_providers: ServiceProviderType[];
 }
 
+type HealthStatusBase<T> = {
+    good: T;
+    warning: T;
+    critical: T;
+}
+
+export type AlertTuple = [string, string, string, string, ...string[]]
+
 // Health metric status types
-type HealthStatus = {
-    good: number | null;
-    warning: number | null;
-    critical: number | null;
-};
+type HealthStatus = HealthStatusBase<number | null>;
+type AlertHealthStatus = HealthStatusBase<AlertTuple[]>;
 
 // Common vehicle health metrics for both response types
 export type VehicleHealthMetrics = {
@@ -81,6 +86,9 @@ export type VehicleHealthMetrics = {
     vehicle_insurance_health: HealthStatus;
     vehicle_license_health: HealthStatus;
 };
+
+export type VehicleHealthAlerts = { [key in keyof VehicleHealthMetrics]: AlertHealthStatus }
+
 
 // Part issue type for recurring issues
 type PartIssue = {
@@ -118,6 +126,11 @@ export type GroupedMetricsResponse = {
     };
     vehicle_health_metrics: VehicleHealthMetrics;
 };
+
+export type FormattedHealthAlerts = {
+    overdue: {total: number, vehicles: AlertTuple[]},
+    upcoming: {total: number, vehicles: AlertTuple[]}
+} | null;
 
 // Combined response type (either core metrics or grouped metrics)
 export type FleetWideOverviewResponseType = CoreMetricsResponse | GroupedMetricsResponse;

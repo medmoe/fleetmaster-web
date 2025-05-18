@@ -695,7 +695,13 @@
           "title": "Service Alerts",
           "overdue": "Overdue",
           "upcoming": "Upcoming",
-          "priority": "PRIORITY",
+          "noAlerts": "No alerts at this time",
+          "issueType": "Issue Type",
+          "scheduledMaintenance": "Scheduled Maintenance",
+          "refresh": "Refresh",
+          "schedule": "Schedule Service",
+          "priority": "Priority",
+          "daysOverdue": "days overdue",
           "dueIn": "Due in",
           "days": "days"
         },
@@ -714,7 +720,7 @@
             "quarterly": "Quarterly comparison",
             "monthly": "Monthly comparison"
           },
-          "ofAverageCosts": "of average maintenance costs per vehicle",
+          "ofAverageCosts": " of average maintenance costs per vehicle",
           "noData": "No data available for the selected filters",
           "tooltip": {
             "average": "Average",

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {API} from "@/constants/endpoints.ts";
 import axios from "axios";
-import {CoreMetricsResponse, GroupedMetricsResponse, VehicleHealthMetrics} from "@/types/maintenance.ts";
+import {AlertTuple, CoreMetricsResponse, FormattedHealthAlerts, GroupedMetricsResponse, VehicleHealthAlerts, VehicleHealthMetrics} from "@/types/maintenance.ts";
 import {initialFleetWideOverview, initialGroupedMetrics} from "./initialStates.ts"
 import {DonutChartSegment} from "@/components/charts/DonutChart.tsx";
 import {CoreMetricsCards, DateRangePicker, DonutChart, GroupedMetricsChart, NotificationBar} from "@/components";
@@ -28,21 +28,10 @@ const MaintenanceLibrary = () => {
     // State for metrics data
     const [standardMetrics, setStandardMetrics] = useState<CoreMetricsResponse>(initialFleetWideOverview);
     const [groupedMetrics, setGroupedMetrics] = useState<GroupedMetricsResponse>(initialGroupedMetrics);
+    const [serviceAlerts, setServiceAlerts] = useState<FormattedHealthAlerts>(null)
 
     // Filtered state - if any filter is applied, show grouped view
     const [isFiltered, setIsFiltered] = useState<boolean>(false);
-
-    // Service alerts mock data
-    const serviceAlerts = {
-        overdue: [
-            {id: 1, vehicle: "Truck #123", service: "Oil Change", urgency: "HIGH"},
-            {id: 2, vehicle: "Van #456", service: "Brake Inspection", urgency: "MEDIUM"},
-        ],
-        upcoming: [
-            {id: 3, vehicle: "Car #789", service: "Tire Rotation", dueIn: 7},
-            {id: 4, vehicle: "Truck #234", service: "Battery Check", dueIn: 14},
-        ]
-    };
 
     // Fetch standard metrics data on initial load
     useEffect(() => {
@@ -57,7 +46,9 @@ const MaintenanceLibrary = () => {
                     params,
                     withCredentials: true
                 });
-                setStandardMetrics(response.data);
+                const {health_alerts, ...rest} = response.data;
+                setStandardMetrics(rest);
+                setServiceAlerts(formatHealthAlerts(health_alerts))
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
@@ -111,8 +102,10 @@ const MaintenanceLibrary = () => {
                     params,
                     withCredentials: true
                 });
+                const {health_alerts, ...rest} = response.data;
+                setGroupedMetrics(rest);
+                setServiceAlerts(formatHealthAlerts(health_alerts))
 
-                setGroupedMetrics(response.data);
             } catch (error: unknown) {
                 if (axios.isAxiosError(error) && error.response?.status === 401) {
                     setSnackbar({open: true, message: t('pages.maintenance.library.errors.sessionExpired'), severity: "error"});
@@ -149,6 +142,27 @@ const MaintenanceLibrary = () => {
         setIsFiltered(false);
     };
 
+    const formatHealthAlerts = (alerts: VehicleHealthAlerts): FormattedHealthAlerts => {
+        const formattedAlerts: FormattedHealthAlerts = {
+            overdue: {total: 0, vehicles: []},
+            upcoming: {total: 0, vehicles: []}
+        }
+        Object.entries(alerts).forEach(([key, value]) => {
+            const health_type = key.split("_")[1];
+            Object.entries(value).forEach(([key2, value2]) => {
+                if (key2 === "warning") {
+                    formattedAlerts.upcoming.total += value2.length;
+                    const extendedTuples: AlertTuple[] = value2.map((tuple) => [...tuple, health_type]);
+                    formattedAlerts.upcoming.vehicles.push(...extendedTuples);
+                } else if (key2 == 'critical') {
+                    formattedAlerts.overdue.total += value2.length;
+                    const extendedTuples: AlertTuple[] = value2.map((tuple) => [...tuple, health_type]);
+                    formattedAlerts.overdue.vehicles.push(...extendedTuples);
+                }
+            })
+        })
+        return formattedAlerts;
+    }
 
     // Get relevant health metrics based on current view
     const getHealthMetrics = (): VehicleHealthMetrics => {
@@ -378,81 +392,138 @@ const MaintenanceLibrary = () => {
                         <Typography variant="h6" gutterBottom>
                             {t('pages.maintenance.library.serviceAlerts.title')}
                         </Typography>
+
                         <Tabs
                             value={serviceTab}
                             onChange={handleServiceTabChange}
                             sx={{mb: 2, borderBottom: 1, borderColor: 'divider'}}
                         >
-                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.overdue')} (${serviceAlerts.overdue.length})`}/>
-                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.upcoming')} (${serviceAlerts.upcoming.length})`}/>
+                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.overdue')} (${serviceAlerts?.overdue.total || 0})`}/>
+                            <Tab label={`${t('pages.maintenance.library.serviceAlerts.upcoming')} (${serviceAlerts?.upcoming.total || 0})`}/>
                         </Tabs>
 
+                        {/* Overdue Alerts Tab */}
                         {serviceTab === 0 && (
                             <Box>
-                                {serviceAlerts.overdue.map((alert) => (
-                                    <Box
-                                        key={alert.id}
-                                        sx={{
-                                            p: 2,
-                                            mb: 1,
-                                            borderLeft: 4,
-                                            borderColor:
-                                                alert.urgency === 'HIGH' ? theme.palette.error.main :
-                                                    alert.urgency === 'MEDIUM' ? theme.palette.warning.main :
-                                                        theme.palette.info.main,
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 1
-                                        }}
-                                    >
-                                        <Typography variant="subtitle1">
-                                            {alert.vehicle} - {alert.service}
-                                        </Typography>
-                                        <Box
-                                            sx={{
-                                                display: 'inline-block',
-                                                px: 1,
-                                                py: 0.5,
-                                                borderRadius: 1,
-                                                fontSize: 12,
-                                                bgcolor:
-                                                    alert.urgency === 'HIGH' ? theme.palette.error.light :
-                                                        alert.urgency === 'MEDIUM' ? theme.palette.warning.light :
-                                                            theme.palette.info.light,
-                                                color: 'white',
-                                                mt: 1
-                                            }}
-                                        >
-                                            {alert.urgency} {t('pages.maintenance.library.serviceAlerts.priority')}
-                                        </Box>
-                                    </Box>
-                                ))}
+                                {serviceAlerts?.overdue.vehicles.length === 0 ? (
+                                    <Typography variant="body1" sx={{textAlign: 'center', py: 4, color: 'text.secondary'}}>
+                                        {t('pages.maintenance.library.serviceAlerts.noAlerts')}
+                                    </Typography>
+                                ) : (
+                                    serviceAlerts?.overdue.vehicles.map(([registration, make, model, year, health_type], index) => {
+                                        return (
+                                            <Box
+                                                key={`${registration}-${index}`}
+                                                sx={{
+                                                    p: 2,
+                                                    mb: 1,
+                                                    borderLeft: 4,
+                                                    bgcolor: 'background.paper',
+                                                    borderRadius: 1,
+                                                    display: 'flex',
+                                                    flexDirection: {xs: 'column', sm: 'row'},
+                                                    justifyContent: 'space-between',
+                                                    alignItems: {xs: 'flex-start', sm: 'center'}
+                                                }}
+                                            >
+                                                <Box sx={{flex: 1}}>
+                                                    <Typography variant="subtitle1" fontWeight="medium">
+                                                        {registration}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {make} {model} ({year})
+                                                    </Typography>
+                                                </Box>
+
+                                                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: {xs: 'flex-start', sm: 'flex-end'}, mt: {xs: 1, sm: 0}}}>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'inline-block',
+                                                            px: 1,
+                                                            py: 0.5,
+                                                            borderRadius: 1,
+                                                            fontSize: 12,
+                                                            bgcolor: theme.palette.error.main,
+                                                            color: 'white',
+                                                            textTransform: 'uppercase'
+                                                        }}
+                                                    >
+                                                        {health_type === 'avg' ? 'maintenance' : health_type}
+                                                    </Box>
+                                                    <Typography variant="caption" sx={{mt: 0.5}}>
+                                                        {t('pages.maintenance.library.serviceAlerts.issueType')}: {health_type === "avg" ? "maintenance" : health_type}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        );
+                                    })
+                                )}
                             </Box>
                         )}
+
+                        {/* Upcoming Alerts Tab */}
                         {serviceTab === 1 && (
                             <Box>
-                                {serviceAlerts.upcoming.map((alert) => (
-                                    <Box
-                                        key={alert.id}
-                                        sx={{
-                                            p: 2,
-                                            mb: 1,
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 1,
-                                            border: 1,
-                                            borderColor: 'divider'
-                                        }}
-                                    >
-                                        <Typography variant="subtitle1">
-                                            {alert.vehicle} - {alert.service}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {t('pages.maintenance.library.serviceAlerts.dueIn')} {alert.dueIn} {t('pages.maintenance.library.serviceAlerts.days')}
-                                        </Typography>
-                                    </Box>
-                                ))}
+                                {serviceAlerts?.upcoming.vehicles.length === 0 ? (
+                                    <Typography variant="body1" sx={{textAlign: 'center', py: 4, color: 'text.secondary'}}>
+                                        {t('pages.maintenance.library.serviceAlerts.noAlerts')}
+                                    </Typography>
+                                ) : (
+                                    serviceAlerts?.upcoming.vehicles.map(([registration, make, model, year, health_type], index) => (
+                                        <Box
+                                            key={`${registration}-${index}`}
+                                            sx={{
+                                                p: 2,
+                                                mb: 1,
+                                                bgcolor: 'background.paper',
+                                                borderRadius: 1,
+                                                border: 1,
+                                                borderColor: 'divider',
+                                                display: 'flex',
+                                                flexDirection: {xs: 'column', sm: 'row'},
+                                                justifyContent: 'space-between',
+                                                alignItems: {xs: 'flex-start', sm: 'center'}
+                                            }}
+                                        >
+                                            <Box sx={{flex: 1}}>
+                                                <Typography variant="subtitle1" fontWeight="medium">
+                                                    {registration}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {make} {model} ({year})
+                                                </Typography>
+                                            </Box>
+
+                                            <Box sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: {xs: 'flex-start', sm: 'flex-end'},
+                                                mt: {xs: 1, sm: 0}
+                                            }}>
+                                                <Box
+                                                    sx={{
+                                                        display: 'inline-block',
+                                                        px: 1.5,
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        fontSize: 12,
+                                                        bgcolor: theme.palette.warning.main,
+                                                        color: 'white'
+                                                    }}
+                                                >
+                                                    {health_type === 'avg' ? 'maintenance' : health_type}
+                                                </Box>
+                                                <Typography variant="caption" sx={{mt: 0.5}}>
+                                                    {t('pages.maintenance.library.serviceAlerts.scheduledMaintenance')}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    ))
+                                )}
                             </Box>
                         )}
                     </Paper>
+
                 </Box>
             )}
             <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
