@@ -157,24 +157,6 @@ const MaintenanceLibrary = () => {
             : standardMetrics.vehicle_health_metrics;
     };
 
-    // Get recurring issues based on current view
-    const getRecurringIssues = () => {
-        if (isFiltered) {
-            // Grouped view might have different top issues
-            // This would need to be implemented based on your API response structure
-            return [
-                {issue: "Engine Issues", count: 8},
-                {issue: "Tire Replacements", count: 7},
-                {issue: "AC Repairs", count: 5}
-            ];
-        } else {
-            return standardMetrics.top_recurring_issues.map(issue => ({
-                issue: issue.part__name,
-                count: issue.count
-            }));
-        }
-    };
-
     const getDonutChartData = () => {
         const healthMetrics = getHealthMetrics();
 
@@ -202,10 +184,6 @@ const MaintenanceLibrary = () => {
             licenseHealthSegments
         };
     };
-
-
-    // Variables for UI rendering
-    const recurringIssues = getRecurringIssues();
 
     return (
         <Container maxWidth="lg" sx={{py: 4}}>
@@ -359,16 +337,16 @@ const MaintenanceLibrary = () => {
                     </Paper>
 
                     {/* Second row: Top recurring issues */}
-                    {recurringIssues.length > 0 && (
+                    {standardMetrics.top_recurring_issues.length > 0 && (
                         <Paper elevation={3} sx={{p: 3, mb: 4}}>
                             <Typography variant="subtitle1" gutterBottom>
                                 {t('pages.maintenance.library.recurringIssues.title')}
                             </Typography>
                             <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 2}}>
-                                {recurringIssues.map((issue, index) => (
+                                {standardMetrics.top_recurring_issues.map((issue, index) => (
                                     <Box key={index} sx={{width: {xs: '100%', sm: '48%', md: '31%'}}}>
                                         <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 0.5}}>
-                                            <Typography variant="body2">{issue.issue}</Typography>
+                                            <Typography variant="body2">{issue.part__name}</Typography>
                                             <Typography variant="body2" fontWeight="bold">{issue.count}</Typography>
                                         </Box>
                                         <Box
