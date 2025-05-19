@@ -63,11 +63,93 @@ export interface ServiceProviderEventType {
 }
 
 export interface GeneralDataType {
-  parts: PartType[];
-  part_providers: PartProviderType[];
-  service_providers: ServiceProviderType[];
+    parts: PartType[];
+    part_providers: PartProviderType[];
+    service_providers: ServiceProviderType[];
 }
 
-// family
+type HealthStatusBase<T> = {
+    good: T;
+    warning: T;
+    critical: T;
+}
+
+export type AlertTuple = [string, string, string, string, ...string[]]
+
+// Health metric status types
+type HealthStatus = HealthStatusBase<number | null>;
+type AlertHealthStatus = HealthStatusBase<AlertTuple[]>;
+
+// Common vehicle health metrics for both response types
+export type VehicleHealthMetrics = {
+    vehicle_avg_health: HealthStatus;
+    vehicle_insurance_health: HealthStatus;
+    vehicle_license_health: HealthStatus;
+};
+
+export type VehicleHealthAlerts = { [key in keyof VehicleHealthMetrics]: AlertHealthStatus }
+
+
+// Part issue type for recurring issues
+type PartIssue = {
+    part__name: string;
+    count: number;
+};
+
+// Cost metric with total and per-vehicle average
+type CostMetric = {
+    total: number;
+    vehicle_avg: number;
+};
+
+// Core metrics response (when no grouping is requested)
+export type CoreMetricsResponse = {
+    total_maintenance_cost: {
+        year: CostMetric;
+        quarter: CostMetric;
+        month: CostMetric;
+    };
+    yoy: number;
+    top_recurring_issues: PartIssue[];
+    vehicle_health_metrics: VehicleHealthMetrics;
+};
+
+// Time period change keys based on grouping strategy
+export type YearlyChange = { yoy_change: number; vehicle_avg: number };
+export type QuarterlyChange = { qoq_change: number; vehicle_avg: number };
+export type MonthlyChange = { mom_change: number; vehicle_avg: number };
+
+// Grouped metrics response structure (when grouping is requested)
+export type GroupedMetricsResponse = {
+    grouped_metrics: {
+        [timePeriod: string]: YearlyChange | QuarterlyChange | MonthlyChange;
+    };
+    vehicle_health_metrics: VehicleHealthMetrics;
+};
+
+export type FormattedHealthAlerts = {
+    overdue: {total: number, vehicles: AlertTuple[]},
+    upcoming: {total: number, vehicles: AlertTuple[]}
+} | null;
+
+// Combined response type (either core metrics or grouped metrics)
+export type FleetWideOverviewResponseType = CoreMetricsResponse | GroupedMetricsResponse;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

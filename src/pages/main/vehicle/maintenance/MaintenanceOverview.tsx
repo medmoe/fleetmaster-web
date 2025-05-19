@@ -1,16 +1,17 @@
 // src/pages/MaintenanceOverview.tsx
 import React, {useEffect, useMemo, useState} from 'react';
-import {Alert, Box, CircularProgress, Container, Paper, Tab, Tabs, Typography} from '@mui/material';
+import {Box, CircularProgress, Container, Paper, Tab, Tabs, Typography} from '@mui/material';
 import {MaintenanceReportsList, MaintenanceTimeLine, SummaryMetrics, VehicleInformationPanel, YearlyComparisonChart} from "../../../../components";
 import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {useTranslation} from "react-i18next";
+import {NotificationBar} from "@/components";
 
 const MaintenanceOverview: React.FC = () => {
     const currentYear = new Date().getFullYear();
     const prevYear = currentYear - 1;
     const [selectedYear, setSelectedYear] = useState<number>(currentYear);
     const {t} = useTranslation();
-    const {fetchMaintenanceReports, maintenanceReports, isLoading, vehicle, error, setError} = useGeneralDataStore();
+    const {fetchMaintenanceReports, maintenanceReports, isLoading, vehicle, snackbar, setSnackbar} = useGeneralDataStore();
 
     useEffect(() => {
         fetchMaintenanceReports();
@@ -52,22 +53,6 @@ const MaintenanceOverview: React.FC = () => {
         <Container maxWidth="lg" className="py-8">
             <Paper className="p-6 mb-6">
                 <Typography variant="h4" component="h1" className="font-bold mb-6">{t('pages.vehicle.maintenance.overview.title')}</Typography>
-                {error && (
-                    <Alert severity="error"
-                           sx={{
-                               position: 'fixed',
-                               bottom: 16,
-                               left: '50%',
-                               transform: 'translateX(-50%)',
-                               zIndex: 9999,
-                               maxWidth: 'calc(100% - 32px'
-                           }}
-                           onClose={() => setError(null)}
-                    >
-                        {error}
-                    </Alert>
-                )}
-
                 <VehicleInformationPanel vehicle={vehicle}
                 />
                 <Tabs
@@ -122,6 +107,7 @@ const MaintenanceOverview: React.FC = () => {
                     </Box>
                 )}
             </Paper>
+            <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
         </Container>
     );
 };

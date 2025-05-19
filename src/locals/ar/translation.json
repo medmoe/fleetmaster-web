@@ -646,6 +646,106 @@
         "deleteError": "فشل في حذف السائق",
         "requiredFields": "يرجى ملء جميع الحقول المطلوبة"
       }
+    },
+    "maintenance": {
+      "library": {
+        "fleetOverview": "نظرة عامة على صيانة الأسطول",
+        "filteredOverview": "نظرة عامة على الصيانة المفلترة",
+        "filters": {
+          "vehicleType": "نوع المركبة",
+          "allVehicles": "جميع المركبات",
+          "trucks": "شاحنات",
+          "vans": "شاحنات صغيرة",
+          "cars": "سيارات",
+          "groupBy": "تجميع حسب",
+          "none": "بدون تجميع",
+          "monthly": "شهري",
+          "quarterly": "ربع سنوي",
+          "yearly": "سنوي",
+          "startDate": "تاريخ البدء",
+          "endDate": "تاريخ الانتهاء",
+          "resetFilters": "إعادة تعيين الفلاتر"
+        },
+        "filteredView": {
+          "showing": "عرض العرض المفلتر:",
+          "allVehicles": "جميع المركبات",
+          "period": "الفترة:",
+          "from": "من:",
+          "until": "حتى:",
+          "grouped": "مجمّع"
+        },
+        "vehicleHealth": {
+          "title": "نظرة عامة على صحة المركبات",
+          "overall": "الصحة العامة للمركبات",
+          "insurance": "حالة التأمين",
+          "license": "حالة الترخيص",
+          "status": {
+            "good": "جيد",
+            "warning": "تحذير",
+            "critical": "حرج",
+            "valid": "ساري",
+            "expiring": "على وشك الانتهاء",
+            "expired": "منتهي"
+          }
+        },
+        "recurringIssues": {
+          "title": "أهم المشكلات المتكررة"
+        },
+        "serviceAlerts": {
+          "title": "تنبيهات الصيانة",
+          "overdue": "متأخرة",
+          "upcoming": "قادمة",
+          "noAlerts": "لا توجد تنبيهات في الوقت الحالي",
+          "issueType": "نوع المشكلة",
+          "scheduledMaintenance": "صيانة مجدولة",
+          "refresh": "تحديث",
+          "schedule": "جدولة صيانة",
+          "priority": "أولوية",
+          "daysOverdue": "أيام متأخرة",
+          "dueIn": "تستحق في",
+          "days": "أيام"
+        },
+        "errors": {
+          "standardMetrics": "خطأ في جلب المقاييس القياسية.",
+          "groupedMetrics": "خطأ في جلب المقاييس المجمعة.",
+          "sessionExpired": "انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى."
+        }
+      },
+      "charts": {
+        "groupedMetrics": {
+          "title": "تحليل تكاليف الصيانة المصفاة",
+          "savings": "وفورات",
+          "comparisonTypes": {
+            "yearly": "مقارنة سنوية",
+            "quarterly": "مقارنة ربع سنوية",
+            "monthly": "مقارنة شهرية"
+          },
+          "ofAverageCosts": " لمتوسط تكاليف الصيانة لكل مركبة",
+          "noData": "لا توجد بيانات متاحة للمرشحات المحددة",
+          "tooltip": {
+            "average": "المتوسط",
+            "change": "التغيير"
+          },
+          "changeTypes": {
+            "yoy": "سنة عن سنة",
+            "qoq": "ربع عن ربع",
+            "mom": "شهر عن شهر",
+            "generic": "التغيير"
+          }
+        }
+      },
+      "coreMetrics": {
+        "fleetWideSpending": "الإنفاق على الأسطول",
+        "perVehicleAverages": "متوسط كل مركبة",
+        "annualSpending": "الإنفاق السنوي",
+        "quarterlySpending": "الإنفاق الربع سنوي",
+        "monthlySpending": "الإنفاق الشهري",
+        "yoyChange": "التغيير السنوي",
+        "annualAverage": "المتوسط السنوي",
+        "quarterlyAverage": "المتوسط الربع سنوي",
+        "monthlyAverage": "المتوسط الشهري",
+        "lowerIsBetter": "الأقل هو الأفضل"
+      }
     }
   }
 }

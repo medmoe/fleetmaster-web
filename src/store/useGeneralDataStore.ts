@@ -12,7 +12,7 @@ interface GeneralDataStore {
     // State
     generalData: GeneralDataType;
     isLoading: boolean;
-    error: string | null;
+    snackbar: { open: boolean, message: string, severity: "success" | "error" }
     maintenanceReports: MaintenanceReportWithStringsType[];
     request: requestType;
     vehicle: VehicleType | null;
@@ -25,7 +25,7 @@ interface GeneralDataStore {
     clearError: () => void;
     setRequest: (request: requestType) => void;
     setVehicle: (vehicle: VehicleType) => void;
-    setError: (error: string | null) => void;
+    setSnackbar: (snackbar: { open: boolean, message: string, severity: "success" | "error" }) => void;
 }
 
 const generalDataInitialState: GeneralDataType = {
@@ -43,14 +43,13 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 // Initial state
                 generalData: generalDataInitialState,
                 isLoading: false,
-                error: null,
                 maintenanceReports: [],
                 request: 'idle',
                 vehicle: null,
+                snackbar: {open: false, message: '', severity: 'success'},
 
                 // Actions
                 fetchGeneralData: async () => {
-                    set({isLoading: true, error: null});
                     try {
                         const response = await axios.get(`${API}maintenance/general-data/`, {
                             headers: {"Accept": "application/json", "Content-Type": "application/json"},
@@ -59,19 +58,30 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         set({generalData: response.data, isLoading: false});
                     } catch (error: any) {
                         if (error.response?.status === 401) {
-                            set({error: i18n.t('common.errorMessages.unauthorized')});
+                            set({
+                                snackbar: {
+                                    open: true,
+                                    message: i18n.t('common.errorMessages.unauthorized'),
+                                    severity: 'error',
+                                }
+                            })
                         } else {
+                            set({
+                                snackbar: {
+                                    open: true,
+                                    message: error.message,
+                                    severity: 'error',
+                                }
+                            })
                             console.error('Error fetching general data:', error);
-                            set({error: error.message});
                         }
                     } finally {
                         set({isLoading: false});
                     }
                 },
                 setGeneralData: (data: GeneralDataType) => set({generalData: data}),
-                clearError: () => set({error: null}),
+                clearError: () => set({snackbar: {open: false, message: '', severity: 'success'}}),
                 fetchMaintenanceReports: async () => {
-                    set({isLoading: true, error: null});
                     const vehicleID = get().vehicle?.id;
                     try {
                         const response = await axios.get(`${API}maintenance/overview/?vehicle_id=${vehicleID}`, {
@@ -81,10 +91,16 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                         set({maintenanceReports: response.data, isLoading: false});
                     } catch (error: any) {
                         if (error.response?.status === 401) {
-                            set({error: i18n.t('common.errorMessages.unauthorized')});
+                            set({
+                                snackbar: {
+                                    open: true,
+                                    message: i18n.t('common.errorMessages.unauthorized'),
+                                    severity: 'error',
+                                }
+                            })
                         } else {
+                            set({snackbar: {open: true, message: error.message, severity: 'error'}});
                             console.error('Error fetching maintenance reports:', error);
-                            set({error: error.message});
                         }
                     } finally {
                         set({isLoading: false});
@@ -93,7 +109,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                 setMaintenanceReports: (reports: MaintenanceReportWithStringsType[]) => set({maintenanceReports: reports}),
                 setRequest: (request: requestType) => set({request: request}),
                 setVehicle: (vehicle: VehicleType) => set({vehicle: vehicle}),
-                setError: (error: string | null) => set({error: error}),
+                setSnackbar: (snackbar: { open: boolean, message: string, severity: "success" | "error" }) => set({snackbar: snackbar})
             }),
             {
                 name: 'general-data-storage', // unique name for the storage

@@ -646,6 +646,106 @@
         "deleteError": "Failed to delete driver",
         "requiredFields": "Please fill in all required fields"
       }
+    },
+    "maintenance": {
+      "library": {
+        "fleetOverview": "Fleet Maintenance Overview",
+        "filteredOverview": "Filtered Maintenance Overview",
+        "filters": {
+          "vehicleType": "Vehicle Type",
+          "allVehicles": "All Vehicles",
+          "trucks": "Trucks",
+          "vans": "Vans",
+          "cars": "Cars",
+          "groupBy": "Group By",
+          "none": "None",
+          "monthly": "Monthly",
+          "quarterly": "Quarterly",
+          "yearly": "Yearly",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "resetFilters": "Reset Filters"
+        },
+        "filteredView": {
+          "showing": "Showing filtered view:",
+          "allVehicles": "all vehicles",
+          "period": "period:",
+          "from": "from:",
+          "until": "until:",
+          "grouped": "grouped"
+        },
+        "vehicleHealth": {
+          "title": "Vehicles Health Overview",
+          "overall": "Overall Vehicles Health",
+          "insurance": "Insurance Status",
+          "license": "License Status",
+          "status": {
+            "good": "Good",
+            "warning": "Warning",
+            "critical": "Critical",
+            "valid": "Valid",
+            "expiring": "Expiring",
+            "expired": "Expired"
+          }
+        },
+        "recurringIssues": {
+          "title": "Top Recurring Issues"
+        },
+        "serviceAlerts": {
+          "title": "Service Alerts",
+          "overdue": "Overdue",
+          "upcoming": "Upcoming",
+          "noAlerts": "No alerts at this time",
+          "issueType": "Issue Type",
+          "scheduledMaintenance": "Scheduled Maintenance",
+          "refresh": "Refresh",
+          "schedule": "Schedule Service",
+          "priority": "Priority",
+          "daysOverdue": "days overdue",
+          "dueIn": "Due in",
+          "days": "days"
+        },
+        "errors": {
+          "standardMetrics": "Error fetching standard metrics.",
+          "groupedMetrics": "Error fetching grouped metrics.",
+          "sessionExpired": "Session expired. Please login again."
+        }
+      },
+      "charts": {
+        "groupedMetrics": {
+          "title": "Filtered Maintenance Cost Analysis",
+          "savings": "savings",
+          "comparisonTypes": {
+            "yearly": "Yearly comparison",
+            "quarterly": "Quarterly comparison",
+            "monthly": "Monthly comparison"
+          },
+          "ofAverageCosts": " of average maintenance costs per vehicle",
+          "noData": "No data available for the selected filters",
+          "tooltip": {
+            "average": "Average",
+            "change": "Change"
+          },
+          "changeTypes": {
+            "yoy": "YoY",
+            "qoq": "QoQ",
+            "mom": "MoM",
+            "generic": "Change"
+          }
+        }
+      },
+      "coreMetrics": {
+        "fleetWideSpending": "Fleet-wide Spending",
+        "perVehicleAverages": "Per-vehicle Averages",
+        "annualSpending": "Annual Spending",
+        "quarterlySpending": "Quarterly Spending",
+        "monthlySpending": "Monthly Spending",
+        "yoyChange": "YoY Change",
+        "annualAverage": "Annual Average",
+        "quarterlyAverage": "Quarterly Average",
+        "monthlyAverage": "Monthly Average",
+        "lowerIsBetter": "Lower is better"
+      }
     }
   }
 }

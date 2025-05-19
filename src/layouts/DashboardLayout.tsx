@@ -40,7 +40,7 @@ const DashboardLayout: React.FC = () => {
             <div
                 className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed z-40 inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out md:translate-x-0`}>
                 <div className="p-6">
-                    <h1 className="text-2xl font-merriweather-bold text-primary-500">Fleet Master</h1>
+                    <h1 className="text-2xl text-primary-500">Fleet Master</h1>
                 </div>
 
                 <nav className="mt-4 px-2 space-y-2">
