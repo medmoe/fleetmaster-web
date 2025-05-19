@@ -42,7 +42,7 @@ const MaintenanceLibrary = () => {
                 if (vehicleType !== "ALL") {
                     params.append("vehicle_type", vehicleType);
                 }
-                const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {
+                const response = await axios.get(`${API}maintenance/fleet-wide-overview/`, {
                     params,
                     withCredentials: true
                 });
@@ -98,7 +98,7 @@ const MaintenanceLibrary = () => {
                 }
 
                 // Make API request with params
-                const response = await axios.get(`${API}/maintenance/fleet-wide-overview/`, {
+                const response = await axios.get(`${API}maintenance/fleet-wide-overview/`, {
                     params,
                     withCredentials: true
                 });
