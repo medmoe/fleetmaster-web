@@ -205,8 +205,8 @@ const PartProviders = () => {
                         />
                         <TextField
                             required
-                            name={t('pages.vehicle.maintenance.partProviders.dialog.phoneNumber')}
-                            label="Phone Number"
+                            label={t('pages.vehicle.maintenance.partProviders.dialog.phoneNumber')}
+                            name="phone_number"
                             fullWidth
                             value={partProviderFormData.phone_number}
                             onChange={handleChange}
