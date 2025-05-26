@@ -7,7 +7,6 @@ import {NotificationBar, VehicleInformationPanel, VehicleMaintenanceOverview} fr
 import {VehicleMaintenanceDataType} from "@/types/maintenance.ts";
 import {API} from '@/constants/endpoints';
 import axios from 'axios';
-import {mockMaintenanceData} from "@/constants/mocks";
 
 const MaintenanceOverview: React.FC = () => {
     const {t} = useTranslation();
@@ -37,7 +36,7 @@ const MaintenanceOverview: React.FC = () => {
             <Paper className="p-6 mb-6">
                 <Typography variant="h4" component="h1" className="font-bold mb-6">{t('pages.vehicle.maintenance.overview.title')}</Typography>
                 <VehicleInformationPanel vehicle={vehicle}/>
-                <VehicleMaintenanceOverview data={mockMaintenanceData}/>
+                <VehicleMaintenanceOverview data={vehicleMaintenanceData}/>
             </Paper>
             <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>
         </Container>

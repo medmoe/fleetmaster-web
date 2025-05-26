@@ -13,7 +13,7 @@ interface VehicleMaintenanceOverviewProps {
 
 const VehicleMaintenanceOverview: React.FC<VehicleMaintenanceOverviewProps> = ({data}) => {
 
-    const [selectedYear, setSelectedYear] = useState<number>(data[0][0]? data[0][0] : 2021);
+    const [selectedYear, setSelectedYear] = useState<number>(1990);
     const [activeTab, setActiveTab] = useState(0);
 
     const selectedYearData = data.find(([year]) => year === selectedYear)?.[1];
