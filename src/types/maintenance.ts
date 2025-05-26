@@ -136,6 +136,29 @@ export type FormattedHealthAlerts = {
 export type FleetWideOverviewResponseType = CoreMetricsResponse | GroupedMetricsResponse;
 
 
+// Vehicle maintenance overview data types
+export type MaintenancePart = {
+  part_name: string | null;
+  part_count: number | null;
+  part_cost: number | null;
+  part_rank: number | null;
+};
+
+export type MonthlyData = {
+  total_cost: number;
+  mom_change: number | null;
+  top_recurring_issues: MaintenancePart[];
+};
+
+export type YearlyData = {
+  total_cost: number;
+  yoy_change: number | null;
+  top_recurring_issues: MaintenancePart[];
+  [month: number]: MonthlyData; // Dynamic month number keys
+};
+
+export type VehicleMaintenanceDataType = [number, YearlyData][];
+
 
 
 
