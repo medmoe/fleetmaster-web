@@ -27,7 +27,7 @@ const YearlySummaryCard: React.FC<YearlySummaryCardProps> = ({ data }) => {
             <Box display="flex" alignItems="center">
               {trendIcon}
               <Typography variant="h5" sx={{ ml: 1 }}>
-                {data.yoy_change !== null ? `${Math.abs(data.yoy_change)}%` : 'N/A'}
+                {data.yoy_change !== null ? `${Math.abs(Number(data.yoy_change.toFixed(2)))}%` : 'N/A'}
               </Typography>
             </Box>
           </Grid>

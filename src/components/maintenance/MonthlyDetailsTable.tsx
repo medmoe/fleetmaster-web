@@ -25,7 +25,7 @@ const MonthlyDetailsTable: React.FC<MonthlyDetailsTableProps> = ({yearData}) => 
                 {months.map(([month, data]) => {
                     const monthName = new Date(2000, Number(month) - 1).toLocaleString('default', {month: 'long'});
                     const totalCost = data?.total_cost?.toLocaleString() ?? 'N/A';
-                    const momChange = data?.mom_change !== null && data?.mom_change !== undefined
+                    const momChange = data?.mom_change !== null && data?.mom_change.toFixed(2) !== undefined
                         ? `${data.mom_change.toFixed(1)}%`
                         : 'N/A';
                     const topParts = data?.top_recurring_issues ?? [];

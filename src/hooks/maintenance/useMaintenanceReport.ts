@@ -40,6 +40,7 @@ export const useMaintenanceReport = (
     const [error, setError] = useState({isError: false, message: ""})
     const [openFormDialog, setOpenFormDialog] = useState(false);
 
+
     const handlePartPurchaseChange = (name: string, value: string) => {
         setPartPurchaseEvent({
             ...partPurchaseEvent,
@@ -110,6 +111,8 @@ export const useMaintenanceReport = (
             setIsLoading(false)
         }
     }
+
+
     const isMaintenanceReportFormDataValid = () => {
         const [isValid, message] = isEndDateAfterStartDate(maintenanceReportFormData.start_date, maintenanceReportFormData.end_date)
         if (!isValid) {
