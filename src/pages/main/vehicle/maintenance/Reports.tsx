@@ -1,11 +1,11 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {DateCalendar} from "@mui/x-date-pickers/DateCalendar";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {Alert, Badge, Box, Button, Container, Snackbar, Typography} from "@mui/material";
+import {Alert, Badge, Box, Button, Container, LinearProgress, Snackbar, Typography} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
-import {format, parse, parseISO} from "date-fns";
+import {format, parse} from "date-fns";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
 import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {MaintenanceReportsList, NewMaintenanceReportDialog} from "../../../../components";
@@ -18,10 +18,13 @@ import axios from "axios";
 const Reports = () => {
     const {t, i18n} = useTranslation();
     const {vehicle} = useGeneralDataStore();
-    const {maintenanceReports, setRequest} = useGeneralDataStore();
+    const {setRequest} = useGeneralDataStore();
     const [openSnackbar, setOpenSnackBar] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(format(new Date(), 'yyyy-MM')) // YYYY-MM format
     const [vehicleReports, setVehicleReports] = useState<MaintenanceReportWithStringsType[]>([])
+    const [reportsCount, setReportsCount] = useState<number>(0);
+    const [loadingVehicleReports, setLoadingVehicleReports] = useState<boolean>(false);
+    const reportRefs = useRef<Map<string, HTMLDivElement>>(new Map());
     const {
         error,
         handleAddPartPurchase,
@@ -44,45 +47,29 @@ const Reports = () => {
 
     useEffect(() => {
         const fetchReports = async () => {
+            setLoadingVehicleReports(true);
             try {
                 const options = {headers: {'Content-Type': 'application/json'}, withCredentials: true};
                 const url = `${API}maintenance/reports/vehicle/${vehicle?.id}/?month=${currentMonth}`;
                 const response = await axios.get(url, options);
                 setVehicleReports(response.data.results);
+                setReportsCount(response.data.count);
             } catch (error) {
                 console.error(error);
+            } finally {
+                setLoadingVehicleReports(false);
             }
         }
         fetchReports();
     }, [currentMonth])
-    // Group reports by date
-    const reportsByDate = useMemo(() => {
-        if (!maintenanceReports || maintenanceReports.length === 0) return {};
 
-        const grouped: Record<string, number> = {};
-
-        maintenanceReports.forEach(report => {
-            if (!report.start_date) return;
-
-            // Format to YYYY-MM-DD to normalize time
-            const dateKey = format(parseISO(report.start_date), 'yyyy-MM-dd');
-
-            if (!grouped[dateKey]) {
-                grouped[dateKey] = 0;
-            }
-
-            grouped[dateKey] += 1;
-        });
-
-        return grouped;
-    }, [maintenanceReports]);
 
     // Create a properly typed day renderer component
     const ServerDay = (props: PickersDayProps<Date>) => {
         const {day, outsideCurrentMonth, ...other} = props;
         const dateStr = format(day, 'yyyy-MM-dd');
-        const hasReports = reportsByDate[dateStr] && reportsByDate[dateStr] > 0;
 
+        const hasReports = vehicleReports.some(report => report.start_date === dateStr);
         // Skip badges for days outside current month
         if (outsideCurrentMonth) {
             return <PickersDay day={day} outsideCurrentMonth={outsideCurrentMonth} {...other} />;
@@ -92,7 +79,7 @@ const Reports = () => {
             <Badge
                 key={day.toString()}
                 overlap="circular"
-                badgeContent={hasReports ? reportsByDate[dateStr] : undefined}
+                badgeContent={hasReports ? ' ' : null}
                 sx={{
                     direction: i18n.language === 'ar' ? 'rtl' : 'ltr',
                     '& .MuiBadge-badge': {
@@ -110,7 +97,16 @@ const Reports = () => {
 
     // Handle date selection
     const handleDateClick = (date: Date) => {
-        console.log(`${date}: date clicked`)
+        const dateStr = format(date, 'yyyy-MM-dd');
+        const reportsForDate = vehicleReports.filter(report => report.start_date === dateStr);
+
+        if (reportsForDate.length > 0) {
+            const reportId = reportsForDate[0].id;
+            const reportElement = reportRefs.current.get(reportId as string);
+            if (reportElement) {
+                reportElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        }
     };
 
     const handleAddingNewReport = () => {
@@ -166,7 +162,7 @@ const Reports = () => {
                         slots={{
                             day: ServerDay // Use our properly typed component
                         }}
-                        value={parse(currentMonth, 'yyyy-MM', new Date())}
+                        value={null}
                         onChange={handleDateClick}
                         onMonthChange={handleMonthChange}
                         sx={{
@@ -195,14 +191,16 @@ const Reports = () => {
                 </Box>
 
                 <Typography variant="body2" sx={{mt: 2, color: 'text.secondary'}}>
-                    {t('pages.vehicle.maintenance.reports.count')}: {maintenanceReports?.length || 0}
+                    {t('pages.vehicle.maintenance.reports.count')}: {reportsCount}
                 </Typography>
             </Container>
             <Container sx={{p: 3, marginTop: 3}} maxWidth={"lg"}>
+                {loadingVehicleReports && <LinearProgress/>}
                 <MaintenanceReportsList reports={vehicleReports}
                                         setOpenSnackBar={setOpenSnackBar}
                                         openSnackbar={openSnackbar}
                                         snackBarMessage={getSnackBarMessage()}
+                                        reportRefs={reportRefs}
                 />
             </Container>
 

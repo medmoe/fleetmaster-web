@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {RefObject, useState} from 'react';
 import {Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography} from '@mui/material';
 import MaintenanceReportCard from "./cards/MaintenanceReportCard";
 import {MaintenanceReportWithStringsType} from '@/types/maintenance';
@@ -14,11 +14,13 @@ interface MaintenanceReportsListProps {
     setOpenSnackBar: (open: boolean) => void;
     openSnackbar: boolean;
     snackBarMessage: string;
+    reportRefs?: RefObject<Map<string, HTMLDivElement>>;
 }
 
 const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                                                                            reports,
                                                                            setOpenSnackBar,
+                                                                           reportRefs,
                                                                        }) => {
     const {setMaintenanceReports, maintenanceReports} = useGeneralDataStore();
     const {
@@ -93,12 +95,21 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
             {reports.length > 0 ? (
                 <Box>
                     {reports.map((report) => (
-                        <MaintenanceReportCard
-                            key={report.id}
-                            report={report}
-                            onEdit={handleEditClick}
-                            onDelete={handleDeleteClick}
-                        />
+                        <div key={report.id} ref={(el) => {
+                            if (el) {
+                                reportRefs?.current.set(report.id as string, el);
+                            }else {
+                                reportRefs?.current.delete(report.id as string);
+                            }
+                        }}>
+                            <MaintenanceReportCard
+                                key={report.id}
+                                report={report}
+                                onEdit={handleEditClick}
+                                onDelete={handleDeleteClick}
+                            />
+                        </div>
+
                     ))}
                 </Box>
             ) : (
