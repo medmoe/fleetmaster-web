@@ -10,7 +10,7 @@ export const useMaintenanceReport = (
     setShowReportsList?: (show: boolean) => void,
     setOpenSnackBar?: (open: boolean) => void,
 ) => {
-    const {maintenanceReports, vehicle, setMaintenanceReports, request} = useGeneralDataStore();
+    const {vehicle, request} = useGeneralDataStore();
     const maintenanceReportFormInitState: MaintenanceReportWithStringsType = {
         maintenance_type: "PREVENTIVE",
         start_date: "",
@@ -39,6 +39,7 @@ export const useMaintenanceReport = (
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({isError: false, message: ""})
     const [openFormDialog, setOpenFormDialog] = useState(false);
+
 
     const handlePartPurchaseChange = (name: string, value: string) => {
         setPartPurchaseEvent({
@@ -88,13 +89,10 @@ export const useMaintenanceReport = (
         try {
             const options = {headers: {'Content-Type': 'application/json'}, withCredentials: true};
             const url = request === 'add' ? `${API}maintenance/reports/` : `${API}maintenance/reports/${maintenanceReportFormData.id}/`;
-            const response = request === 'add' ? await axios.post(url, maintenanceReportFormData, options) : await axios.put(url, maintenanceReportFormData, options);
-            if (request === 'add') {
-                setMaintenanceReports([...maintenanceReports, response.data])
-            } else {
-                setMaintenanceReports(maintenanceReports.map(report => report.id === response.data.id ? response.data : report))
 
-            }
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            request === 'add' ? await axios.post(url, maintenanceReportFormData, options) : await axios.put(url, maintenanceReportFormData, options);
+
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             setOpenSnackBar && setOpenSnackBar(true)
             setOpenFormDialog(false)
@@ -110,6 +108,8 @@ export const useMaintenanceReport = (
             setIsLoading(false)
         }
     }
+
+
     const isMaintenanceReportFormDataValid = () => {
         const [isValid, message] = isEndDateAfterStartDate(maintenanceReportFormData.start_date, maintenanceReportFormData.end_date)
         if (!isValid) {
