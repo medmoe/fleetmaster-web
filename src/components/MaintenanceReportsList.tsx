@@ -22,7 +22,6 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                                                                            setOpenSnackBar,
                                                                            reportRefs,
                                                                        }) => {
-    const {setMaintenanceReports, maintenanceReports} = useGeneralDataStore();
     const {
         isLoading,
         setIsLoading,
@@ -65,7 +64,6 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
             const url = `${API}maintenance/reports/${reportToDelete.id}/`;
             await axios.delete(url, options);
             setDeleteDialogOpen(false);
-            setMaintenanceReports(maintenanceReports.filter(report => report.id !== reportToDelete.id));
             setOpenSnackBar(true);
         } catch (error) {
             console.error(error);
@@ -81,16 +79,6 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
     }
     return (
         <Box maxWidth={'lg'}>
-
-
-            {/* Results Summary */}
-            {/*<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>*/}
-            {/*    <Typography variant="subtitle1">*/}
-            {/*        {sortedReports.length} {sortedReports.length === 1 ? t('pages.vehicle.maintenance.overview.reports.list.resultSummary.single') : t('pages.vehicle.maintenance.overview.reports.list.resultSummary.plural')}*/}
-            {/*    </Typography>*/}
-            {/*</Box>*/}
-
-
             {/* Reports List */}
             {reports.length > 0 ? (
                 <Box>
@@ -98,7 +86,7 @@ const MaintenanceReportsList: React.FC<MaintenanceReportsListProps> = ({
                         <div key={report.id} ref={(el) => {
                             if (el) {
                                 reportRefs?.current.set(report.id as string, el);
-                            }else {
+                            } else {
                                 reportRefs?.current.delete(report.id as string);
                             }
                         }}>
