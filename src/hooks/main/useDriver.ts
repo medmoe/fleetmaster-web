@@ -8,7 +8,7 @@ import useAuthStore from "@/store/useAuthStore";
 
 export const useDriver = () => {
     const {t} = useTranslation();
-    const {addDriver, authResponse, editDriver, removeDriver} = useAuthStore();
+    const {addDriver, authResponse, editDriver, removeDriver, setAuthResponse} = useAuthStore();
     const drivers = authResponse?.drivers || [];
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -178,6 +178,40 @@ export const useDriver = () => {
         }
     };
 
+    const refreshAccessCode = async (driverId?: string) => {
+        setLoading(true);
+        try {
+            const response = await axios.put(`${API}drivers/${driverId}/access-code/`,{}, {
+                headers: {"Content-Type": "application/json"},
+                withCredentials: true
+            })
+            // update the driver access code
+            if (authResponse && authResponse.drivers) {
+                setAuthResponse({
+                    ...authResponse,
+                    drivers: authResponse.drivers.map(driver => {
+                        if (driver.id === driverId) {
+                            return {
+                                ...driver,
+                                access_code: response.data.access_code
+                            }
+                        }
+                        return driver;
+                    })
+                })
+            }
+        } catch (error: any) {
+            if (error.response.status === 401) {
+                setFormError({
+                    isError: true,
+                    message: "You are not authorized to refresh the access code. Please login again."
+                })
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         driverToDelete,
         filterStatus,
@@ -194,6 +228,7 @@ export const useDriver = () => {
         loading,
         openDeleteDialog,
         openDialog,
+        refreshAccessCode,
         searchQuery,
         setFilterStatus,
         setFormError,

@@ -24,6 +24,7 @@ const Drivers = () => {
             loading,
             openDeleteDialog,
             openDialog,
+            refreshAccessCode,
             searchQuery,
             setFilterStatus,
             setFormError,
@@ -31,7 +32,7 @@ const Drivers = () => {
             setOpenDialog,
             setSearchQuery,
             setSnackbar,
-            snackbar
+            snackbar,
         } = useDriver()
 
         const menuItems = [
@@ -110,6 +111,7 @@ const Drivers = () => {
                         driver={driver}
                         onEdit={handleEditDriver}
                         onDelete={handleDeleteClick}
+                        refreshAccessCode={refreshAccessCode}
                     />
                 ))}
 

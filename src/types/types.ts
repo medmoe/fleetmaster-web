@@ -23,6 +23,7 @@ export interface DriverType {
     updated_at?: string
     profile_picture?: string
     vehicle_details?: VehicleType
+    access_code?: string
 }
 
 export interface VehicleType {
@@ -91,7 +92,7 @@ export interface UserProfileData {
     zip_code?: string;
 }
 
-export interface SignUpFormData extends UserProfileData{
+export interface SignUpFormData extends UserProfileData {
     user: UserData;
     confirmPassword: string;
 }

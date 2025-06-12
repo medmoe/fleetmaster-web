@@ -1,15 +1,25 @@
 import React from 'react';
-import {Avatar, Box, Card, CardContent, Chip, Divider, IconButton, Tooltip, Typography, useTheme} from '@mui/material';
-import {
-    ContactPhone as EmergencyIcon,
-    DateRange as DateIcon,
-    Delete as DeleteIcon,
-    DriveEta as DriveIcon,
-    Edit as EditIcon,
-    Email as EmailIcon,
-    LocationOn as LocationIcon,
-    Phone as PhoneIcon
-} from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import {useTheme} from '@mui/material/styles';
+import ContactPhone from '@mui/icons-material/ContactPhone';
+import DateRange from '@mui/icons-material/DateRange';
+import Delete from '@mui/icons-material/Delete';
+import DriveEta from '@mui/icons-material/DriveEta';
+import Edit from '@mui/icons-material/Edit';
+import Email from '@mui/icons-material/Email';
+import Key from '@mui/icons-material/Key';
+import LocationOn from '@mui/icons-material/LocationOn';
+import Phone from '@mui/icons-material/Phone';
+import Refresh from '@mui/icons-material/Refresh';
+
 import {format} from 'date-fns';
 import {useTranslation} from 'react-i18next';
 import {DriverType} from '@/types/types.ts';
@@ -18,9 +28,10 @@ interface DriverCardProps {
     driver: DriverType;
     onEdit?: (driver: DriverType) => void;
     onDelete?: (driver: DriverType) => void;
+    refreshAccessCode: (driverId?: string) => void;
 }
 
-const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelete}) => {
+const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelete, refreshAccessCode}) => {
     const {t} = useTranslation();
     const theme = useTheme();
 
@@ -109,14 +120,14 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                     {onEdit && (
                         <Tooltip title={t('common.edit')}>
                             <IconButton onClick={() => onEdit(driver)} color="inherit">
-                                <EditIcon/>
+                                <Edit/>
                             </IconButton>
                         </Tooltip>
                     )}
                     {onDelete && (
                         <Tooltip title={t('common.delete')}>
                             <IconButton onClick={() => onDelete(driver)} color="inherit">
-                                <DeleteIcon/>
+                                <Delete/>
                             </IconButton>
                         </Tooltip>
                     )}
@@ -132,20 +143,20 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                         </Typography>
 
                         <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                            <PhoneIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                            <Phone fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                             <Typography variant="body2">{driver.phone_number}</Typography>
                         </Box>
 
                         {driver.email && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <EmailIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <Email fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant="body2">{driver.email}</Typography>
                             </Box>
                         )}
 
                         {driver.address && (
                             <Box sx={{display: 'flex', alignItems: 'flex-start', mb: 1}}>
-                                <LocationIcon fontSize="small" sx={{mr: 1, mt: 0.5, color: '#3847a3'}}/>
+                                <LocationOn fontSize="small" sx={{mr: 1, mt: 0.5, color: '#3847a3'}}/>
                                 <Typography variant="body2">
                                     {driver.address}
                                     {driver.city && `, ${driver.city}`}
@@ -165,7 +176,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
 
                         {driver.license_number && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <DriveIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <DriveEta fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant="body2">
                                     {t('pages.driver.card.license')}: {driver.license_number}
                                 </Typography>
@@ -174,7 +185,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
 
                         {driver.license_expiry_date && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <DateRange fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant="body2">
                                     {t('pages.driver.card.licenseExpiry')}: {formatDate(driver.license_expiry_date)}
                                 </Typography>
@@ -182,7 +193,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                         )}
                         {driver.date_of_birth && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <DateRange fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant="body2">
                                     {t('pages.driver.card.dob')}: {formatDate(driver.date_of_birth)}
                                 </Typography>
@@ -191,7 +202,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
 
                         {driver.hire_date && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <DateIcon fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
+                                <DateRange fontSize="small" sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant="body2">
                                     {t('pages.driver.card.hireDate')}: {formatDate(driver.hire_date)}
                                 </Typography>
@@ -199,7 +210,7 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                         )}
                         {driver.vehicle && (
                             <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                <DriveIcon fontSize={"small"} sx={{mr: 1, color: '#3847a3'}}/>
+                                <DriveEta fontSize={"small"} sx={{mr: 1, color: '#3847a3'}}/>
                                 <Typography variant={"body2"}>
                                     {t('pages.driver.card.assignedVehicle')}: {driver.vehicle_details?.make} {driver.vehicle_details?.model} {driver.vehicle_details?.year}
                                 </Typography>
@@ -212,28 +223,41 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                 {(driver.emergency_contact_name || driver.emergency_contact_phone) && (
                     <>
                         <Divider sx={{my: 2, bgcolor: "#e3e6f7"}}/>
-                        <Box>
-                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
-                                {t('pages.driver.card.emergencyContact')}
-                            </Typography>
+                        <Box sx={{display: 'flex', flexDirection: {xs: 'column', sm: 'row'}, mb: 2}}>
+                            <Box sx={{flex: 1, mb: {xs: 2, sm: 0}}}>
+                                <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>
+                                    {t('pages.driver.card.emergencyContact')}
+                                </Typography>
 
-                            {driver.emergency_contact_name && (
-                                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                    <EmergencyIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
-                                    <Typography variant="body2">
-                                        {driver.emergency_contact_name}
-                                    </Typography>
-                                </Box>
-                            )}
+                                {driver.emergency_contact_name && (
+                                    <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                        <ContactPhone fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                        <Typography variant="body2">
+                                            {driver.emergency_contact_name}
+                                        </Typography>
+                                    </Box>
+                                )}
 
-                            {driver.emergency_contact_phone && (
+                                {driver.emergency_contact_phone && (
+                                    <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
+                                        <Phone fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                        <Typography variant="body2">
+                                            {driver.emergency_contact_phone}
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+                            <Box sx={{flex: 1}}>
+                                <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}> Driver Portal Information</Typography>
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
-                                    <PhoneIcon fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
-                                    <Typography variant="body2">
-                                        {driver.emergency_contact_phone}
-                                    </Typography>
+                                    <Key fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
+                                    <Typography variant={"body2"}>Access code: {driver.access_code? driver.access_code : 'N/A'}</Typography>
+                                    <IconButton onClick={() => refreshAccessCode(driver.id)} color="primary" sx={{ml: 1}}>
+                                        <Refresh/>
+                                    </IconButton>
                                 </Box>
-                            )}
+
+                            </Box>
                         </Box>
                     </>
                 )}
