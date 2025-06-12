@@ -105,14 +105,6 @@ export const useDriver = () => {
 
     // Submit form (create or update driver)
     const handleSubmit = async () => {
-        // Validate form
-        if (!formData.license_expiry_date || !formData.date_of_birth || !formData.hire_date || !formData.license_number || !formData.phone_number) {
-            setFormError({
-                isError: true,
-                message: t('pages.driver.errors.requiredFields')
-            });
-            return;
-        }
         setLoading(true);
         try {
             const options = {

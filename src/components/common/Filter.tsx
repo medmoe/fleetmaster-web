@@ -16,7 +16,7 @@ const Filter = ({items, filterInput, setFilterInput, searchQuery, setSearchQuery
     return (
         <Box sx={{display: "flex", gap: 2, mb: 4, flexDirection: {xs: 'column', sm: 'row'}}}>
             <TextField fullWidth
-                       placeholder={t('pages.vehicle.search')}
+                       placeholder={t('pages.driver.search')}
                        value={searchQuery}
                        onChange={(e) => setSearchQuery(e.target.value)}
                        slotProps={{

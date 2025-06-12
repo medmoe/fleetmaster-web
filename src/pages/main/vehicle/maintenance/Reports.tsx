@@ -5,7 +5,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {Alert, Badge, Box, Button, Container, LinearProgress, Snackbar, Typography} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
-import {format, parse} from "date-fns";
+import {format} from "date-fns";
 import {PickersDay, PickersDayProps} from "@mui/x-date-pickers/PickersDay";
 import {MaintenanceReportWithStringsType} from "@/types/maintenance";
 import {MaintenanceReportsList, NewMaintenanceReportDialog} from "../../../../components";
