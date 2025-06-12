@@ -14,6 +14,7 @@ export {default as DriverCardComponent} from "./cards/DriverCardComponent";
 export {default as DeleteDriver} from "./dialogs/driver/Delete"
 export {default as DeleteVehicle} from "./dialogs/vehicle/Delete"
 export {default as DriverDialog} from "./dialogs/driver/DriverDialog";
+export {default as UpdateAccessCode} from "./dialogs/driver/AccessCode"
 export {default as Filter} from "./common/Filter";
 export {default as VehicleDialog} from "./dialogs/vehicle/VehicleDialog";
 export {default as FileUpload} from "./common/FileUpload";

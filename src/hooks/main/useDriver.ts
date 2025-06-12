@@ -15,6 +15,8 @@ export const useDriver = () => {
     const [filterStatus, setFilterStatus] = useState("ALL");
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [driverId, setDriverId] = useState<string | undefined>(undefined);
     const [driverToDelete, setDriverToDelete] = useState<DriverType | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formError, setFormError] = useState({isError: false, message: ""});
@@ -179,9 +181,14 @@ export const useDriver = () => {
     };
 
     const refreshAccessCode = async (driverId?: string) => {
+        setOpenUpdateDialog(true)
+        setDriverId(driverId)
+    }
+
+    const handleUpdateConfirm = async () => {
         setLoading(true);
         try {
-            const response = await axios.put(`${API}drivers/${driverId}/access-code/`,{}, {
+            const response = await axios.put(`${API}drivers/${driverId}/access-code/`, {}, {
                 headers: {"Content-Type": "application/json"},
                 withCredentials: true
             })
@@ -200,6 +207,7 @@ export const useDriver = () => {
                     })
                 })
             }
+            setOpenUpdateDialog(false);
         } catch (error: any) {
             if (error.response.status === 401) {
                 setFormError({
@@ -211,6 +219,7 @@ export const useDriver = () => {
             setLoading(false);
         }
     }
+
 
     return {
         driverToDelete,
@@ -228,7 +237,10 @@ export const useDriver = () => {
         loading,
         openDeleteDialog,
         openDialog,
+        openUpdateDialog,
+        setOpenUpdateDialog,
         refreshAccessCode,
+        handleUpdateConfirm,
         searchQuery,
         setFilterStatus,
         setFormError,

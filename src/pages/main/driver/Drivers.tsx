@@ -1,6 +1,6 @@
 import {Box, Button, Container, Divider, Typography, useTheme,} from "@mui/material";
 import {Add as AddIcon} from "@mui/icons-material";
-import {DeleteDriver, DriverCardComponent, DriverDialog, Filter, NotificationBar} from "@/components";
+import {DeleteDriver, DriverCardComponent, DriverDialog, Filter, NotificationBar, UpdateAccessCode} from "@/components";
 import {useTranslation} from "react-i18next";
 import {useDriver} from "@/hooks/main/useDriver";
 
@@ -24,6 +24,9 @@ const Drivers = () => {
             loading,
             openDeleteDialog,
             openDialog,
+            openUpdateDialog,
+            setOpenUpdateDialog,
+            handleUpdateConfirm,
             refreshAccessCode,
             searchQuery,
             setFilterStatus,
@@ -133,6 +136,11 @@ const Drivers = () => {
                               driverToDelete={driverToDelete}
                               handleDeleteConfirm={handleDeleteConfirm}
                               loading={loading}
+                />
+                <UpdateAccessCode openUpdateDialog={openUpdateDialog}
+                                  setOpenUpdateDialog={setOpenUpdateDialog}
+                                  loading={loading}
+                                  handleUpdateConfirm={handleUpdateConfirm}
                 />
 
                 {/* Snackbar for notifications */}

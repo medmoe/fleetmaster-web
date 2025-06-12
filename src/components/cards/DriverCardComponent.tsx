@@ -248,10 +248,10 @@ const DriverCardComponent: React.FC<DriverCardProps> = ({driver, onEdit, onDelet
                                 )}
                             </Box>
                             <Box sx={{flex: 1}}>
-                                <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}> Driver Portal Information</Typography>
+                                <Typography variant="subtitle1" sx={{fontWeight: 'bold', mb: 1, color: '#20276d'}}>{t('pages.driver.card.driverPortal.title')}</Typography>
                                 <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                                     <Key fontSize="small" sx={{mr: 1, color: 'primary.main'}}/>
-                                    <Typography variant={"body2"}>Access code: {driver.access_code? driver.access_code : 'N/A'}</Typography>
+                                    <Typography variant={"body2"}>{t('pages.driver.card.driverPortal.accessCode')}: {driver.access_code? driver.access_code : 'N/A'}</Typography>
                                     <IconButton onClick={() => refreshAccessCode(driver.id)} color="primary" sx={{ml: 1}}>
                                         <Refresh/>
                                     </IconButton>
