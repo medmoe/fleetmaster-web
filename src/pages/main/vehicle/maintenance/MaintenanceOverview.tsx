@@ -1,6 +1,6 @@
 // src/pages/MaintenanceOverview.tsx
 import React, {useEffect, useState} from 'react';
-import {Container, Paper, Typography} from '@mui/material';
+import {Container, LinearProgress, Paper, Typography} from '@mui/material';
 import useGeneralDataStore from "../../../../store/useGeneralDataStore";
 import {useTranslation} from "react-i18next";
 import {NotificationBar, VehicleInformationPanel, VehicleMaintenanceOverview} from "@/components";
@@ -36,6 +36,7 @@ const MaintenanceOverview: React.FC = () => {
             <Paper className="p-6 mb-6">
                 <Typography variant="h4" component="h1" className="font-bold mb-6">{t('pages.vehicle.maintenance.overview.title')}</Typography>
                 <VehicleInformationPanel vehicle={vehicle}/>
+                {loading && <LinearProgress/>}
                 <VehicleMaintenanceOverview data={vehicleMaintenanceData}/>
             </Paper>
             <NotificationBar snackbar={snackbar} setSnackbar={setSnackbar}/>

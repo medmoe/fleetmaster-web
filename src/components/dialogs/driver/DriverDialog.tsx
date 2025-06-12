@@ -1,27 +1,11 @@
-import {
-    Alert,
-    Box,
-    Button,
-    CircularProgress,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    FormControl,
-    IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-} from "@mui/material";
+import {Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography,} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {useTranslation} from "react-i18next";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DriverType} from "@/types/types.ts";
 import useAuthStore from "@/store/useAuthStore.ts";
+import {NotificationBar} from "@/components";
 
 interface DriverDialogProps {
     openDialog: boolean;
@@ -65,16 +49,6 @@ const DriverDialog = ({
             </DialogTitle>
 
             <DialogContent dividers>
-                {formError.isError && (
-                    <Alert
-                        severity="error"
-                        sx={{mb: 3}}
-                        onClose={() => setFormError({isError: false, message: ""})}
-                    >
-                        {formError.message}
-                    </Alert>
-                )}
-
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Box sx={{display: 'grid', gridTemplateColumns: {xs: '1fr', md: '1fr 1fr'}, gap: 2, mt: 1}}>
                         {/* Personal Information */}
@@ -280,7 +254,7 @@ const DriverDialog = ({
                 <Button
                     onClick={handleSubmit}
                     variant="contained"
-                    disabled={loading || !formData.first_name || !formData.last_name || !formData.phone_number}
+                    disabled={loading || !formData.first_name || !formData.last_name || !formData.phone_number || !formData.license_expiry_date || !formData.date_of_birth || !formData.hire_date || !formData.license_number}
                     startIcon={loading && <CircularProgress size={20} color="inherit"/>}
                     sx={{
                         backgroundColor: '#3f51b5',
@@ -290,6 +264,7 @@ const DriverDialog = ({
                     {isEditing ? t('pages.driver.dialog.updateButton') : t('pages.driver.dialog.addButton')}
                 </Button>
             </DialogActions>
+            <NotificationBar snackbar={{open: formError.isError, message: formError.message, severity: 'error'}} setSnackbar={() => setFormError({isError: false, message: ""})}/>
         </Dialog>
     )
 }

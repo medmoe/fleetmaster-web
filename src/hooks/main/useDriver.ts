@@ -8,13 +8,15 @@ import useAuthStore from "@/store/useAuthStore";
 
 export const useDriver = () => {
     const {t} = useTranslation();
-    const {addDriver, authResponse, editDriver, removeDriver} = useAuthStore();
+    const {addDriver, authResponse, editDriver, removeDriver, setAuthResponse} = useAuthStore();
     const drivers = authResponse?.drivers || [];
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterStatus, setFilterStatus] = useState("ALL");
     const [openDialog, setOpenDialog] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [driverId, setDriverId] = useState<string | undefined>(undefined);
     const [driverToDelete, setDriverToDelete] = useState<DriverType | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formError, setFormError] = useState({isError: false, message: ""});
@@ -105,14 +107,6 @@ export const useDriver = () => {
 
     // Submit form (create or update driver)
     const handleSubmit = async () => {
-        // Validate form
-        if (!formData.license_expiry_date || !formData.date_of_birth || !formData.hire_date || !formData.license_number || !formData.phone_number) {
-            setFormError({
-                isError: true,
-                message: t('pages.driver.errors.requiredFields')
-            });
-            return;
-        }
         setLoading(true);
         try {
             const options = {
@@ -186,6 +180,47 @@ export const useDriver = () => {
         }
     };
 
+    const refreshAccessCode = async (driverId?: string) => {
+        setOpenUpdateDialog(true)
+        setDriverId(driverId)
+    }
+
+    const handleUpdateConfirm = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.put(`${API}drivers/${driverId}/access-code/`, {}, {
+                headers: {"Content-Type": "application/json"},
+                withCredentials: true
+            })
+            // update the driver access code
+            if (authResponse && authResponse.drivers) {
+                setAuthResponse({
+                    ...authResponse,
+                    drivers: authResponse.drivers.map(driver => {
+                        if (driver.id === driverId) {
+                            return {
+                                ...driver,
+                                access_code: response.data.access_code
+                            }
+                        }
+                        return driver;
+                    })
+                })
+            }
+            setOpenUpdateDialog(false);
+        } catch (error: any) {
+            if (error.response.status === 401) {
+                setFormError({
+                    isError: true,
+                    message: "You are not authorized to refresh the access code. Please login again."
+                })
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
     return {
         driverToDelete,
         filterStatus,
@@ -202,6 +237,10 @@ export const useDriver = () => {
         loading,
         openDeleteDialog,
         openDialog,
+        openUpdateDialog,
+        setOpenUpdateDialog,
+        refreshAccessCode,
+        handleUpdateConfirm,
         searchQuery,
         setFilterStatus,
         setFormError,
