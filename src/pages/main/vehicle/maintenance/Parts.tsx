@@ -242,16 +242,17 @@ const Parts: React.FC = () => {
                             {paginatedParts.map((part, index) => (
                                 <React.Fragment key={part.id || index}>
                                     <ListItem
-                                        secondaryAction={
-                                            <Box>
-                                                <IconButton edge="end" onClick={() => handleEditPart(part)} color="primary">
-                                                    <EditIcon/>
-                                                </IconButton>
-                                                <IconButton edge="end" onClick={() => handleDeleteConfirm(part)} color="error">
-                                                    <DeleteIcon/>
-                                                </IconButton>
-                                            </Box>
-                                        }
+                                        secondaryAction={(part.isOwner && (
+                                                <Box>
+                                                    <IconButton edge="end" onClick={() => handleEditPart(part)} color="primary">
+                                                        <EditIcon/>
+                                                    </IconButton>
+                                                    <IconButton edge="end" onClick={() => handleDeleteConfirm(part)} color="error">
+                                                        <DeleteIcon/>
+                                                    </IconButton>
+                                                </Box>
+                                            )
+                                        )}
                                     >
                                         <ListItemText
                                             primary={part.name}
