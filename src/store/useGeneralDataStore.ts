@@ -50,6 +50,7 @@ const useGeneralDataStore = create<GeneralDataStore>()(
                             headers: {"Accept": "application/json", "Content-Type": "application/json"},
                             withCredentials: true,
                         });
+                        console.log(response);
                         set({generalData: response.data, isLoading: false});
                     } catch (error: any) {
                         if (error.response?.status === 401) {

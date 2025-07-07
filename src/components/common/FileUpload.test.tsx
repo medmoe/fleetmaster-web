@@ -20,7 +20,7 @@ describe('FileUpload', () => {
             <FileUpload onUpload={mockHandleUpload}/>
         )
         expect(screen.getByText('Import CSV File')).toBeInTheDocument()
-        expect(screen.getByText('Drag & drop or click to select')).toBeInTheDocument();
+        expect(screen.getByText('click to select a file')).toBeInTheDocument();
         expect(screen.getByText('Only CSV Files accepted')).toBeInTheDocument();
         expect(screen.queryByTestId('cancel-upload-button')).toBeNull();
         expect(screen.queryByTestId('upload-button')).toBeNull();

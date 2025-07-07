@@ -11,6 +11,7 @@ export interface PartType {
     id?: string
     name: string
     description: string
+    isOwner?: boolean
 }
 
 export interface ServiceProviderType {
