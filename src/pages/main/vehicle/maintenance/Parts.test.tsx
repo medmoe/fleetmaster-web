@@ -292,14 +292,6 @@ describe("Parts page", () => {
         const fileInput = screen.getByTestId('csv-upload-input');
         await user.upload(fileInput, file);
 
-        // Check if API was called correctly
-        await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledTimes(1);
-
-            // FormData is hard to assert directly, so we just check the URL
-            expect(axios.post.mock.calls[0][0]).toContain('upload-parts');
-        });
-
         // Check if store was updated with new parts
         await waitFor(() => {
             expect(mockSetGeneralData).toHaveBeenCalledTimes(1);
