@@ -5,6 +5,7 @@ export interface PartProviderType {
     name: string
     phone_number: string
     address: string
+    is_owner?: boolean
 }
 
 export interface PartType {
@@ -20,6 +21,7 @@ export interface ServiceProviderType {
     service_type: "MECHANIC" | "ELECTRICIAN" | "CLEANING"
     phone_number: string
     address: string
+    is_owner?: boolean
 }
 
 export interface MaintenanceReportType {

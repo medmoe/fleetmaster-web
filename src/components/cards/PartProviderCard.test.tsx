@@ -8,7 +8,8 @@ describe('PartProviderCard', () => {
     const mockProvider: PartProviderType = {
         name: 'Test Provider',
         phone_number: '123-456-7890',
-        address: '123 Test St'
+        address: '123 Test St',
+        is_owner: true,
     };
 
     const mockHandleEdit = vi.fn();
@@ -53,4 +54,21 @@ describe('PartProviderCard', () => {
         fireEvent.click(screen.getByText('Delete'));
         expect(mockHandleDelete).toHaveBeenCalled();
     });
+    it('hides action buttons when is_owner is false', () => {
+        const mockProvider: PartProviderType = {
+            name: 'Test Provider',
+            phone_number: '123-456-7890',
+            address: '123 Test St',
+            is_owner: false,
+        };
+        render(
+            <PartProviderCard partProvider={mockProvider}
+                              handlePartProviderEdition={mockHandleEdit}
+                              handlePartProviderDeletion={mockHandleDelete}
+            />
+        )
+        expect(screen.queryByText('Edit')).not.toBeInTheDocument()
+        expect(screen.queryByText('Delete')).not.toBeInTheDocument()
+
+    })
 })
