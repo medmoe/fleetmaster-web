@@ -34,12 +34,15 @@ const ServiceProviderCard = ({serviceProvider, handleServiceProviderEdition, han
                                         textStyle={"text-txt"}
                         />
                     </div>
-                    <div className={"flex flex-col space-y-3 md:self-start gap-2"}>
-                        <Button variant="outlined" startIcon={<Edit/>} size={"medium"}
-                                onClick={handleServiceProviderEdition}>{t('common.edit')}</Button>
-                        <Button variant={"outlined"} startIcon={<Delete/>} size={"medium"} color={"error"}
-                                onClick={handleServiceProviderDeletion}>{t('common.delete')}</Button>
-                    </div>
+                    {serviceProvider.is_owner && (
+                        <div className={"flex flex-col space-y-3 md:self-start gap-2"}>
+                            <Button variant="outlined" startIcon={<Edit/>} size={"medium"}
+                                    onClick={handleServiceProviderEdition}>{t('common.edit')}</Button>
+                            <Button variant={"outlined"} startIcon={<Delete/>} size={"medium"} color={"error"}
+                                    onClick={handleServiceProviderDeletion}>{t('common.delete')}</Button>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </Container>

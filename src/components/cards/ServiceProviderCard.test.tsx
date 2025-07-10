@@ -10,7 +10,8 @@ describe('ServiceProviderCard', () => {
         name: 'Test Provider',
         phone_number: '123-456-7890',
         address: '123 Test St',
-        service_type: 'MECHANIC'
+        service_type: 'MECHANIC',
+        is_owner: true,
     };
 
     const mockHandleEdit = vi.fn();
@@ -67,4 +68,19 @@ describe('ServiceProviderCard', () => {
         fireEvent.click(screen.getByText('Delete'));
         expect(mockHandleDelete).toHaveBeenCalledTimes(1)
     });
+    it('hides action buttons when is_owner is false', () => {
+        const mockServiceProvider: ServiceProviderType = {
+            id: '1',
+            name: 'Test Provider',
+            phone_number: '123-456-7890',
+            address: '123 Test St',
+            service_type: 'MECHANIC',
+            is_owner: false,
+        };
+        render(
+            <ServiceProviderCard serviceProvider={mockServiceProvider} handleServiceProviderEdition={mockHandleEdit} handleServiceProviderDeletion={mockHandleDelete} />
+        )
+        expect(screen.queryByText('Edit')).not.toBeInTheDocument();
+        expect(screen.queryByText('Delete')).not.toBeInTheDocument();
+    })
 })
